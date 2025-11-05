@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.ProductMapper">
+    
+    <resultMap id="productMap" type="com.swiftstock.entity.Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="stockQuantity" column="stock_quantity"/>
+        <result property="minStockLevel" column="min_stock_level"/>
+        <result property="supplier" column="supplier"/>
+        <result property="location" column="location"/>
+        <result property="status" column="status"/>
+        <result property="stockValue" column="stock_value"/>
+        <result property="inTime" column="in_time"/>
+        <result property="outTime" column="out_time"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+        <association property="category" javaType="com.swiftstock.entity.Category">
+            <id property="id" column="category_id"/>
+            <result property="name" column="category_name"/>
+            <result property="description" column="category_description"/>
+            <result property="fullPath" column="category_full_path"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="productMap">
+        SELECT 
+            p.*,
+            c.name as category_name,
+            c.description as category_description,
+            CASE 
+                WHEN c.level = 1 THEN c.name
+                WHEN c.level = 2 THEN CONCAT(p1.name, '-', c.name)
+                WHEN c.level = 3 THEN CONCAT(p1.name, '-', p2.name, '-', c.name)
+            END as category_full_path
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN category p2 ON c.parent_id = p2.id
+        LEFT JOIN category p1 ON p2.parent_id = p1.id
+        ORDER BY p.id ASC
+    </select>
+
+    <select id="selectById" resultMap="productMap">
+        SELECT 
+            p.*,
+            c.name as category_name,
+            c.description as category_description,
+            CASE 
+                WHEN c.level = 1 THEN c.name
+                WHEN c.level = 2 THEN CONCAT(p1.name, '-', c.name)
+                WHEN c.level = 3 THEN CONCAT(p1.name, '-', p2.name, '-', c.name)
+            END as category_full_path
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN category p2 ON c.parent_id = p2.id
+        LEFT JOIN category p1 ON p2.parent_id = p1.id
+        WHERE p.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (
+            name, category_id, description, price, stock_quantity,
+            min_stock_level, supplier, location, status, stock_value, in_time, created_time
+        ) VALUES (
+            #{name}, #{categoryId}, #{description}, #{price}, #{stockQuantity},
+            #{minStockLevel}, #{supplier}, #{location}, #{status}, #{stockValue}, #{inTime}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE product
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="stockQuantity != null">stock_quantity = #{stockQuantity},</if>
+            <if test="minStockLevel != null">min_stock_level = #{minStockLevel},</if>
+            <if test="supplier != null">supplier = #{supplier},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="stockValue != null">stock_value = #{stockValue},</if>
+            <if test="inTime != null">in_time = #{inTime},</if>
+            <if test="outTime != null">out_time = #{outTime},</if>
+            updated_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product WHERE id = #{id}
+    </delete>
+
+    <select id="findByCondition" resultMap="productMap">
+        SELECT 
+            p.*,
+            c.name as category_name,
+            c.description as category_description,
+            CASE 
+                WHEN c.level = 1 THEN c.name
+                WHEN c.level = 2 THEN CONCAT(p1.name, '-', c.name)
+                WHEN c.level = 3 THEN CONCAT(p1.name, '-', p2.name, '-', c.name)
+            END as category_full_path
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN category p2 ON c.parent_id = p2.id
+        LEFT JOIN category p1 ON p2.parent_id = p1.id
+        <where>
+            <if test="name != null and name != ''">
+                AND p.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND p.category_id = #{categoryId}
+            </if>
+            <if test="supplier != null and supplier != ''">
+                AND p.supplier LIKE CONCAT('%', #{supplier}, '%')
+            </if>
+            <if test="location != null and location != ''">
+                AND p.location LIKE CONCAT('%', #{location}, '%')
+            </if>
+            <if test="stockQuantity != null">
+                AND p.stock_quantity >= #{stockQuantity}
+            </if>
+        </where>
+        ORDER BY p.id ASC
+    </select>
+
+    <update id="updateStock">
+        UPDATE product 
+        SET stock_quantity = stock_quantity + #{quantity},
+            updated_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="setStock">
+        UPDATE product 
+        SET stock_quantity = #{stock},
+            updated_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+</mapper> 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.InventoryRecordMapper">
+    <resultMap id="inventoryRecordMap" type="com.swiftstock.entity.InventoryRecord">
+        <id property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="type" column="type"/>
+        <result property="quantity" column="quantity"/>
+        <result property="reason" column="reason"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="productName" column="product_name"/>
+    </resultMap>
+    
+    <select id="findByProductId" resultMap="inventoryRecordMap">
+        SELECT r.*, p.name as product_name 
+        FROM inventory_record r
+        LEFT JOIN product p ON r.product_id = p.id
+        WHERE r.product_id = #{productId} 
+        ORDER BY r.created_time DESC
+    </select>
+    
+    <insert id="insert" parameterType="com.swiftstock.entity.InventoryRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO inventory_record (product_id, type, quantity, reason)
+        VALUES (#{productId}, #{type}, #{quantity}, #{reason})
+    </insert>
+</mapper> 

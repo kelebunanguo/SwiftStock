@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.AdminMapper">
+    <select id="findById" resultType="com.swiftstock.entity.Admin">
+        SELECT * FROM admin WHERE id = #{id}
+    </select>
+    
+    <select id="findByUsername" resultType="com.swiftstock.entity.Admin">
+        SELECT * FROM admin WHERE username = #{username}
+    </select>
+    
+    <update id="update">
+        UPDATE admin
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="password != null">password = #{password},</if>
+            updated_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper> 

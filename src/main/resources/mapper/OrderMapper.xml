@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.OrderMapper">
+    
+    <resultMap id="orderMap" type="com.swiftstock.entity.Order">
+        <id property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerPhone" column="customer_phone"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="status" column="status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+        <association property="operator" javaType="com.swiftstock.entity.Admin">
+            <id property="id" column="operator_id"/>
+            <result property="username" column="operator_username"/>
+            <result property="name" column="operator_name"/>
+        </association>
+        <collection property="items" ofType="com.swiftstock.entity.OrderItem">
+            <id property="id" column="item_id"/>
+            <result property="orderId" column="order_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="productName" column="product_name"/>
+            <result property="quantity" column="quantity"/>
+            <result property="price" column="price"/>
+            <result property="amount" column="amount"/>
+            <association property="product" javaType="com.swiftstock.entity.Product">
+                <id property="id" column="product_id"/>
+                <result property="name" column="product_name"/>
+                <result property="categoryId" column="category_id"/>
+                <result property="description" column="product_description"/>
+                <result property="price" column="product_price"/>
+                <result property="stockQuantity" column="stock_quantity"/>
+                <result property="minStockLevel" column="min_stock_level"/>
+                <result property="supplier" column="supplier"/>
+                <result property="location" column="location"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findByCondition" parameterType="com.swiftstock.entity.Order" resultMap="orderMap">
+        SELECT DISTINCT
+            o.*,
+            a.username as operator_username,
+            a.name as operator_name,
+            i.id as item_id,
+            i.quantity,
+            i.price,
+            i.amount,
+            i.product_id,
+            i.product_name
+        FROM orders o
+        LEFT JOIN admin a ON o.operator_id = a.id
+        LEFT JOIN order_item i ON o.id = i.order_id
+        <where>
+            <if test="orderNo != null and orderNo != ''">
+                AND o.order_no LIKE CONCAT('%', #{orderNo}, '%')
+            </if>
+            <if test="customerName != null and customerName != ''">
+                AND o.customer_name LIKE CONCAT('%', #{customerName}, '%')
+            </if>
+            <if test="customerPhone != null and customerPhone != ''">
+                AND o.customer_phone LIKE CONCAT('%', #{customerPhone}, '%')
+            </if>
+            <if test="status != null">
+                AND o.status = #{status, typeHandler=com.swiftstock.config.OrderStatusTypeHandler}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND DATE(o.created_time) >= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND DATE(o.created_time) &lt;= #{endDate}
+            </if>
+        </where>
+        ORDER BY o.created_time DESC
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="orderMap">
+        SELECT 
+            o.*,
+            a.username as operator_username,
+            a.name as operator_name,
+            i.id as item_id,
+            i.quantity,
+            i.price,
+            i.amount,
+            i.product_id,
+            i.product_name
+        FROM orders o
+        LEFT JOIN admin a ON o.operator_id = a.id
+        LEFT JOIN order_item i ON o.id = i.order_id
+        WHERE o.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (
+            order_no, customer_name, customer_phone, status, total_amount, 
+            remark, created_time, updated_time
+        ) VALUES (
+            #{orderNo}, #{customerName}, #{customerPhone}, 
+            #{status, typeHandler=com.swiftstock.config.OrderStatusTypeHandler}, 
+            #{totalAmount}, #{remark}, #{createdTime}, #{updatedTime}
+        )
+    </insert>
+
+    <insert id="insertItem" parameterType="com.swiftstock.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item (
+            order_id, product_id, product_name, quantity, price, amount, created_time
+        ) VALUES (
+            #{orderId}, #{productId}, #{productName}, #{quantity}, #{price}, #{amount}, #{createdTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.swiftstock.entity.Order">
+        UPDATE orders
+        <set>
+            <if test="status != null">
+                status = #{status, typeHandler=com.swiftstock.config.OrderStatusTypeHandler},
+            </if>
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            updated_time = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE orders 
+        SET status = #{status}, 
+            updated_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectAll" resultMap="orderMap">
+        SELECT 
+            o.*,
+            a.username as operator_username,
+            a.name as operator_name,
+            i.id as item_id,
+            i.quantity,
+            i.price,
+            i.amount,
+            i.product_id,
+            i.product_name
+        FROM orders o
+        LEFT JOIN admin a ON o.operator_id = a.id
+        LEFT JOIN order_item i ON o.id = i.order_id
+        ORDER BY o.created_time DESC
+    </select>
+    
+    <select id="selectById" resultMap="orderMap">
+        SELECT 
+            o.*,
+            a.username as operator_username,
+            a.name as operator_name,
+            i.id as item_id,
+            i.quantity,
+            i.price,
+            i.amount,
+            p.id as product_id,
+            p.name as product_name,
+            p.category_id,
+            p.description as product_description,
+            p.price as product_price,
+            p.stock_quantity,
+            p.min_stock_level,
+            p.supplier,
+            p.location
+        FROM orders o
+        LEFT JOIN admin a ON o.operator_id = a.id
+        LEFT JOIN order_item i ON o.id = i.order_id
+        LEFT JOIN product p ON i.product_id = p.id
+        WHERE o.id = #{id}
+    </select>
+
+    <select id="selectOrderItems" resultType="com.swiftstock.entity.OrderItem">
+        SELECT * FROM order_item WHERE order_id = #{orderId}
+    </select>
+    
+    <delete id="deleteById">
+        DELETE FROM orders WHERE id = #{id}
+    </delete>
+</mapper> 

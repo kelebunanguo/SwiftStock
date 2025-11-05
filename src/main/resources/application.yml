@@ -1,0 +1,88 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /swiftstock
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
+    whitelabel:
+      enabled: false
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**,public/**,resources/**,templates/**
+    livereload:
+      enabled: true
+      port: 35729
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_warehouse?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: false
+  mvc:
+    static-path-pattern: /**
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./frontend/dist/
+      add-mappings: true
+  security:
+    user:
+      name: admin
+      password: admin
+  # 移除 Thymeleaf 配置，改用 Vue.js 前端
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# 文件上传配置
+file:
+  upload:
+    path: /upload/images
+    maxSize: 10485760
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.swiftstock.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.swiftstock: debug
+    org.springframework.security: debug
+    org.springframework.jdbc.core: TRACE
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+  file:
+    name: logs/swiftstock.log
+
+# API Documentation Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  show-actuator: false
+  packages-to-scan: com.swiftstock.controller
+
+  #http://localhost:8088/swiftstock/login
