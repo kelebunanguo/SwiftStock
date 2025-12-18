@@ -12,6 +12,15 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/reports")
+/**
+ * 报表接口（Controller）
+ *
+ * <p>功能：
+ * <ul>
+ *   <li>库存报表：统计库存健康度（正常/低库存/缺货）、总库存价值、明细列表</li>
+ *   <li>销售报表：当前实现包含演示数据（便于前端图表展示）；销售趋势/概览建议使用 /sales 接口</li>
+ * </ul>
+ */
 public class ReportController {
 
     @Autowired
@@ -19,6 +28,13 @@ public class ReportController {
 
     /**
      * 获取库存报表
+     *
+     * <p>实现方式：
+     * <ul>
+     *   <li>读取全部商品</li>
+     *   <li>按库存与安全阈值进行分类统计</li>
+     *   <li>库存价值 = price * stock_quantity</li>
+     * </ul>
      */
     @GetMapping("/stock")
     public ResponseEntity<Map<String, Object>> getStockReport(
@@ -50,12 +66,12 @@ public class ReportController {
                 .count();
             stats.put("outOfStock", outOfStock);
             
-            // 计算库存价值
+            // 计算库存价值（总价值 = Σ(单价 * 库存数量)）
             BigDecimal totalValue = products.stream()
                 .map(p -> p.getPrice().multiply(BigDecimal.valueOf(p.getStockQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
             
-            // 为每个商品添加库存价值
+            // 为每个商品添加库存价值（前端明细表/报表显示）
             products.forEach(p -> {
                 BigDecimal stockValue = p.getPrice().multiply(BigDecimal.valueOf(p.getStockQuantity()));
                 p.setStockValue(stockValue);
@@ -79,6 +95,9 @@ public class ReportController {
 
     /**
      * 获取销售报表
+     *
+     * <p>说明：该接口目前为“演示数据”，便于前端 ECharts 展示。
+     * 真实销售统计建议基于订单表（PAID/COMPLETED）按时间范围聚合计算。
      */
     @GetMapping("/sales")
     public ResponseEntity<Map<String, Object>> getSalesReport(

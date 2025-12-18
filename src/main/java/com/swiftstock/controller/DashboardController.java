@@ -19,6 +19,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/dashboard")
+/**
+ * 仪表盘接口（Controller）
+ *
+ * <p>用途：为首页看板提供汇总数据（商品数、订单数、库存总量、预警数量等）。
+ * <p>特点：以“聚合统计”为主，不提供复杂写操作。
+ */
 public class DashboardController {
 
     @Autowired
@@ -32,13 +38,21 @@ public class DashboardController {
 
     /**
      * 获取仪表盘统计数据
+     *
+     * <p>统计口径：
+     * <ul>
+     *   <li>totalProducts：商品总数</li>
+     *   <li>totalOrders：订单总数</li>
+     *   <li>totalInventory：所有商品库存数量求和</li>
+     *   <li>lowStockProducts/outOfStockProducts：来自库存预警服务</li>
+     * </ul>
      */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getDashboardStats() {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            // 获取所有商品和订单（不分页）
+            // 获取所有商品和订单（不分页，适用于演示数据规模）
             List<Product> allProducts = productService.findAll();
             List<Order> allOrders = orderService.findAll();
             
@@ -66,6 +80,8 @@ public class DashboardController {
     
     /**
      * 获取最近订单
+     *
+     * <p>按创建时间倒序取前 5 条，用于首页“最近订单”模块展示。
      */
     @GetMapping("/recent-orders")
     public ResponseEntity<Map<String, Object>> getRecentOrders() {

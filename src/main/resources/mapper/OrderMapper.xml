@@ -184,4 +184,11 @@
     <delete id="deleteById">
         DELETE FROM orders WHERE id = #{id}
     </delete>
+    
+    <!-- 查询指定前缀的最大订单号 -->
+    <select id="selectMaxOrderNoByPrefix" resultType="string">
+        SELECT MAX(order_no)
+        FROM orders
+        WHERE order_no LIKE CONCAT(#{prefix}, '%')
+    </select>
 </mapper> 

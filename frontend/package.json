@@ -1,7 +1,7 @@
 {
   "name": "ecommerce-warehouse-frontend",
   "version": "1.0.0",
-  "description": "电商仓库管理系统前端",
+  "description": "SwiftStock电商仓库管理系统前端",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

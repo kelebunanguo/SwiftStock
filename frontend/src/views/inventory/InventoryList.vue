@@ -67,6 +67,7 @@
 
     <!-- 库存表格 -->
     <div class="table-container">
+
       <el-table
         :data="inventoryList"
         v-loading="loading"
@@ -74,6 +75,11 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
+        <el-table-column label="序号" width="70">
+          <template #default="scope">
+            {{ (pagination.page - 1) * pagination.size + scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="商品名称" min-width="150" />
         <el-table-column prop="code" label="商品编码" width="120" />
         <el-table-column label="分类" width="150">
@@ -89,7 +95,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="minStockLevel" label="最低库存" width="100" />
-        <el-table-column prop="supplier" label="供应商" width="120" />
+        <el-table-column prop="supplier" label="供应商" width="200" />
         <el-table-column label="库存状态" width="100">
           <template #default="scope">
             <el-tag :type="getStockStatusType(scope.row)">

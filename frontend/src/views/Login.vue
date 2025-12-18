@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>电商仓库管理系统</h1>
+        <h1>SwiftStock电商仓库管理系统</h1>
       </div>
       
       <el-form

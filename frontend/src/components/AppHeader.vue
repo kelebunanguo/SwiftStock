@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header-left">
-      <h1>电商仓库管理系统</h1>
+      <h1>SwiftStock电商仓库管理系统</h1>
     </div>
     <div class="header-right">
       <el-dropdown @command="handleCommand">

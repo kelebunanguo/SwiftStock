@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="page-header">
       <h2>仪表盘</h2>
-      <p>欢迎使用电商仓库管理系统</p>
+      <p>欢迎使用SwiftStock电商仓库管理系统</p>
     </div>
 
     <!-- 统计卡片 -->

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.OrderStatusHistoryMapper">
+
+    <resultMap id="statusHistoryMap" type="com.swiftstock.entity.OrderStatusHistory">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="fromStatus" column="from_status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
+        <result property="toStatus" column="to_status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
+        <result property="reason" column="reason"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="changedTime" column="changed_time"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_status_history (
+            order_id, from_status, to_status, reason, operator_id, changed_time
+        ) VALUES (
+            #{orderId},
+            #{fromStatus, typeHandler=com.swiftstock.config.OrderStatusTypeHandler},
+            #{toStatus, typeHandler=com.swiftstock.config.OrderStatusTypeHandler},
+            #{reason},
+            #{operatorId},
+            #{changedTime}
+        )
+    </insert>
+
+    <select id="findByOrderId" parameterType="long" resultMap="statusHistoryMap">
+        SELECT *
+        FROM order_status_history
+        WHERE order_id = #{orderId}
+        ORDER BY changed_time ASC, id ASC
+    </select>
+</mapper>
+

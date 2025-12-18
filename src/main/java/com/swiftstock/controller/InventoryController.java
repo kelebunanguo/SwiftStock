@@ -17,6 +17,23 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/inventory")
+/**
+ * 库存管理接口（Controller）
+ *
+ * <p>职责：
+ * <ul>
+ *   <li>库存列表查询（支持条件筛选与分页）</li>
+ *   <li>入库/出库操作（落库库存记录）</li>
+ *   <li>库存操作类型封装（采购/退货/调拨/损耗等映射到入/出库）</li>
+ * </ul>
+ *
+ * <p>说明：库存的最终落库更新由 {@link com.swiftstock.service.InventoryService} 与
+ * {@link com.swiftstock.service.ProductService} 协同完成：
+ * <ul>
+ *   <li>商品表 {@code product.stock_quantity} 保存“当前库存”</li>
+ *   <li>库存记录表 {@code inventory_record} 保存“变动明细”（可追溯）</li>
+ * </ul>
+ */
 public class InventoryController {
     
     private static final Logger logger = LoggerFactory.getLogger(InventoryController.class);
@@ -29,6 +46,15 @@ public class InventoryController {
     
     /**
      * 获取库存列表
+     *
+     * <p>stockStatus 约定：
+     * <ul>
+     *   <li>{@code out}：缺货（stock_quantity == 0）</li>
+     *   <li>{@code low}：低库存（0 < stock_quantity <= min_stock_level）</li>
+     *   <li>{@code normal}：正常库存（stock_quantity > min_stock_level）</li>
+     * </ul>
+     *
+     * <p>分页说明：当前为内存分页（subList），适用于毕业设计演示；生产环境建议数据库分页。
      */
     @GetMapping
     public ResponseEntity<Map<String, Object>> getInventoryList(
@@ -46,13 +72,14 @@ public class InventoryController {
             
             List<Product> products = productService.findAll();
             
-            // 应用搜索过滤
+            // 1) 应用搜索过滤：商品名称模糊匹配
             if (productName != null && !productName.trim().isEmpty()) {
                 products = products.stream()
                     .filter(p -> p.getName().toLowerCase().contains(productName.toLowerCase()))
                     .collect(java.util.stream.Collectors.toList());
             }
             
+            // 2) 分类筛选：按 categoryId 过滤
             if (categoryId != null) {
                 products = products.stream()
                     .filter(p -> p.getCategoryId() != null && p.getCategoryId().equals(categoryId))
@@ -92,7 +119,7 @@ public class InventoryController {
                 logger.info("Found {} products matching the search criteria", products.size());
             }
             
-            // 简单分页处理
+            // 3) 简单分页处理
             int start = (page - 1) * size;
             int end = Math.min(start + size, products.size());
             List<Product> pageProducts = products.subList(start, end);
@@ -116,6 +143,8 @@ public class InventoryController {
 
     /**
      * 获取商品库存记录
+     *
+     * <p>返回结构：{@code {product: 商品信息, records: 库存变动列表}}。
      */
     @GetMapping("/records/{productId}")
     public ResponseEntity<Map<String, Object>> getInventoryRecords(@PathVariable Long productId) {
@@ -159,6 +188,8 @@ public class InventoryController {
 
     /**
      * 商品入库
+     *
+     * <p>业务含义：库存增加 + 写入一条 {@code inventory_record(type=IN)}。
      */
     @PostMapping("/in")
     public ResponseEntity<Map<String, Object>> stockIn(@RequestBody Map<String, Object> request) {
@@ -193,6 +224,9 @@ public class InventoryController {
 
     /**
      * 商品出库
+     *
+     * <p>业务含义：库存减少 + 写入一条 {@code inventory_record(type=OUT)}。
+     * 实际扣减会在 {@code ProductService.updateStock} 中校验“不能扣成负库存”。
      */
     @PostMapping("/out")
     public ResponseEntity<Map<String, Object>> stockOut(@RequestBody Map<String, Object> request) {
@@ -227,6 +261,12 @@ public class InventoryController {
 
     /**
      * 库存操作（支持多种操作类型）
+     *
+     * <p>该接口是“业务动作”到“库存增减”的映射层：
+     * <ul>
+     *   <li>purchase/return/transfer_in => 入库</li>
+     *   <li>sales/transfer_out/damage => 出库</li>
+     * </ul>
      */
     @PostMapping("/operation")
     public ResponseEntity<Map<String, Object>> stockOperation(@RequestBody Map<String, Object> request) {
@@ -280,6 +320,9 @@ public class InventoryController {
 
     /**
      * 批量库存操作
+     *
+     * <p>说明：当前实现为逐个商品处理，遇到单个失败会跳过并继续（返回成功数/总数）。
+     * 因此是“部分成功”的批处理策略，适合演示；如需强一致可改为整体事务回滚。
      */
     @PostMapping("/batch-operation")
     public ResponseEntity<Map<String, Object>> batchStockOperation(@RequestBody Map<String, Object> request) {

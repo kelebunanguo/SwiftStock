@@ -56,10 +56,14 @@
         v-loading="loading"
         style="width: 100%"
       >
-        <el-table-column prop="id" label="ID" width="70" />
+        <el-table-column label="序号" width="70">
+          <template #default="scope">
+            {{ (pagination.page - 1) * pagination.size + scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="商品名称" min-width="140" />
         <el-table-column prop="code" label="商品编码" width="100" />
-        <el-table-column label="分类" width="130">
+        <el-table-column label="分类" width="150">
           <template #default="scope">
             {{ scope.row.category?.fullPath || scope.row.category?.name || '未分类' }}
           </template>

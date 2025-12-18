@@ -12,6 +12,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
+/**
+ * 商品管理接口（Controller）
+ *
+ * <p>业务对象：商品（product），包含价格、库存、安全库存阈值、库位等信息。
+ * <p>设计要点：
+ * <ul>
+ *   <li>商品列表支持条件查询（名称/分类）与分页</li>
+ *   <li>订单创建时通过 {@code /products/available} 只返回“有库存的商品”</li>
+ * </ul>
+ */
 public class ProductController {
 
     @Autowired
@@ -22,6 +32,8 @@ public class ProductController {
 
     /**
      * 获取商品列表
+     *
+     * <p>分页说明：当前为内存分页（subList），适合演示；生产环境建议在 Mapper 层做分页。
      */
     @GetMapping
     public ResponseEntity<Map<String, Object>> getProducts(
@@ -62,6 +74,8 @@ public class ProductController {
 
     /**
      * 获取所有可用商品（用于订单创建）
+     *
+     * <p>可用的定义：库存 > 0。用于避免下单时选择到“缺货商品”。
      */
     @GetMapping("/available")
     public ResponseEntity<Map<String, Object>> getAvailableProducts() {
@@ -110,6 +124,8 @@ public class ProductController {
 
     /**
      * 创建商品
+     *
+     * <p>数据库层存在触发器自动生成商品编码 {@code product.code}（见 SQL 脚本）。
      */
     @PostMapping
     public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Product product) {
@@ -157,6 +173,8 @@ public class ProductController {
 
     /**
      * 删除商品
+     *
+     * <p>注意：商品如果被订单项引用，数据库外键约束可能会阻止删除（取决于约束配置）。
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
@@ -176,6 +194,8 @@ public class ProductController {
 
     /**
      * 获取商品分类列表
+     *
+     * <p>说明：系统同时提供 {@code /categories} 独立分类接口；此处是商品模块下的便捷入口。
      */
     @GetMapping("/categories")
     public ResponseEntity<Map<String, Object>> getCategories() {

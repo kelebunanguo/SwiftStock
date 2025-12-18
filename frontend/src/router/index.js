@@ -87,7 +87,16 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫
+/**
+ * 路由守卫（前端鉴权）
+ *
+ * 规则：
+ * - 路由 meta.requiresAuth=true 时必须存在 token，否则跳转 /login
+ * - 已登录状态访问 /login 会自动跳到 /dashboard
+ *
+ * 说明：这里的 token 有效性校验为“简化版本”（仅判断非空/非 null/非 undefined）。
+ * 实际生产应调用后端校验 token 或解析 JWT 过期时间。
+ */
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   

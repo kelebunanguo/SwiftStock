@@ -1,6 +1,14 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
+/**
+ * 前端 API 访问层（Axios 封装）
+ *
+ * 设计要点：
+ * - baseURL 统一加上后端 context-path：/swiftstock
+ * - 请求拦截器：自动附带 token（演示版 token）
+ * - 响应拦截器：统一返回 response.data，并对常见 HTTP 错误做提示与跳转
+ */
 // 创建 axios 实例
 const api = axios.create({
   baseURL: '/swiftstock',
@@ -10,7 +18,7 @@ const api = axios.create({
   }
 })
 
-// 请求拦截器
+// 请求拦截器：将本地 token 写入 Authorization 头，便于后端鉴权（当前后端为演示放行）
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')
@@ -24,7 +32,9 @@ api.interceptors.request.use(
   }
 )
 
-// 响应拦截器
+// 响应拦截器：
+// 1) 统一返回 response.data（后端返回结构一般为 {success, data, message}）
+// 2) 对 HTTP 错误码进行统一提示，401 时清 token 并跳转登录页
 api.interceptors.response.use(
   response => {
     return response.data

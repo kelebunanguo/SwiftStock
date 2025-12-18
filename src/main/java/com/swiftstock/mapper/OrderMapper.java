@@ -19,4 +19,11 @@ public interface OrderMapper {
     List<OrderItem> findItemsByOrderId(Long orderId);
     int insertItem(OrderItem item);
     int update(Order order);
+    
+    /**
+     * 查询指定前缀的最大订单号
+     * @param prefix 订单号前缀（如 "ORD20251218"）
+     * @return 最大订单号，如果没有则返回null
+     */
+    String selectMaxOrderNoByPrefix(@Param("prefix") String prefix);
 } 

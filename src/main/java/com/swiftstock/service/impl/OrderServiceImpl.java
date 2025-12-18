@@ -4,9 +4,11 @@ import com.swiftstock.dto.OrderCreateDTO;
 import com.swiftstock.entity.Order;
 import com.swiftstock.entity.OrderItem;
 import com.swiftstock.entity.OrderStatus;
+import com.swiftstock.entity.OrderStatusHistory;
 import com.swiftstock.entity.Product;
 import com.swiftstock.mapper.OrderMapper;
 import com.swiftstock.mapper.OrderItemMapper;
+import com.swiftstock.mapper.OrderStatusHistoryMapper;
 import com.swiftstock.service.OrderService;
 import com.swiftstock.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +20,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
+/**
+ * 订单业务实现（Service）
+ *
+ * <p>核心点：
+ * <ul>
+ *   <li>订单创建：写入订单与订单项，并计算总金额</li>
+ *   <li>订单状态机：通过 {@link com.swiftstock.entity.OrderStatus#canTransitionTo(OrderStatus)} 校验合法流转</li>
+ *   <li>库存一致性：状态进入/退出“已付款”时触发库存扣减/恢复（避免超卖/少卖）</li>
+ *   <li>事务控制：关键写操作使用 {@code @Transactional} 保证订单与库存变更原子性</li>
+ * </ul>
+ */
 public class OrderServiceImpl implements OrderService {
 
-    private static final AtomicInteger ORDER_SEQUENCE = new AtomicInteger(1);
     private static final DateTimeFormatter ORDER_NO_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     @Autowired
@@ -37,10 +47,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private OrderStatusHistoryMapper orderStatusHistoryMapper;
+
     @Override
     @Transactional
     public Order createOrder(OrderCreateDTO orderDTO) {
-        // 1. 创建订单
+        // 1) 创建订单主表（orders）
         Order order = new Order();
         // 使用前端传递的订单编号，如果没有则自动生成
         if (orderDTO.getOrderNo() != null && !orderDTO.getOrderNo().isEmpty()) {
@@ -59,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setCreatedTime(LocalDateTime.now());
         
-        // 2. 处理订单项
+        // 2) 处理订单项（order_item）并累计总金额
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
         
@@ -80,27 +93,58 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(orderItems);
         order.setTotalAmount(totalAmount);
         
-        // 3. 保存订单
+        // 3) 保存订单与订单项（在同一事务内）
         orderMapper.insert(order);
         for (OrderItem item : orderItems) {
             item.setOrderId(order.getId());
             orderItemMapper.insert(item);
             
-            // 4. 更新库存（只有在订单状态为PAID时才扣减库存）
+            // 4) 更新库存（只有在订单状态为 PAID 时才扣减库存）
+            //    解释：UNPAID/待付款不锁库存；进入 PAID 才认为“已收款，需要备货”，因此扣减库存。
             if (order.getStatus() == OrderStatus.PAID) {
                 productService.updateStock(item.getProductId(), -item.getQuantity());
                 log.info("订单{}状态为已付款，自动扣减商品{}库存{}件", order.getOrderNo(), item.getProductName(), item.getQuantity());
             }
         }
 
+        // 5) 记录初始状态历史（fromStatus 为空，toStatus 为初始状态）
+        logStatusHistory(null, order.getStatus(), "订单创建", order);
+
         return order;
     }
 
+    /**
+     * 生成订单编号
+     * 格式：ORD + yyyyMMdd + 4位序号（如 ORD202512180001）
+     * 
+     * <p>逻辑：查询当天最大订单号，提取序号部分+1，确保每天从0001开始
+     */
     private String generateOrderNo() {
         LocalDateTime now = LocalDateTime.now();
         String datePart = now.format(ORDER_NO_DATE_FORMATTER);
-        String sequencePart = String.format("%04d", ORDER_SEQUENCE.getAndIncrement());
-        return "ORD" + datePart + sequencePart;
+        String prefix = "ORD" + datePart;
+        
+        // 从数据库查询今天的最大订单号
+        String maxOrderNo = orderMapper.selectMaxOrderNoByPrefix(prefix);
+        
+        int nextSequence = 1; // 默认从1开始
+        
+        if (maxOrderNo != null && maxOrderNo.length() >= prefix.length() + 4) {
+            try {
+                // 提取序号部分（最后4位）
+                String seqStr = maxOrderNo.substring(prefix.length());
+                int currentSeq = Integer.parseInt(seqStr);
+                nextSequence = currentSeq + 1;
+            } catch (Exception e) {
+                // 如果解析失败，从1开始
+                log.warn("解析订单号失败：{}，将从0001开始", maxOrderNo, e);
+            }
+        }
+        
+        // 生成新的序号（固定4位，不足补0）
+        String sequencePart = String.format("%04d", nextSequence);
+        
+        return prefix + sequencePart;
     }
 
     @Override
@@ -148,16 +192,16 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus oldStatus = order.getStatus();
         OrderStatus newStatus = OrderStatus.valueOf(status);
         
-        // 检查状态流转是否合法
+        // 1) 检查状态流转是否合法（状态机约束）
         if (!oldStatus.canTransitionTo(newStatus)) {
             throw new RuntimeException(String.format("订单状态不能从%s流转到%s", 
                 oldStatus.getDescription(), newStatus.getDescription()));
         }
         
-        // 业务逻辑验证
+        // 2) 业务逻辑验证（库存/发货/完成/取消/退款等前置条件）
         validateStatusTransition(order, oldStatus, newStatus);
         
-        // 处理状态变更时的库存操作
+        // 3) 处理状态变更时的库存操作（扣减/恢复）
         if (oldStatus != newStatus) {
             handleStockOperationOnStatusChange(order, oldStatus, newStatus);
         }
@@ -165,6 +209,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(newStatus);
         order.setUpdatedTime(LocalDateTime.now());
         orderMapper.updateStatus(order);
+
+        // 4) 记录状态历史
+        logStatusHistory(oldStatus, newStatus, "状态更新", order);
         
         log.info("订单{}状态从{}变更为{}", order.getOrderNo(), oldStatus.getDescription(), newStatus.getDescription());
     }
@@ -173,14 +220,15 @@ public class OrderServiceImpl implements OrderService {
      * 处理订单状态变更时的库存操作
      */
     private void handleStockOperationOnStatusChange(Order order, OrderStatus oldStatus, OrderStatus newStatus) {
-        // 如果新状态是"已付款"，需要扣减库存
+        // 场景 A：进入“已付款” => 认为订单已生效，需要从可售库存中扣减
         if (newStatus == OrderStatus.PAID && oldStatus != OrderStatus.PAID) {
             for (OrderItem item : order.getItems()) {
                 productService.updateStock(item.getProductId(), -item.getQuantity());
                 log.info("订单{}状态变更为已付款，自动扣减商品{}库存{}件", order.getOrderNo(), item.getProductName(), item.getQuantity());
             }
         }
-        // 如果从"已付款"变更为其他状态（非已完成），需要恢复库存
+        // 场景 B：从“已付款”离开到非“已付款/已完成” => 认为订单失效或回滚，需要恢复库存
+        // 说明：已完成（COMPLETED）表示履约闭环，理论上不应恢复库存。
         else if (oldStatus == OrderStatus.PAID && newStatus != OrderStatus.COMPLETED && newStatus != OrderStatus.PAID) {
             for (OrderItem item : order.getItems()) {
                 productService.updateStock(item.getProductId(), item.getQuantity());
@@ -200,22 +248,26 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus currentStatus = order.getStatus();
         OrderStatus newStatus = OrderStatus.valueOf(targetStatus);
         
-        // 检查状态流转是否合法
+        // 1) 状态机校验：是否允许从当前状态流转到目标状态
         if (!currentStatus.canTransitionTo(newStatus)) {
             throw new RuntimeException(String.format("订单状态不能从%s流转到%s", 
                 currentStatus.getDescription(), newStatus.getDescription()));
         }
         
-        // 业务逻辑验证
+        // 2) 业务校验：库存/付款/发货/完成/取消/退款等规则
         validateStatusTransition(order, currentStatus, newStatus);
         
-        // 处理状态流转
+        // 3) 状态流转触发的库存扣减/恢复
         handleStockOperationOnStatusChange(order, currentStatus, newStatus);
         
         order.setStatus(newStatus);
         order.setUpdatedTime(LocalDateTime.now());
         orderMapper.updateStatus(order);
+
+        // 4) 记录状态历史
+        logStatusHistory(currentStatus, newStatus, reason, order);
         
+        // reason 为“操作原因/备注”，用于审计与排查（当前主要体现在日志中）
         log.info("订单{}状态流转：{} -> {}，原因：{}", order.getOrderNo(), 
                 currentStatus.getDescription(), newStatus.getDescription(), reason);
     }
@@ -224,27 +276,27 @@ public class OrderServiceImpl implements OrderService {
      * 验证状态流转的业务逻辑
      */
     private void validateStatusTransition(Order order, OrderStatus currentStatus, OrderStatus newStatus) {
-        // 检查配货中状态的库存要求
+        // 配货中（PREPARING）前做库存校验：避免出现“进入配货才发现缺货”
         if (newStatus.requiresStockValidation()) {
             validateStockForPreparing(order);
         }
         
-        // 检查发货状态的业务要求
+        // 发货（SHIPPED）前置条件校验
         if (newStatus == OrderStatus.SHIPPED) {
             validateForShipping(order);
         }
         
-        // 检查完成状态的业务要求
+        // 完成（COMPLETED）前置条件校验
         if (newStatus == OrderStatus.COMPLETED) {
             validateForCompletion(order);
         }
         
-        // 检查取消状态的业务要求
+        // 取消（CANCELLED）前置条件校验
         if (newStatus == OrderStatus.CANCELLED) {
             validateForCancellation(order, currentStatus);
         }
         
-        // 检查退款状态的业务要求
+        // 退款（REFUNDED）前置条件校验
         if (newStatus == OrderStatus.REFUNDED) {
             validateForRefund(order, currentStatus);
         }
@@ -358,6 +410,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.CANCELLED);
         order.setUpdatedTime(LocalDateTime.now());
         orderMapper.updateStatus(order);
+
+        // 记录状态历史
+        logStatusHistory(currentStatus, OrderStatus.CANCELLED, reason, order);
         
         log.info("订单{}已取消，原因：{}", order.getOrderNo(), reason);
     }
@@ -389,91 +444,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Map<String, Object>> getStatusHistory(Long id) {
+    public List<OrderStatusHistory> getStatusHistory(Long id) {
         Order order = findById(id);
         if (order == null) {
             throw new RuntimeException("订单不存在：" + id);
         }
-        
-        List<Map<String, Object>> history = new ArrayList<>();
-        
-        // 创建时间
-        Map<String, Object> createRecord = new java.util.HashMap<>();
-        createRecord.put("status", OrderStatus.UNPAID.name());
-        createRecord.put("statusText", OrderStatus.UNPAID.getDescription());
-        createRecord.put("time", order.getCreatedTime());
-        createRecord.put("reason", "订单创建");
-        history.add(createRecord);
-        
-        // 根据当前状态生成完整的状态流转历史
-        OrderStatus currentStatus = order.getStatus();
-        LocalDateTime currentTime = order.getUpdatedTime() != null ? order.getUpdatedTime() : order.getCreatedTime();
-        
-        // 获取状态流转顺序
-        OrderStatus[] statusFlow = OrderStatus.getStatusFlow();
-        
-        // 找到当前状态在流转中的位置
-        int currentIndex = -1;
-        for (int i = 0; i < statusFlow.length; i++) {
-            if (statusFlow[i] == currentStatus) {
-                currentIndex = i;
-                break;
-            }
-        }
-        
-        // 如果当前状态在正常流转中，添加所有中间状态
-        if (currentIndex > 0) {
-            for (int i = 1; i <= currentIndex; i++) {
-                OrderStatus status = statusFlow[i];
-                Map<String, Object> statusRecord = new java.util.HashMap<>();
-                statusRecord.put("status", status.name());
-                statusRecord.put("statusText", status.getDescription());
-                
-                // 根据状态设置原因
-                String reason = getStatusReason(status);
-                statusRecord.put("reason", reason);
-                
-                // 设置时间（使用当前时间，实际项目中应该有具体的时间记录）
-                statusRecord.put("time", currentTime);
-                
-                history.add(statusRecord);
-            }
-        }
-        
-        // 处理特殊状态（取消、退款）
-        if (currentStatus == OrderStatus.CANCELLED || currentStatus == OrderStatus.REFUNDED) {
-            Map<String, Object> specialRecord = new java.util.HashMap<>();
-            specialRecord.put("status", currentStatus.name());
-            specialRecord.put("statusText", currentStatus.getDescription());
-            specialRecord.put("reason", getStatusReason(currentStatus));
-            specialRecord.put("time", currentTime);
-            history.add(specialRecord);
-        }
-        
-        return history;
+        return orderStatusHistoryMapper.findByOrderId(id);
     }
-    
+
     /**
-     * 根据状态获取原因描述
+     * 记录订单状态变更历史
      */
-    private String getStatusReason(OrderStatus status) {
-        switch (status) {
-            case PAID:
-                return "客户付款";
-            case PREPARING:
-                return "开始配货";
-            case SHIPPED:
-                return "商品已发货";
-            case DELIVERED:
-                return "商品已送达";
-            case COMPLETED:
-                return "订单完成";
-            case CANCELLED:
-                return "订单取消";
-            case REFUNDED:
-                return "申请退款";
-            default:
-                return "状态更新";
-        }
+    private void logStatusHistory(OrderStatus fromStatus, OrderStatus toStatus, String reason, Order order) {
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setOrderId(order.getId());
+        history.setFromStatus(fromStatus);
+        history.setToStatus(toStatus);
+        history.setReason(reason);
+        history.setOperatorId(order.getOperatorId());
+        history.setChangedTime(LocalDateTime.now());
+        orderStatusHistoryMapper.insert(history);
     }
 } 

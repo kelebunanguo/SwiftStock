@@ -13,6 +13,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/sales")
+/**
+ * 销售统计接口（Controller）
+ *
+ * <p>面向“经营分析”的数据接口，供前端折线图/概览卡片使用。
+ * <p>数据来源：基于订单（PAID/COMPLETED）聚合计算（见 {@code SalesServiceImpl}）。
+ */
 public class SalesController {
 
     @Autowired
@@ -20,6 +26,13 @@ public class SalesController {
 
     /**
      * 获取销售趋势数据
+     *
+     * <p>period 约定：
+     * <ul>
+     *   <li>7d：近 7 天</li>
+     *   <li>30d：近 30 天</li>
+     *   <li>90d：近 90 天</li>
+     * </ul>
      */
     @GetMapping("/trend")
     public ResponseEntity<Map<String, Object>> getSalesTrend(
@@ -44,6 +57,8 @@ public class SalesController {
 
     /**
      * 获取销售统计概览
+     *
+     * <p>典型指标：总销售额、今日销售额、本月销售额、订单数量等。
      */
     @GetMapping("/overview")
     public ResponseEntity<Map<String, Object>> getSalesOverview() {

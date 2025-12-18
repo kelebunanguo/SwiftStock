@@ -39,9 +39,18 @@
             <el-form-item label="商品编码" prop="code">
               <el-input
                 v-model="form.code"
-                placeholder="请输入商品编码"
+                :placeholder="isEdit ? '' : '系统自动生成'"
+                :disabled="!isEdit"
+                :readonly="isEdit"
                 maxlength="50"
-              />
+              >
+                <template #append v-if="!isEdit">
+                  <el-icon><InfoFilled /></el-icon>
+                </template>
+              </el-input>
+              <div v-if="!isEdit" style="color: #909399; font-size: 12px; margin-top: 4px;">
+                商品编码将在创建时自动生成（格式：P00001）
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -155,7 +164,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowLeft, Plus } from '@element-plus/icons-vue'
+import { ArrowLeft, Plus, InfoFilled } from '@element-plus/icons-vue'
 import { productAPI, categoryAPI } from '@/api'
 import AppLayout from '@/components/AppLayout.vue'
 
@@ -164,6 +173,7 @@ export default {
   components: {
     ArrowLeft,
     Plus,
+    InfoFilled,
     AppLayout
   },
   setup() {
@@ -214,10 +224,6 @@ export default {
       name: [
         { required: true, message: '请输入商品名称', trigger: 'blur' },
         { min: 2, max: 100, message: '长度在 2 到 100 个字符', trigger: 'blur' }
-      ],
-      code: [
-        { required: true, message: '请输入商品编码', trigger: 'blur' },
-        { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
       ],
       categoryId: [
         { required: true, message: '请选择商品分类', trigger: 'change' }
@@ -277,7 +283,10 @@ export default {
           await productAPI.update(form.id, form)
           ElMessage.success('商品更新成功')
         } else {
-          await productAPI.create(form)
+          // 新增时，不传递code字段，由数据库自动生成
+          const submitData = { ...form }
+          delete submitData.code
+          await productAPI.create(submitData)
           ElMessage.success('商品创建成功')
         }
         

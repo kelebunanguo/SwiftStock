@@ -69,7 +69,12 @@
         v-loading="loading"
         style="width: 100%"
       >
-        <el-table-column prop="orderNo" label="订单号" width="150" />
+        <el-table-column label="序号" width="70">
+          <template #default="scope">
+            {{ (pagination.page - 1) * pagination.size + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderNo" label="订单号" width="200" />
         <el-table-column prop="customerName" label="客户姓名" width="120" />
         <el-table-column prop="customerPhone" label="联系电话" width="130" />
         <el-table-column prop="totalAmount" label="订单金额" width="120">

@@ -14,6 +14,14 @@ import java.util.Map;
 
 /**
  * 库存预警控制器
+ *
+ * <p>预警规则（与 Service 保持一致）：
+ * <ul>
+ *   <li>低库存：0 < stock_quantity <= min_stock_level</li>
+ *   <li>缺货：stock_quantity == 0</li>
+ * </ul>
+ *
+ * <p>用途：为前端预警组件/仪表盘提供数据支撑。
  */
 @RestController
 @RequestMapping("/stock-alert")
@@ -26,6 +34,8 @@ public class StockAlertController {
     
     /**
      * 获取库存预警信息
+     *
+     * <p>返回：低库存商品列表 + 低库存数量 + 缺货数量 + 总预警数量。
      */
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> getStockAlertInfo() {
@@ -59,6 +69,8 @@ public class StockAlertController {
     
     /**
      * 检查指定商品的库存预警状态
+     *
+     * <p>返回 isAlert：是否触发预警（包含低库存与缺货）。
      */
     @GetMapping("/check/{productId}")
     public ResponseEntity<Map<String, Object>> checkProductStockAlert(@PathVariable Long productId) {
@@ -88,6 +100,8 @@ public class StockAlertController {
     
     /**
      * 获取库存预警统计
+     *
+     * <p>用于仪表盘快捷展示：低库存数、缺货数、总预警数。
      */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStockAlertStats() {
