@@ -63,9 +63,14 @@ public class SalesServiceImpl implements SalesService {
                 currentDate = currentDate.plusDays(1);
             }
             
-            // 统计实际销售额
+            // 统计实际销售额（所有已付款的订单状态：PAID及之后的状态都计入销售额）
             for (Order order : orders) {
-                if (order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED) {
+                // 统计所有已付款的订单：PAID、PREPARING、SHIPPED、DELIVERED、COMPLETED
+                if (order.getStatus() == OrderStatus.PAID || 
+                    order.getStatus() == OrderStatus.PREPARING ||
+                    order.getStatus() == OrderStatus.SHIPPED ||
+                    order.getStatus() == OrderStatus.DELIVERED ||
+                    order.getStatus() == OrderStatus.COMPLETED) {
                     LocalDateTime orderTime = order.getCreatedTime();
                     if (orderTime != null) {
                         LocalDate orderDate = orderTime.toLocalDate();
@@ -103,9 +108,13 @@ public class SalesServiceImpl implements SalesService {
         try {
             List<Order> orders = orderMapper.selectAll();
             
-            // 统计总销售额
+            // 统计总销售额（所有已付款的订单）
             BigDecimal totalSales = orders.stream()
-                    .filter(order -> order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED)
+                    .filter(order -> order.getStatus() == OrderStatus.PAID || 
+                                   order.getStatus() == OrderStatus.PREPARING ||
+                                   order.getStatus() == OrderStatus.SHIPPED ||
+                                   order.getStatus() == OrderStatus.DELIVERED ||
+                                   order.getStatus() == OrderStatus.COMPLETED)
                     .map(Order::getTotalAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             
@@ -116,7 +125,11 @@ public class SalesServiceImpl implements SalesService {
                         if (order.getCreatedTime() == null) return false;
                         LocalDate orderDate = order.getCreatedTime().toLocalDate();
                         return orderDate.equals(today) && 
-                               (order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED);
+                               (order.getStatus() == OrderStatus.PAID || 
+                                order.getStatus() == OrderStatus.PREPARING ||
+                                order.getStatus() == OrderStatus.SHIPPED ||
+                                order.getStatus() == OrderStatus.DELIVERED ||
+                                order.getStatus() == OrderStatus.COMPLETED);
                     })
                     .map(Order::getTotalAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -128,14 +141,22 @@ public class SalesServiceImpl implements SalesService {
                         if (order.getCreatedTime() == null) return false;
                         LocalDate orderDate = order.getCreatedTime().toLocalDate();
                         return !orderDate.isBefore(monthStart) && 
-                               (order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED);
+                               (order.getStatus() == OrderStatus.PAID || 
+                                order.getStatus() == OrderStatus.PREPARING ||
+                                order.getStatus() == OrderStatus.SHIPPED ||
+                                order.getStatus() == OrderStatus.DELIVERED ||
+                                order.getStatus() == OrderStatus.COMPLETED);
                     })
                     .map(Order::getTotalAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             
-            // 统计订单数量
+            // 统计订单数量（所有已付款的订单）
             long totalOrders = orders.stream()
-                    .filter(order -> order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED)
+                    .filter(order -> order.getStatus() == OrderStatus.PAID || 
+                                   order.getStatus() == OrderStatus.PREPARING ||
+                                   order.getStatus() == OrderStatus.SHIPPED ||
+                                   order.getStatus() == OrderStatus.DELIVERED ||
+                                   order.getStatus() == OrderStatus.COMPLETED)
                     .count();
             
             long todayOrders = orders.stream()
@@ -143,7 +164,11 @@ public class SalesServiceImpl implements SalesService {
                         if (order.getCreatedTime() == null) return false;
                         LocalDate orderDate = order.getCreatedTime().toLocalDate();
                         return orderDate.equals(today) && 
-                               (order.getStatus() == OrderStatus.PAID || order.getStatus() == OrderStatus.COMPLETED);
+                               (order.getStatus() == OrderStatus.PAID || 
+                                order.getStatus() == OrderStatus.PREPARING ||
+                                order.getStatus() == OrderStatus.SHIPPED ||
+                                order.getStatus() == OrderStatus.DELIVERED ||
+                                order.getStatus() == OrderStatus.COMPLETED);
                     })
                     .count();
             

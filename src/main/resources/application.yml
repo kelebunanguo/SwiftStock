@@ -50,11 +50,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-# 文件上传配置
-file:
-  upload:
-    path: /upload/images
-    maxSize: 10485760
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

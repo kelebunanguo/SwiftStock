@@ -5,19 +5,23 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.4.1</version>
         <relativePath/>
     </parent>
     
     <groupId>com.swiftstock</groupId>
     <artifactId>swiftstock</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>SwiftStock</name>
     <description>Warehouse Management System</description>
     
     <properties>
         <java.version>17</java.version>
-        <springdoc.version>2.5.0</springdoc.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springdoc.version>2.7.0</springdoc.version>
+        <mybatis.version>3.0.4</mybatis.version>
     </properties>
 
     <!-- 配置 Maven 仓库 -->
@@ -51,12 +55,18 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>3.0.3</version>
+            <version>${mybatis.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        
+        <!-- HikariCP (已包含在spring-boot-starter-jdbc中，但显式声明以确保最新版本) -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
         
         <!-- Lombok -->
