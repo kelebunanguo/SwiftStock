@@ -9,14 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="完善功能、添加注释">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="配置修改优化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/MyBatisConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/PasswordEncoderConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/WebConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SalesServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SalesServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce_warehouse.sql" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce_warehouse.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -229,7 +224,7 @@
       <workItem from="1762352441615" duration="475000" />
       <workItem from="1765199133995" duration="301000" />
       <workItem from="1765527283112" duration="1000" />
-      <workItem from="1766047257038" duration="6196000" />
+      <workItem from="1766047257038" duration="8190000" />
     </task>
     <task id="LOCAL-00001" summary="完善功能、添加注释">
       <option name="closed" value="true" />
@@ -239,7 +234,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766052842440</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="配置修改优化">
+      <option name="closed" value="true" />
+      <created>1766057821783</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1766057821783</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,6 +250,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完善功能、添加注释" />
-    <option name="LAST_COMMIT_MESSAGE" value="完善功能、添加注释" />
+    <MESSAGE value="配置修改优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="配置修改优化" />
   </component>
 </project>
