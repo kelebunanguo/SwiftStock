@@ -134,6 +134,8 @@ export const inventoryAPI = {
 export const supplierAPI = {
   // 获取供应商列表（支持分页与筛选：name, contactPerson, page, size）
   getList: (params) => api.get('/suppliers', { params }),
+  // 获取全部供应商
+  getAll: () => api.get('/suppliers/all'),
   // 获取供应商详情
   getById: (id) => api.get(`/suppliers/${id}`),
   // 获取供应商供货记录

@@ -9,13 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改注释">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="新增供应商管理模块">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecommerce_warehouse.sql" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce_warehouse.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppSidebar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppSidebar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/order/OrderList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/order/OrderList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/product/ProductForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/product/ProductForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,7 +232,7 @@
       <workItem from="1766075904151" duration="33000" />
       <workItem from="1766109314371" duration="607000" />
       <workItem from="1766245455263" duration="3868000" />
-      <workItem from="1766280121312" duration="7694000" />
+      <workItem from="1766280121312" duration="9176000" />
     </task>
     <task id="LOCAL-00001" summary="完善功能、添加注释">
       <option name="closed" value="true" />
@@ -298,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766284841053</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="新增供应商管理模块">
+      <option name="closed" value="true" />
+      <created>1766290582767</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1766290582767</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,6 +321,7 @@
     <MESSAGE value="修改数据库脚本" />
     <MESSAGE value="添加Spring Security" />
     <MESSAGE value="修改注释" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改注释" />
+    <MESSAGE value="新增供应商管理模块" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增供应商管理模块" />
   </component>
 </project>

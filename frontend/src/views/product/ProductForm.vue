@@ -117,11 +117,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="供应商" prop="supplier">
-              <el-input
+              <el-select
                 v-model="form.supplier"
-                placeholder="请输入供应商"
-                maxlength="100"
-              />
+                placeholder="请选择供应商"
+                clearable
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="s in suppliers"
+                  :key="s.id"
+                  :label="s.name"
+                  :value="s.name"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -165,7 +173,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft, Plus, InfoFilled } from '@element-plus/icons-vue'
-import { productAPI, categoryAPI } from '@/api'
+import { productAPI, categoryAPI, supplierAPI } from '@/api'
 import AppLayout from '@/components/AppLayout.vue'
 
 export default {
@@ -252,6 +260,25 @@ export default {
         ElMessage.error('加载分类列表失败')
       }
     }
+
+    // 供应商列表
+    const suppliers = ref([])
+    const loadSuppliers = async () => {
+      try {
+        const res = await supplierAPI.getAll()
+        // 兼容两种后端返回结构：{ success:true, data: [...] } 或 { data: { list: [...] } } 或直接 [...]
+        console.log('supplierAPI.getAll response:', res)
+        suppliers.value = res && res.data ? (Array.isArray(res.data) ? res.data : (res.data.list || [])) : (res || [])
+        // 如果仍为空，尝试兼容旧接口 getList
+        if (!suppliers.value || suppliers.value.length === 0) {
+          const r2 = await supplierAPI.getList({ page: 1, size: 200 })
+          console.log('supplierAPI.getList fallback response:', r2)
+          suppliers.value = r2 && r2.data ? (r2.data.list || r2.data) : (r2 || [])
+        }
+      } catch (e) {
+        console.error('加载供应商失败', e)
+      }
+    }
     
     // 加载商品详情
     const loadProductDetails = async () => {
@@ -318,6 +345,7 @@ export default {
     const loadProduct = async () => {
       await Promise.all([
         loadCategories(),
+        loadSuppliers(),
         loadProductDetails()
       ])
     }
@@ -325,6 +353,7 @@ export default {
     onMounted(() => {
       loadProduct()
     })
+    
     
     return {
       loading,
@@ -341,6 +370,7 @@ export default {
       handleCancel,
       handleBack,
       handleCategoryChange
+      , suppliers
     }
   }
 }

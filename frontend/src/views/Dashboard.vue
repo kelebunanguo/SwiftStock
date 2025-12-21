@@ -36,16 +36,7 @@
           <div class="stat-label">库存总量</div>
         </div>
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon low-stock">
-          <el-icon><Warning /></el-icon>
-        </div>
-        <div class="stat-content">
-          <div class="stat-number">{{ stats.lowStockProducts }}</div>
-          <div class="stat-label">库存不足</div>
-        </div>
-      </div>
+
     </div>
 
     <!-- 图表区域 -->
@@ -89,7 +80,7 @@
           </el-button>
         </div>
         <el-table :data="recentOrders" style="width: 100%">
-          <el-table-column prop="orderNo" label="订单号" width="150" />
+          <el-table-column prop="orderNo" label="订单号" />
           <el-table-column prop="customerName" label="客户姓名" width="120" />
           <el-table-column prop="totalAmount" label="订单金额" width="120">
             <template #default="scope">

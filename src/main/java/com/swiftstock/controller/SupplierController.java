@@ -52,6 +52,18 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 返回全部供应商
+     */
+    @GetMapping("/all")
+    public ResponseEntity<Map<String, Object>> listAll() {
+        Map<String, Object> resp = new HashMap<>();
+        java.util.List<Supplier> list = supplierService.findAll();
+        resp.put("success", true);
+        resp.put("data", list);
+        return ResponseEntity.ok(resp);
+    }
+
     @GetMapping("/{id}/records")
     public ResponseEntity<Map<String, Object>> getRecords(@PathVariable Long id) {
         Map<String, Object> resp = new HashMap<>();
