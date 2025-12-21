@@ -46,9 +46,7 @@
         </el-form-item>
       </el-form>
       
-      <div class="login-footer">
-        <p>默认账号：admin / admin</p>
-      </div>
+      <!-- 登录页不再展示或依赖默认演示账号，请使用真实账号或由管理员创建账号后登录 -->
     </div>
   </div>
 </template>
@@ -67,8 +65,8 @@ export default {
     const loading = ref(false)
     
     const loginForm = reactive({
-      username: 'admin',
-      password: 'admin'
+      username: '',
+      password: ''
     })
     
     const loginRules = {
@@ -91,7 +89,9 @@ export default {
         const response = await authAPI.login(loginForm)
         
         if (response.success) {
-          localStorage.setItem('token', 'mock-token')
+          // 使用后端返回的真实 token，若缺失则回退到 mock-token（兼容老版演示）
+          const token = response.data && response.data.token ? response.data.token : 'mock-token'
+          localStorage.setItem('token', token)
           ElMessage.success('登录成功')
           router.push('/dashboard')
         } else {
