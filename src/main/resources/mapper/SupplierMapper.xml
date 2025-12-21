@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.SupplierMapper">
+
+    <resultMap id="supplierMap" type="com.swiftstock.entity.Supplier">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="contactPerson" column="contact_person" />
+        <result property="phone" column="phone" />
+        <result property="email" column="email" />
+        <result property="address" column="address" />
+        <result property="remark" column="remark" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedTime" column="updated_time" />
+    </resultMap>
+
+    <select id="findById" parameterType="long" resultMap="supplierMap">
+        SELECT * FROM supplier WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="supplierMap">
+        SELECT * FROM supplier ORDER BY id DESC
+    </select>
+    
+    <!-- 分页与筛选查询 -->
+    <select id="findPage" resultMap="supplierMap" parameterType="map">
+        SELECT * FROM supplier
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="contactPerson != null and contactPerson != ''">
+                AND contact_person LIKE CONCAT('%', #{contactPerson}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count" resultType="long" parameterType="map">
+        SELECT COUNT(1) FROM supplier
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="contactPerson != null and contactPerson != ''">
+                AND contact_person LIKE CONCAT('%', #{contactPerson}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.swiftstock.entity.Supplier">
+        INSERT INTO supplier (name, contact_person, phone, email, address, remark, created_time, updated_time)
+        VALUES (#{name}, #{contactPerson}, #{phone}, #{email}, #{address}, #{remark}, NOW(), NOW())
+    </insert>
+
+    <update id="update" parameterType="com.swiftstock.entity.Supplier">
+        UPDATE supplier
+        SET name = #{name},
+            contact_person = #{contactPerson},
+            phone = #{phone},
+            email = #{email},
+            address = #{address},
+            remark = #{remark},
+            updated_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM supplier WHERE id = #{id}
+    </delete>
+
+</mapper>
+
+

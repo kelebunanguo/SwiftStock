@@ -131,6 +131,21 @@ export const inventoryAPI = {
   batchStockOperation: (data) => api.post('/inventory/batch-operation', data)
 }
 
+export const supplierAPI = {
+  // 获取供应商列表（支持分页与筛选：name, contactPerson, page, size）
+  getList: (params) => api.get('/suppliers', { params }),
+  // 获取供应商详情
+  getById: (id) => api.get(`/suppliers/${id}`),
+  // 获取供应商供货记录
+  getRecords: (id) => api.get(`/suppliers/${id}/records`),
+  // 创建供应商
+  create: (data) => api.post('/suppliers', data),
+  // 更新供应商
+  update: (id, data) => api.put(`/suppliers/${id}`, data),
+  // 删除供应商
+  delete: (id) => api.delete(`/suppliers/${id}`)
+}
+
 export const categoryAPI = {
   // 获取分类列表
   getList: () => api.get('/categories'),

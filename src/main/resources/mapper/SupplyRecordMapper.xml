@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.swiftstock.mapper.SupplyRecordMapper">
+
+    <resultMap id="supplyRecordMap" type="com.swiftstock.entity.SupplyRecord">
+        <id property="id" column="id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="findBySupplierId" resultMap="supplyRecordMap" parameterType="long">
+        SELECT * FROM supply_record WHERE supplier_id = #{supplierId} ORDER BY receive_time DESC, id DESC
+    </select>
+
+</mapper>
+
+

@@ -74,23 +74,23 @@
             {{ (pagination.page - 1) * pagination.size + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="orderNo" label="订单号" width="200" />
-        <el-table-column prop="customerName" label="客户姓名" width="120" />
-        <el-table-column prop="customerPhone" label="联系电话" width="130" />
-        <el-table-column prop="totalAmount" label="订单金额" width="120">
+        <el-table-column prop="orderNo" label="订单号" />
+        <el-table-column prop="customerName" label="客户姓名" />
+        <el-table-column prop="customerPhone" label="联系电话" />
+        <el-table-column prop="totalAmount" label="订单金额">
           <template #default="scope">
             ¥{{ scope.row.totalAmount }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" label="状态">
           <template #default="scope">
             <el-tag :type="getStatusType(scope.row.status)">
               {{ getStatusText(scope.row.status) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createdTime" label="创建时间" width="160" />
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column prop="createdTime" label="创建时间" />
+        <el-table-column label="操作">
           <template #default="scope">
             <div class="action-buttons">
               <el-button

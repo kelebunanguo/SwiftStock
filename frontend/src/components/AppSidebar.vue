@@ -24,6 +24,10 @@
         <el-icon><Grid /></el-icon>
         <span>库存管理</span>
       </el-menu-item>
+      <el-menu-item index="/suppliers">
+        <el-icon><Box /></el-icon>
+        <span>供应商管理</span>
+      </el-menu-item>
       <el-menu-item index="/reports/stock">
         <el-icon><TrendCharts /></el-icon>
         <span>报表统计</span>

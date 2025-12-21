@@ -9,6 +9,9 @@ import OrderView from '../views/order/OrderView.vue'
 import InventoryList from '../views/inventory/InventoryList.vue'
 import InventoryRecords from '../views/inventory/InventoryRecords.vue'
 import ReportStock from '../views/report/ReportStock.vue'
+import SupplierList from '../views/supplier/SupplierList.vue'
+import SupplierForm from '../views/supplier/SupplierForm.vue'
+import SupplierView from '../views/supplier/SupplierView.vue'
 
 const routes = [
   {
@@ -78,6 +81,31 @@ const routes = [
     path: '/reports/stock',
     name: 'ReportStock',
     component: ReportStock,
+    meta: { requiresAuth: true }
+  }
+  ,
+  {
+    path: '/suppliers',
+    name: 'SupplierList',
+    component: SupplierList,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/suppliers/add',
+    name: 'SupplierAdd',
+    component: SupplierForm,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/suppliers/edit/:id',
+    name: 'SupplierEdit',
+    component: SupplierForm,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/suppliers/view/:id',
+    name: 'SupplierView',
+    component: SupplierView,
     meta: { requiresAuth: true }
   }
 ]
