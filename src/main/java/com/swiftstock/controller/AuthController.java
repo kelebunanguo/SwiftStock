@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 /**
  * 认证接口（Controller）
  *
+ * <p>说明：
  * <ul>
- *   <li>使用固定账号 {@code admin/admin} 校验</li>
- *   <li>返回 {@code mock-jwt-token} 作为前端存储的 token</li>
+ *   <li>使用数据库中的管理员账号进行认证（Admin 表）</li>
+ *   <li>返回经 JWT 签名的访问令牌（请在生产环境中通过配置/环境变量管理密钥）</li>
  * </ul>
- *
  */
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -129,11 +129,11 @@ public class AuthController {
             data.put("name", admin.getName());
             data.put("role", "ADMIN");
         } else {
-            // Fallback：若未认证则返回默认 admin（兼容老版）
-            Admin admin = adminMapper.findById(1L);
-            data.put("username", admin != null ? admin.getUsername() : "admin");
-            data.put("name", admin != null ? admin.getName() : "系统管理员");
-            data.put("role", "ADMIN");
+            // 若未认证则返回未认证提示（不再依赖内置/演示账号）
+            response.put("success", false);
+            response.put("message", "用户未认证");
+            response.put("data", data);
+            return ResponseEntity.status(401).body(response);
         }
 
         response.put("success", true);

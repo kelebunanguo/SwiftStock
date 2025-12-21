@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus'
  *
  * 设计要点：
  * - baseURL 统一加上后端 context-path：/swiftstock
- * - 请求拦截器：自动附带 token（演示版 token）
+ * - 请求拦截器：自动附带 token（JWT）
  * - 响应拦截器：统一返回 response.data，并对常见 HTTP 错误做提示与跳转
  */
 // 创建 axios 实例
@@ -18,7 +18,7 @@ const api = axios.create({
   }
 })
 
-// 请求拦截器：将本地 token 写入 Authorization 头，便于后端鉴权（当前后端为演示放行）
+// 请求拦截器：将本地 token 写入 Authorization 头，便于后端基于 JWT 鉴权
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')

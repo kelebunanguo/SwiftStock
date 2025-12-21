@@ -85,12 +85,15 @@ export default {
         await loginFormRef.value.validate()
         loading.value = true
         
-        // 模拟登录请求
+        // 发起登录请求（后端应返回 data.token）
         const response = await authAPI.login(loginForm)
-        
+
         if (response.success) {
-          // 使用后端返回的真实 token，若缺失则回退到 mock-token（兼容老版演示）
-          const token = response.data && response.data.token ? response.data.token : 'mock-token'
+          const token = response.data && response.data.token
+          if (!token) {
+            ElMessage.error('服务器未返回 token，请检查后端配置')
+            return
+          }
           localStorage.setItem('token', token)
           ElMessage.success('登录成功')
           router.push('/dashboard')

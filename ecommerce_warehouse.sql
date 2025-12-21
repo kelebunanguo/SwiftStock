@@ -37,7 +37,7 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKyVhQy2S9S4Dq/9x5X8K8K8K8K8', '系统管理员', 'admin@ecommerce-warehouse.com', '13800138000', '2025-10-06 02:00:16', '2025-10-06 02:00:16');
+-- 默认管理员记录已移除；请使用迁移脚本或手动 SQL 创建管理员账户以保证安全
 
 -- ----------------------------
 -- Table structure for category

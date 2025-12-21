@@ -39,10 +39,6 @@ spring:
     resources:
       static-locations: classpath:/static/,file:./frontend/dist/
       add-mappings: true
-  security:
-    user:
-      name: admin
-      password: admin
   # 移除 Thymeleaf 配置，改用 Vue.js 前端
   servlet:
     multipart:
@@ -67,6 +63,11 @@ logging:
     org.springframework.jdbc.core.StatementCreatorUtils: TRACE
   file:
     name: logs/swiftstock.log
+
+# JWT 配置：建议在生产环境通过环境变量或配置中心覆盖这些值
+jwt:
+  secret: ${JWT_SECRET:ChangeThisSecretKey}
+  expiration-millis: 86400000
 
 # API Documentation Configuration
 springdoc:
