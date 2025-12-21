@@ -12,6 +12,10 @@
         <el-icon><House /></el-icon>
         <span>仪表盘</span>
       </el-menu-item>
+      <el-menu-item index="/ai/forecast">
+        <el-icon><TrendCharts /></el-icon>
+        <span>AI智能补货</span>
+      </el-menu-item>
       <el-menu-item index="/products">
         <el-icon><Box /></el-icon>
         <span>商品管理</span>

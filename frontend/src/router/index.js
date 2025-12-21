@@ -12,6 +12,7 @@ import ReportStock from '../views/report/ReportStock.vue'
 import SupplierList from '../views/supplier/SupplierList.vue'
 import SupplierForm from '../views/supplier/SupplierForm.vue'
 import SupplierView from '../views/supplier/SupplierView.vue'
+import AiForecast from '../views/ai/AiForecast.vue'
 
 const routes = [
   {
@@ -106,6 +107,13 @@ const routes = [
     path: '/suppliers/view/:id',
     name: 'SupplierView',
     component: SupplierView,
+    meta: { requiresAuth: true }
+  }
+  ,
+  {
+    path: '/ai/forecast',
+    name: 'AiForecast',
+    component: AiForecast,
     meta: { requiresAuth: true }
   }
 ]

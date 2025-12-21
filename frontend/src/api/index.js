@@ -40,6 +40,12 @@ api.interceptors.response.use(
     return response.data
   },
   error => {
+    // If caller passed { silent: true } in request config, skip global error messages
+    const isSilent = error.config && error.config.silent
+    if (isSilent) {
+      return Promise.reject(error)
+    }
+
     if (error.response) {
       const { status, data } = error.response
       switch (status) {
@@ -183,3 +189,12 @@ export const stockAlertAPI = {
 }
 
 export default api
+
+// AI API
+export const aiAPI = {
+  // count of products need reorder
+  // accepts optional axios config as second argument, e.g. { silent: true }
+  getReplenishmentCount: (params, config = {}) => api.get('/api/ai/forecast/recommend-count', { params, ...config }),
+  // detailed recommend list
+  getRecommendList: (params, config = {}) => api.get('/api/ai/forecast/recommend-list', { params, ...config })
+}

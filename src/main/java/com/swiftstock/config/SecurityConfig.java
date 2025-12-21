@@ -27,6 +27,8 @@ public class SecurityConfig {
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
                 // authentication endpoints
                 .requestMatchers("/auth/**").permitAll()
+                // allow all API endpoints (public)
+                .requestMatchers("/api/**").permitAll()
                 // other public endpoints you intentionally want public can be added here
                 .anyRequest().authenticated()
             )
