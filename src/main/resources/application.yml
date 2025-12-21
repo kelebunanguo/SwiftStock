@@ -34,12 +34,20 @@ spring:
       continue-on-error: false
   mvc:
     static-path-pattern: /**
-    throw-exception-if-no-handler-found: true
   web:
     resources:
       static-locations: classpath:/static/,file:./frontend/dist/
       add-mappings: true
-  # 移除 Thymeleaf 配置，改用 Vue.js 前端
+  ai:
+    openai:
+      base-url: https://api.deepseek.com
+      api-key: sk-c7f04122bc9946cf9f53c008bacd1568  # 填你自己的
+      chat:
+        options:
+          model: deepseek-chat  # 或 deepseek-reasoner（推理模型）
+          temperature: 0.3
+          max-tokens: 300
+
   servlet:
     multipart:
       enabled: true
@@ -64,7 +72,7 @@ logging:
   file:
     name: logs/swiftstock.log
 
-# JWT 配置：建议在生产环境通过环境变量或配置中心覆盖这些值
+# JWT 配置
 jwt:
   secret: ${JWT_SECRET:ChangeThisSecretKey}
   expiration-millis: 86400000
