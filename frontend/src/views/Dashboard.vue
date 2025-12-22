@@ -731,7 +731,7 @@ export default {
 .stat-number { font-size:24px; font-weight:700; color:#111; }
 .stat-label { font-size:13px; color:#666; margin:0; }
 
-.ai-card.hero { border-radius:14px; overflow:hidden; background:linear-gradient(135deg,#409EFF 0%, #79bbff 100%); color:#fff; padding:0; }
+.ai-card.hero { border-radius:14px; overflow:hidden; background:linear-gradient(135deg,#92e4f8 0%, #53a6f8 100%); color:#fff; padding:0; }
 .ai-hero-inner { display:flex; align-items:center; height:100%; position:relative; padding:12px 12px; gap:12px; box-sizing:border-box; }
 .ai-hero-left { flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
 .ai-hero-icon { width:100%; height:100%; max-width:300px; max-height:300px; border-radius:12px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:clamp(28px,6vw,64px); color:#fff; }
