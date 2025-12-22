@@ -68,6 +68,11 @@
       </el-col>
     </el-row>
 
+    <!-- 库存预警 -->
+    <div class="alert-section">
+      <StockAlertWidget />
+    </div>
+
     <!-- 图表区域 -->
     <div class="charts-grid">
       <div class="chart-card">
@@ -94,10 +99,7 @@
       </div>
     </div>
 
-    <!-- 库存预警 -->
-    <div class="alert-section">
-      <StockAlertWidget />
-    </div>
+
 
     <!-- 最近订单 -->
     <div class="recent-orders">

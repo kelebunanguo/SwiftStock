@@ -10,8 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="AI智能补货模块">
-      <change afterPath="$PROJECT_DIR$/毕业设计论文.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/系统说明与实现图解.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
