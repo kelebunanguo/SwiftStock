@@ -44,9 +44,10 @@
 
       <!-- 右侧：AI 大卡片，占右侧 50% -->
       <el-col :xs="24" :md="12">
-        <el-card class="ai-card hero" shadow="hover" @click="gotoAi"style="height:100%; overflow:hidden !important; touch-action: none; cursor: pointer;">          <div class="ai-hero-inner">
+        <el-card class="ai-card hero" shadow="hover" style="height:100%; overflow:hidden;">
+          <div class="ai-hero-inner">
             <div class="ai-hero-left">
-              <div class="ai-hero-icon"><el-icon><TrendCharts /></el-icon></div>
+              <div class="ai-hero-icon"><el-icon size="100" color="#fff"><Connection  /></el-icon></div>
             </div>
 
             <div class="ai-hero-right">
@@ -58,11 +59,21 @@
                 <span v-else class="ai-hero-number">-</span>
               </div>
 
-              <div class="ai-hero-sub">件商品需补货 · 点击查看详情</div>
-            </div>
+              <div class="ai-hero-sub">件商品需补货</div>
 
-            <!-- 装饰：半透明图形/波纹（纯装饰，不影响布局） -->
-            <div class="ai-hero-decor" aria-hidden="true"></div>
+            <div class="ai-hero-buttons">
+              <div style="width:100%; display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+                <el-button type="success" size="small" :loading="aiLoading" @click.stop="refreshAi">
+                  <el-icon><Refresh /></el-icon>
+                  刷新
+                </el-button>
+                <el-button plain type="info" size="small" @click.stop="gotoAi">
+                  查看详情
+                  <el-icon><ArrowRight /></el-icon>
+                </el-button>
+              </div>
+            </div>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -148,7 +159,8 @@ import VChart from 'vue-echarts'
 import { dashboardAPI, categoryAPI, salesAPI, productAPI, aiAPI } from '@/api'
 import StockAlertWidget from '@/components/StockAlertWidget.vue'
 import AppLayout from '@/components/AppLayout.vue'
-import { Check, Loading } from '@element-plus/icons-vue'
+import { Connection , Loading, Refresh, ArrowRight } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 use([
   CanvasRenderer,
@@ -347,6 +359,46 @@ export default {
         aiLoading.value = false
       }
     }
+    // local cache for AI count (30 minutes TTL)
+    const AI_CACHE_KEY = 'ai_replenish_cache_v1'
+    const AI_CACHE_TTL = 30 * 60 * 1000
+
+    const readAiCache = () => {
+      try {
+        const raw = localStorage.getItem(AI_CACHE_KEY)
+        if (!raw) return null
+        const obj = JSON.parse(raw)
+        if (!obj || typeof obj.ts !== 'number') return null
+        if (Date.now() - obj.ts > AI_CACHE_TTL) {
+          localStorage.removeItem(AI_CACHE_KEY)
+          return null
+        }
+        return obj.value
+      } catch (e) {
+        return null
+      }
+    }
+
+    const writeAiCache = (value) => {
+      try {
+        const obj = { value, ts: Date.now() }
+        localStorage.setItem(AI_CACHE_KEY, JSON.stringify(obj))
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    const refreshAi = async () => {
+      try {
+        await loadAiReplenish()
+        if (aiSuccess.value && aiReplenishCount.value !== null) {
+          writeAiCache(aiReplenishCount.value)
+        }
+      } catch (e) {
+        console.error('refreshAi error', e)
+        ElMessage.error('刷新失败，请稍后重试')
+      }
+    }
 
     // 加载数据
     const loadData = async () => {
@@ -399,8 +451,6 @@ export default {
         
         // 加载销售趋势数据
         await loadSalesTrend()
-        // 加载 AI 补货建议
-        await loadAiReplenish()
         
       } catch (error) {
         console.error('加载数据失败:', error)
@@ -410,7 +460,14 @@ export default {
     onMounted(() => {
       // 并行：避免某些接口失败（如 product/category）导致 AI 补货计数无法加载
       loadData()
-      loadAiReplenish()
+      // 首次进入页面：若缓存存在且未过期，直接读取缓存并显示；否则自动发起一次请求并缓存
+      const cached = readAiCache()
+      if (cached !== null) {
+        aiReplenishCount.value = cached
+      } else {
+        // 首次进入页面自动刷新并写缓存
+        refreshAi()
+      }
     })
 
     const router = useRouter()
@@ -445,8 +502,7 @@ export default {
       getStatusText,
       aiReplenishCount,
       aiLoading,
-      aiSuccess,
-      handleAiMouseDown,
+      refreshAi,
       gotoAi
     }
   }
@@ -586,7 +642,6 @@ export default {
   color: #fff;
   border-radius: 8px;
   padding: 16px;
-  cursor: pointer;
 }
 
 /* AI 卡片增强样式 */
@@ -679,13 +734,14 @@ export default {
 .ai-card.hero { border-radius:14px; overflow:hidden; background:linear-gradient(135deg,#409EFF 0%, #79bbff 100%); color:#fff; padding:0; }
 .ai-hero-inner { display:flex; align-items:center; height:100%; position:relative; padding:12px 12px; gap:12px; box-sizing:border-box; }
 .ai-hero-left { flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
-.ai-hero-icon { width:50%; height:50%; max-width:220px; max-height:220px; border-radius:12px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:clamp(28px,6vw,64px); color:#fff; }
-.ai-hero-right { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
-.ai-hero-title { font-size:20px; font-weight:700; color:rgba(255,255,255,0.98); margin-bottom:12px; }
+.ai-hero-icon { width:100%; height:100%; max-width:300px; max-height:300px; border-radius:12px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:clamp(28px,6vw,64px); color:#fff; }
+.ai-hero-right { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding-left: 30px;}
+.ai-hero-title { font-size:30px; font-weight:700; color:rgba(255,255,255,0.98); margin-bottom:12px; }
 .ai-hero-number-wrap { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
-.ai-hero-number { font-size:clamp(28px,6vw,96px); font-weight:900; color:#fff; line-height:1; white-space:nowrap; }
-.ai-hero-sub { color:rgba(255,255,255,0.9); font-size:14px; }
-.ai-hero-decor { position:absolute; right:-40px; bottom:-40px; width:280px; height:280px; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02) 40%, transparent 60%); transform:rotate(20deg); pointer-events:none; }
+.ai-hero-number { font-size:clamp(28px,6vw,96px); font-size: 100px; font-weight:900; color:#fff; line-height:1; white-space:nowrap; }
+.ai-hero-sub { color:rgba(255,255,255,0.9); font-size:18px; }
+.ai-hero-right { position:relative; z-index:1; }
+.ai-hero-buttons {margin-top: 30px;display: flex;gap: 12px;}
 
 /* hide any internal scrollbars inside AI card */
 .ai-card.hero, .ai-card.hero * {

@@ -9,8 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="AI智能补货模块">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改前端样式">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiForecastService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiForecastService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -368,7 +370,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766337113545</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="修改前端样式">
+      <option name="closed" value="true" />
+      <created>1766371604148</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1766371604148</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -388,6 +398,7 @@
     <MESSAGE value="修改数据库配置" />
     <MESSAGE value="配置AI模块，引入DeepSeek大模型" />
     <MESSAGE value="AI智能补货模块" />
-    <option name="LAST_COMMIT_MESSAGE" value="AI智能补货模块" />
+    <MESSAGE value="修改前端样式" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改前端样式" />
   </component>
 </project>
