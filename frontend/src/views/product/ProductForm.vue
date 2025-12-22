@@ -136,15 +136,23 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="存放位置" prop="location">
-              <el-input
-                v-model="form.location"
-                placeholder="请输入存放位置"
-                maxlength="50"
-              />
-            </el-form-item>
+            <!-- 存放位置字段已移除 -->
           </el-col>
         </el-row>
+        
+        <!-- AI 生成商品详情按钮（仅在商品名称不为空时可用），向右偏移与表单输入对齐 -->
+        <div style="margin: 0 0 8px 120px;">
+          <el-button
+            plain type="primary"
+            size="small"
+            :disabled="!form.name || form.name.trim() === ''"
+            :loading="detailLoading"
+            @click="generateDetail"
+          >
+            <el-icon><MagicStick /></el-icon>
+            AI生成商品详情
+          </el-button>
+        </div>
 
         <el-form-item label="商品描述" prop="description">
           <el-input
@@ -156,6 +164,7 @@
             show-word-limit
           />
         </el-form-item>
+        
 
         <el-form-item>
           <el-button type="primary" @click="handleSubmit" :loading="loading">
@@ -172,8 +181,8 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowLeft, Plus, InfoFilled } from '@element-plus/icons-vue'
-import { productAPI, categoryAPI, supplierAPI } from '@/api'
+import { ArrowLeft, Plus, InfoFilled, MagicStick } from '@element-plus/icons-vue'
+import api, { productAPI, categoryAPI, supplierAPI } from '@/api'
 import AppLayout from '@/components/AppLayout.vue'
 
 export default {
@@ -182,6 +191,7 @@ export default {
     ArrowLeft,
     Plus,
     InfoFilled,
+    MagicStick,
     AppLayout
   },
   setup() {
@@ -223,7 +233,6 @@ export default {
       stockQuantity: 0,
       minStockLevel: 0,
       supplier: '',
-      location: '',
       description: '',
       status: 1
     })
@@ -288,6 +297,10 @@ export default {
         const response = await productAPI.getDetail(route.params.id)
         if (response.success) {
           Object.assign(form, response.data)
+          // 清理后端可能返回的已移除字段，防止反应式对象产生不必要的属性
+          if ('location' in form) {
+            delete form.location
+          }
         } else {
           ElMessage.error(response.message || '加载商品详情失败')
         }
@@ -307,12 +320,17 @@ export default {
         loading.value = true
         
         if (isEdit.value) {
-          await productAPI.update(form.id, form)
+          const submitData = { ...form }
+          // 不再提交或更新 location 字段
+          delete submitData.code
+          delete submitData.location
+          await productAPI.update(form.id, submitData)
           ElMessage.success('商品更新成功')
         } else {
           // 新增时，不传递code字段，由数据库自动生成
           const submitData = { ...form }
           delete submitData.code
+          delete submitData.location
           await productAPI.create(submitData)
           ElMessage.success('商品创建成功')
         }
@@ -354,6 +372,36 @@ export default {
       loadProduct()
     })
     
+    // AI 生成详情加载状态
+    const detailLoading = ref(false)
+
+    // 点击 AI 生成商品详情
+    const generateDetail = async () => {
+      if (!form.name || form.name.trim() === '') {
+        return
+      }
+      detailLoading.value = true
+      try {
+        const payload = {
+          productName: form.name.trim(),
+          supplier: form.supplier || '',
+          category: ''
+        }
+        const res = await api.post('/api/ai/product/generate-detail', payload, { silent: true })
+        if (res && res.success) {
+          form.description = res.data || ''
+          ElMessage.success('AI商品详情生成成功，可手动修改')
+        } else {
+          ElMessage.error('生成失败，请手动填写')
+        }
+      } catch (e) {
+        console.error('AI 生成商品详情失败', e)
+        ElMessage.error('生成失败，请手动填写')
+      } finally {
+        detailLoading.value = false
+      }
+    }
+    
     
     return {
       loading,
@@ -370,7 +418,9 @@ export default {
       handleCancel,
       handleBack,
       handleCategoryChange
-      , suppliers
+      , suppliers,
+      detailLoading,
+      generateDetail
     }
   }
 }
