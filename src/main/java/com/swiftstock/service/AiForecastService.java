@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * AI 补货预测服务接口。
  * <p>
- * 说明（中文）：
  * - 将对外暴露的方法抽象为接口，有利于单元测试和替换实现（例如在测试中注入 Mock 实现）。
  * - 原有实现已移至 `com.swiftstock.service.impl.AiForecastServiceImpl`。
  */

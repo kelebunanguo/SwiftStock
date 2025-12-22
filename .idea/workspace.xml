@@ -9,11 +9,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="添加日志">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改为接口和实现类">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OpenApiConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OrderStatusTypeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OrderStatusTypeHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiForecastController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiForecastController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiTestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiTestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/MigrationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SystemController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AdminService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiForecastService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiForecastService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/InventoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/InventoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/SupplierService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/SupplierService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -398,7 +412,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766376056413</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="修改AI卡片样式">
+      <option name="closed" value="true" />
+      <created>1766377542424</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1766377542424</updated>
+    </task>
+    <task id="LOCAL-00019" summary="修改为接口和实现类">
+      <option name="closed" value="true" />
+      <created>1766377625990</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1766377625990</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -420,6 +450,8 @@
     <MESSAGE value="AI智能补货模块" />
     <MESSAGE value="修改前端样式" />
     <MESSAGE value="添加日志" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加日志" />
+    <MESSAGE value="修改AI卡片样式" />
+    <MESSAGE value="修改为接口和实现类" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改为接口和实现类" />
   </component>
 </project>

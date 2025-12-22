@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * 商品分类服务接口。
  * <p>
- * 说明（中文）：
  * - 将分类相关的 CRUD 操作抽象为接口，具体实现位于 `com.swiftstock.service.impl.CategoryServiceImpl`。
  * - 使用接口有利于解耦和单元测试替换实现。
  */

@@ -12,6 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 全局异常处理器
+ * - 捕获未处理的异常并统一返回格式化的错误响应（包含时间戳和请求路径），同时记录错误日志，便于排查。
+ * - 使用 @ControllerAdvice 在全局范围内拦截控制器抛出的异常。
+ */
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {

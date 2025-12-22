@@ -22,19 +22,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                // static and swagger
+                // 静态资源与 Swagger 接口文档允许匿名访问
                 .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**",
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
-                // authentication endpoints
+                // 认证相关接口允许匿名访问（登录/登出等）
                 .requestMatchers("/auth/**").permitAll()
-                // allow all API endpoints (public)
+                // 暴露给前端的公共 API（如无需鉴权的接口）
                 .requestMatchers("/api/**").permitAll()
-                // other public endpoints you intentionally want public can be added here
+                // 其它未明确允许的请求需要认证
                 .anyRequest().authenticated()
             )
-            .csrf(csrf -> csrf.disable()); // 使用 JWT 时通常禁用 CSRF（注意：若使用 Cookie-based auth 请开启）
+            .csrf(csrf -> csrf.disable()); // 使用 JWT 时通常禁用 CSRF（注意：若使用基于 Cookie 的认证请开启 CSRF）
 
-        // Insert JWT filter before username/password auth filter
+        // 在用户名/密码认证过滤器之前插入 JWT 认证过滤器
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

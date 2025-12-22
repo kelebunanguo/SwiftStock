@@ -1,6 +1,5 @@
 package com.swiftstock.config;
 
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.Contact;
@@ -14,11 +13,11 @@ public class OpenApiConfig {
     public OpenAPI swiftStockOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("SwiftStock API Documentation")
-                        .description("API documentation for SwiftStock Warehouse Management System")
+                        .title("SwiftStock API 文档")
+                        .description("SwiftStock 仓库管理系统接口文档")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("SwiftStock Team")
+                                .name("SwiftStock 团队")
                                 .email("support@swiftstock.com")));
     }
 } 

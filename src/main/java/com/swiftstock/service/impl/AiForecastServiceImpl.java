@@ -36,7 +36,7 @@ public class AiForecastServiceImpl implements AiForecastService {
     // 简单的内存缓存，缓存 key = "recommend_list"
     private final ConcurrentHashMap<String, List<AiReorderRecommendVO>> cache = new ConcurrentHashMap<>();
     private volatile Instant lastRefresh = Instant.EPOCH;
-    private final long ttlSeconds = 60 * 30; // 30 minutes
+    private final long ttlSeconds = 60 * 30; // 30 分钟
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -84,7 +84,7 @@ public class AiForecastServiceImpl implements AiForecastService {
         try {
             List<AiReorderRecommendVO> newList = generateRecommendations();
             newList.sort(Comparator.comparing(AiReorderRecommendVO::getSuggestReorderQuantity, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
-            List<AiReorderRecommendVO> top = newList.size() > 15 ? new ArrayList<>(newList.subList(0, 15)) : newList;
+            List<AiReorderRecommendVO> top = newList.size() > 10 ? new ArrayList<>(newList.subList(0, 10)) : newList;
             cache.put("recommend_list", top);
             lastRefresh = Instant.now();
         } catch (Exception ignored) {

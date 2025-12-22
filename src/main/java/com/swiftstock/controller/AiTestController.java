@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 该接口用于快速验证 ChatClient 是否可用，仅在受控的测试/开发环境中启用。
+ */
 @RestController
 @RequestMapping("/api/test")
 public class AiTestController {
