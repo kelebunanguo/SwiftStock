@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
 
-@RestController
-@RequestMapping("/reports")
 /**
  * 报表接口（Controller）
  *
@@ -21,6 +19,8 @@ import java.math.BigDecimal;
  *   <li>销售报表：当前实现包含演示数据（便于前端图表展示）；销售趋势/概览建议使用 /sales 接口</li>
  * </ul>
  */
+@RestController
+@RequestMapping("/reports")
 public class ReportController {
 
     @Autowired

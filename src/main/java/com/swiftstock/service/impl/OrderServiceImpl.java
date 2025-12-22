@@ -21,8 +21,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@Service
 /**
  * 订单业务实现（Service）
  *
@@ -34,6 +32,8 @@ import java.util.List;
  *   <li>事务控制：关键写操作使用 {@code @Transactional} 保证订单与库存变更原子性</li>
  * </ul>
  */
+@Slf4j
+@Service
 public class OrderServiceImpl implements OrderService {
 
     private static final DateTimeFormatter ORDER_NO_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -147,11 +147,22 @@ public class OrderServiceImpl implements OrderService {
         return prefix + sequencePart;
     }
 
+    /**
+     * 查询所有订单（无条件）
+     *
+     * @return 订单列表
+     */
     @Override
     public List<Order> findAll() {
         return orderMapper.selectAll();
     }
 
+    /**
+     * 按条件查询订单
+     *
+     * @param searchParams 查询条件封装的 Order（支持订单号/客户名/状态/日期范围等）
+     * @return 满足条件的订单列表
+     */
     @Override
     public List<Order> findByCondition(Order searchParams) {
         try {
@@ -176,11 +187,25 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * 根据 ID 查询订单
+     *
+     * @param id 订单 ID
+     * @return 订单实体或 null
+     */
     @Override
     public Order findById(Long id) {
         return orderMapper.selectById(id);
     }
 
+    /**
+     * 更新订单状态（直接设置目标状态）
+     *
+     * <p>业务校验与库存操作在 Service 内完成，方法为事务性操作。</p>
+     *
+     * @param id     订单 ID
+     * @param status 目标状态（如 PAID、SHIPPED 等）
+     */
     @Override
     @Transactional
     public void updateStatus(Long id, String status) {
@@ -237,6 +262,13 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * 按工作流进行订单状态流转（允许携带原因用于审计）
+     *
+     * @param id           订单 ID
+     * @param targetStatus 目标状态
+     * @param reason       操作原因/备注
+     */
     @Override
     @Transactional
     public void transitionStatus(Long id, String targetStatus, String reason) {
@@ -383,6 +415,12 @@ public class OrderServiceImpl implements OrderService {
         log.info("订单{}退款前业务检查通过", order.getOrderNo());
     }
 
+    /**
+     * 取消订单（根据业务规则恢复库存/记录日志）
+     *
+     * @param id     订单 ID
+     * @param reason 取消原因
+     */
     @Override
     @Transactional
     public void cancelOrder(Long id, String reason) {
@@ -417,6 +455,11 @@ public class OrderServiceImpl implements OrderService {
         log.info("订单{}已取消，原因：{}", order.getOrderNo(), reason);
     }
 
+    /**
+     * 删除订单（若已付款则先恢复库存）
+     *
+     * @param id 订单 ID
+     */
     @Override
     @Transactional
     public void deleteById(Long id) {
@@ -443,6 +486,12 @@ public class OrderServiceImpl implements OrderService {
         log.info("订单{}已删除", order.getOrderNo());
     }
 
+    /**
+     * 获取订单状态流转历史
+     *
+     * @param id 订单 ID
+     * @return 状态历史列表
+     */
     @Override
     public List<OrderStatusHistory> getStatusHistory(Long id) {
         Order order = findById(id);

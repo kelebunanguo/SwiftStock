@@ -14,6 +14,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * 销售统计服务实现
+ *
+ * <p>提供销售趋势与概览数据的计算，基于订单表聚合已付款及后续状态订单的销售额。</p>
+ */
 @Slf4j
 @Service
 public class SalesServiceImpl implements SalesService {
@@ -21,6 +26,12 @@ public class SalesServiceImpl implements SalesService {
     @Autowired
     private OrderMapper orderMapper;
 
+    /**
+     * 获取销售趋势数据（按天聚合）
+     *
+     * @param period 时间周期标识，例：7d、30d、90d
+     * @return 每日销售额的列表（date, amount）
+     */
     @Override
     public List<Map<String, Object>> getSalesTrend(String period) {
         List<Map<String, Object>> trendData = new ArrayList<>();
@@ -101,6 +112,11 @@ public class SalesServiceImpl implements SalesService {
         return trendData;
     }
 
+    /**
+     * 获取销售概览数据（总销售、本日、本月等指标）
+     *
+     * @return 包含 totalSales、todaySales、monthSales、totalOrders 等指标的 Map
+     */
     @Override
     public Map<String, Object> getSalesOverview() {
         Map<String, Object> overview = new HashMap<>();

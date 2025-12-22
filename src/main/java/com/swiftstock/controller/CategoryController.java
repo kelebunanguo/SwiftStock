@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 商品分类管理控制器
+ *
+ * <p>提供分类的增删改查接口，用于商品管理中的分类维护与展示。</p>
+ */
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {

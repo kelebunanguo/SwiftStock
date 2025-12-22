@@ -14,7 +14,13 @@ import java.util.Date;
 /**
  * JWT 工具类（基于 HMAC SHA256）
  *
- * <p>密钥与过期时间从配置中读取，生产环境请通过环境变量或配置中心管理。</p>
+ * <p>职责：
+ * <ul>
+ *   <li>根据 Admin 信息生成 JWT token（包含用户名与 id）</li>
+ *   <li>验证并解析 JWT，提取用户名等信息</li>
+ * </ul>
+ *
+ * <p>注意：密钥与过期时间从配置中读取，生产环境请通过环境变量或配置中心管理。</p>
  */
 @Component
 public class JwtTokenUtil {

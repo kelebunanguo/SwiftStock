@@ -10,12 +10,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 供应商管理控制器
+ *
+ * <p>职责：
+ * <ul>
+ *   <li>提供供应商的增删改查与分页查询接口，支持按名称与联系人筛选。</li>
+ *   <li>提供获取单个供应商详情与返回全部供应商的便捷接口（用于后台管理或下拉选择）。</li>
+ *   <li>提供查询供应商对应供货记录的接口（若实现类提供 findRecords 扩展方法，则返回其结果）。</li>
+ * </ul>
+ *
+ * <p>返回格式：统一使用 {success: boolean, message?: String, data?: Object} 结构，便于前端统一处理。</p>
+ *
+ * <p>路径：`/suppliers`</p>
+ */
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    /**
+     * 分页查询供应商
+     */
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> list(
@@ -43,6 +61,9 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 根据ID查询供应商
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
         Map<String, Object> resp = new HashMap<>();
@@ -64,6 +85,9 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 根据ID查询供应商供货记录
+     */
     @GetMapping("/{id}/records")
     public ResponseEntity<Map<String, Object>> getRecords(@PathVariable Long id) {
         Map<String, Object> resp = new HashMap<>();
@@ -75,6 +99,9 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 创建供应商
+     */
     @PostMapping
     public ResponseEntity<Map<String, Object>> create(@RequestBody Supplier supplier) {
         Map<String, Object> resp = new HashMap<>();
@@ -84,6 +111,9 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 更新供应商
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Supplier supplier) {
         Map<String, Object> resp = new HashMap<>();
@@ -94,6 +124,9 @@ public class SupplierController {
         return ResponseEntity.ok(resp);
     }
 
+    /**
+     * 删除供应商
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
         Map<String, Object> resp = new HashMap<>();

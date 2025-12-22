@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 该接口用于快速验证 ChatClient 是否可用，仅在受控的测试/开发环境中启用。
+ * AI 测试控制器（开发/测试用）
+ *
+ * <p>仅用于验证 Spring 的 ChatClient 是否可用，生产环境请关闭或增加访问控制。</p>
  */
 @RestController
 @RequestMapping("/api/test")

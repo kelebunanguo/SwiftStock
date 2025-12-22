@@ -54,12 +54,24 @@ public class AiForecastServiceImpl implements AiForecastService {
         scheduler.shutdownNow();
     }
 
+    /**
+     * 获取需要补货的商品数量（AI 推荐结果条目数）。
+     *
+     * @return 需要补货的商品数量
+     */
     @Override
     public int getRecommendCount() {
         List<AiReorderRecommendVO> list = getRecommendList();
         return list.size();
     }
 
+    /**
+     * 获取补货建议列表
+     *
+     * <p>优先使用缓存，若缓存失效则重新调用模型生成推荐并缓存结果，最终按建议补货量降序并取前 10 条返回。</p>
+     *
+     * @return 推荐的补货建议 VO 列表（可能为空）
+     */
     @Override
     public List<AiReorderRecommendVO> getRecommendList() {
         // 优先使用缓存
@@ -92,7 +104,13 @@ public class AiForecastServiceImpl implements AiForecastService {
         }
     }
 
-    // 生成推荐的具体实现：遍历商品、调用大模型、解析结果并构造 VO 列表
+    /**
+     * 生成推荐列表的具体实现：遍历商品、调用大模型、解析结果并构造 VO 列表
+     *
+     * <p>注意：当前为测试阶段会限制处理商品数量以减少 API 调用，生产环境应根据实际需求调整或异步化计算。</p>
+     *
+     * @return 推荐的 AiReorderRecommendVO 列表（可能为空）
+     */
     private List<AiReorderRecommendVO> generateRecommendations() {
         List<AiReorderRecommendVO> result = new ArrayList<>();
 

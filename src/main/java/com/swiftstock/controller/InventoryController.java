@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
 
-@RestController
-@RequestMapping("/inventory")
 /**
  * 库存管理接口（Controller）
  *
@@ -34,6 +32,8 @@ import java.util.ArrayList;
  *   <li>库存记录表 {@code inventory_record} 保存“变动明细”（可追溯）</li>
  * </ul>
  */
+@RestController
+@RequestMapping("/inventory")
 public class InventoryController {
     
     private static final Logger logger = LoggerFactory.getLogger(InventoryController.class);

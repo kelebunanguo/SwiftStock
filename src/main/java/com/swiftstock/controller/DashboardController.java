@@ -16,15 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
-@RestController
-@RequestMapping("/dashboard")
 /**
- * 仪表盘接口（Controller）
+ * 首页接口（Controller）
  *
  * <p>用途：为首页看板提供汇总数据（商品数、订单数、库存总量、预警数量等）。
  * <p>特点：以“聚合统计”为主，不提供复杂写操作。
  */
+@Slf4j
+@RestController
+@RequestMapping("/dashboard")
 public class DashboardController {
 
     @Autowired

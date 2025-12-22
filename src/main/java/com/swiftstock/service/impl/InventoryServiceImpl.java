@@ -11,9 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-@Slf4j
-@Service
-@Transactional
+
 /**
  * 库存服务实现（Service）
  *
@@ -24,6 +22,9 @@ import java.util.List;
  *   <li>先更新商品库存，再写入库存记录；两者在事务内保证一致</li>
  * </ul>
  */
+@Slf4j
+@Service
+@Transactional
 public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
@@ -32,6 +33,14 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private ProductService productService;
 
+    
+
+    /**
+     * 查询指定商品的库存变动历史
+     *
+     * @param productId 商品 ID
+     * @return 该商品的库存记录列表
+     */
     @Override
     public List<InventoryRecord> findByProductId(Long productId) {
         log.debug("Finding inventory records for product ID: {}", productId);
@@ -46,6 +55,15 @@ public class InventoryServiceImpl implements InventoryService {
         }
     }
 
+    /**
+     * 为商品增加库存并写入库存记录（入库）
+     *
+     * <p>流程：先更新商品库存，再写入一条 type=IN 的库存记录；方法在事务中执行。</p>
+     *
+     * @param productId 商品 ID
+     * @param quantity  增加数量（必须 > 0）
+     * @param reason    入库原因/备注
+     */
     @Override
     @Transactional
     public void addStock(Long productId, Integer quantity, String reason) {
@@ -73,6 +91,15 @@ public class InventoryServiceImpl implements InventoryService {
         }
     }
 
+    /**
+     * 为商品减少库存并写入库存记录（出库）
+     *
+     * <p>流程：先更新商品库存（会校验负库存），再写入一条 type=OUT 的库存记录；方法在事务中执行。</p>
+     *
+     * @param productId 商品 ID
+     * @param quantity  减少数量（必须 > 0）
+     * @param reason    出库原因/备注
+     */
     @Override
     @Transactional
     public void reduceStock(Long productId, Integer quantity, String reason) {

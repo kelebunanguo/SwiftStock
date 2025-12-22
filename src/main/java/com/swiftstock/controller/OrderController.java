@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
-@RestController
-@RequestMapping("/orders")
 /**
  * 订单管理接口（Controller）
  *
@@ -28,6 +25,9 @@ import java.util.Map;
  *
  * <p>说明：系统上下文路径为 {@code /swiftstock}，因此完整路径形如 {@code /swiftstock/orders/...}。
  */
+@Slf4j
+@RestController
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired

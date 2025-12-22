@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/products")
 /**
  * 商品管理接口（Controller）
  *
@@ -22,6 +20,8 @@ import java.util.Map;
  *   <li>订单创建时通过 {@code /products/available} 只返回“有库存的商品”</li>
  * </ul>
  */
+@RestController
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired

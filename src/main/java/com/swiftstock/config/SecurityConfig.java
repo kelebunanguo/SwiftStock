@@ -11,6 +11,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.swiftstock.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Spring Security 配置
+ *
+ * <p>配置要点：
+ * <ul>
+ *   <li>配置 HTTP 安全过滤链，定义哪些 URL 需要认证，哪些不需要。</li>
+ *   <li>禁用 CSRF 保护（使用 JWT 时通常不需要 CSRF）。</li>
+ *   <li>在用户名/密码认证过滤器之前插入 JWT 认证过滤器，确保 JWT 认证优先。</li>
+ * </ul>
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

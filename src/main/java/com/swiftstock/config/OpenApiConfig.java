@@ -6,6 +6,11 @@ import io.swagger.v3.oas.models.info.Contact;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * OpenAPI / Swagger 配置
+ *
+ * <p>提供应用的 OpenAPI 元信息，用于在 Swagger UI 中展示接口文档标题、描述等信息。</p>
+ */
 @Configuration
 public class OpenApiConfig {
     
@@ -20,4 +25,4 @@ public class OpenApiConfig {
                                 .name("SwiftStock 团队")
                                 .email("support@swiftstock.com")));
     }
-} 
+}

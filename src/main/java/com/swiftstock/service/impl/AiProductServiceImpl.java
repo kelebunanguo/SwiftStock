@@ -20,6 +20,14 @@ public class AiProductServiceImpl implements AiProductService {
         this.chatClient = chatClientBuilder.build();
     }
 
+    /**
+     * 生成商品详情文案（调用大模型）
+     *
+     * @param productName 商品名称（必传）
+     * @param supplier    供应商名称（可空）
+     * @param category    分类（可空）
+     * @return AI 生成的商品详情文本，失败时返回提示文本
+     */
     @Override
     public String generateProductDetail(String productName, String supplier, String category) {
         if (productName == null || productName.trim().isEmpty()) {

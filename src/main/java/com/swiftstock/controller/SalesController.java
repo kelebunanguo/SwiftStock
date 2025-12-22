@@ -10,15 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
-@RestController
-@RequestMapping("/sales")
 /**
  * 销售统计接口（Controller）
  *
  * <p>面向“经营分析”的数据接口，供前端折线图/概览卡片使用。
  * <p>数据来源：基于订单（PAID/COMPLETED）聚合计算（见 {@code SalesServiceImpl}）。
  */
+@Slf4j
+@RestController
+@RequestMapping("/sales")
 public class SalesController {
 
     @Autowired

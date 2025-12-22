@@ -26,6 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.findById(id);
     }
 
+    /**
+     * 查询所有分类
+     *
+     * @return 分类列表
+     */
     @Override
     public List<Category> findAll() {
         return categoryMapper.findAll();
@@ -40,6 +45,11 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    /**
+     * 删除分类
+     *
+     * @param id 分类 ID
+     */
     @Override
     public void delete(Long id) {
         categoryMapper.delete(id);

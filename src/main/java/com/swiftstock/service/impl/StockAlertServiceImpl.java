@@ -41,6 +41,12 @@ public class StockAlertServiceImpl implements StockAlertService {
         return lowStockProducts;
     }
     
+    /**
+     * 检查指定商品是否触发预警
+     *
+     * @param productId 商品 ID
+     * @return 是否触发预警（低库存或缺货）
+     */
     @Override
     public boolean checkStockAlert(Long productId) {
         Product product = productService.findById(productId);
@@ -58,6 +64,11 @@ public class StockAlertServiceImpl implements StockAlertService {
         return isAlert;
     }
     
+    /**
+     * 获取低库存（>0 且 <= minStockLevel）的商品数量
+     *
+     * @return 低库存商品数量
+     */
     @Override
     public int getLowStockCount() {
         List<Product> allProducts = productService.findAll();
@@ -66,6 +77,11 @@ public class StockAlertServiceImpl implements StockAlertService {
             .count();
     }
     
+    /**
+     * 获取缺货（stock_quantity == 0）的商品数量
+     *
+     * @return 缺货商品数量
+     */
     @Override
     public int getOutOfStockCount() {
         List<Product> allProducts = productService.findAll();

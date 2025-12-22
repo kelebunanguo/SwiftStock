@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+/**
+ * 供货记录Mapper
+ */
 @Mapper
 public interface SupplyRecordMapper {
 	/**

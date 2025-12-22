@@ -12,8 +12,6 @@ import com.swiftstock.security.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@RestController
-@RequestMapping("/auth")
 /**
  * 认证接口（Controller）
  *
@@ -23,6 +21,8 @@ import org.slf4j.LoggerFactory;
  *   <li>返回经 JWT 签名的访问令牌（请在生产环境中通过配置/环境变量管理密钥）</li>
  * </ul>
  */
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired

@@ -10,6 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * AI 商品详情生成控制器
+ *
+ * <p>职责：
+ * <ul>
+ *   <li>为商品编辑或创建场景提供 AI 文案生成功能，返回适合商品详情页的文本描述。</li>
+ *   <li>提供开发/测试接口以便验证 AI 输出，Controller 层负责入参校验与统一返回结构。</li>
+ * </ul>
+ *
+ * <p>行为说明：对关键入参（如 productName）做基础校验，发生异常时返回友好默认提示以保证前端容错。</p>
+ *
+ * <p>路径：`/api/ai/product`。</p>
  */
 @RestController
 @RequestMapping("/api/ai/product")

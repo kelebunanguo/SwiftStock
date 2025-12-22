@@ -5,10 +5,10 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * DTO for SupplyRecord requests.
- * <p>
- * 用于接收前端的 JSON，请求中的 receiveTime 使用字符串（yyyy-MM-dd HH:mm:ss）
- * 在控制器中将其转换为 {@link java.time.LocalDateTime}。
+ * 供货记录请求 DTO
+ *
+ * <p>用于接收前端提交的供货记录数据。注意：前端传递的 {@code receiveTime} 为字符串格式（yyyy-MM-dd HH:mm:ss），
+ * 控制器会在接收后解析为 {@link java.time.LocalDateTime}。
  */
 @Data
 public class SupplyRecordDTO {

@@ -4,6 +4,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 商品分类实体
+ *
+ * <p>用于表示商品的分类层级信息，支持父子关系与路径表示，供分类管理与商品关联使用。</p>
+ */
 @Data
 public class Category {
     private Long id;

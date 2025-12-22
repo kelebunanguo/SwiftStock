@@ -86,6 +86,7 @@ springdoc:
     operationsSorter: method
     disable-swagger-default-url: true
     display-request-duration: true
+    locale: zh-cn
   show-actuator: false
   packages-to-scan: com.swiftstock.controller
 
