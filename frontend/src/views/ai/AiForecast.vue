@@ -74,10 +74,53 @@ export default {
     const list = ref([])
     const loading = ref(false)
 
-    const load = async () => {
+    // local cache for AI list/count (30 minutes TTL) - same key as dashboard
+    const AI_CACHE_KEY = 'ai_replenish_cache_v1'
+    const AI_CACHE_TTL = 30 * 60 * 1000
+
+    const readAiCache = () => {
+      try {
+        const raw = localStorage.getItem(AI_CACHE_KEY)
+        if (!raw) return null
+        const obj = JSON.parse(raw)
+        if (!obj || typeof obj.ts !== 'number') return null
+        if (Date.now() - obj.ts > AI_CACHE_TTL) {
+          localStorage.removeItem(AI_CACHE_KEY)
+          return null
+        }
+        return obj.value
+      } catch (e) {
+        return null
+      }
+    }
+
+    const writeAiCache = (value) => {
+      try {
+        const obj = { value, ts: Date.now() }
+        localStorage.setItem(AI_CACHE_KEY, JSON.stringify(obj))
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    const load = async (force = false) => {
       loading.value = true
       try {
-        const resCount = await aiAPI.getReplenishmentCount()
+        // if not forcing, try to reuse cache
+        if (!force) {
+          const cached = readAiCache()
+          if (cached) {
+            count.value = cached.count ?? null
+            list.value = cached.list || []
+            loading.value = false
+            return
+          }
+        }
+
+        // fetch fresh data
+        const params = {}
+        if (force) params.cacheBust = Date.now()
+        const resCount = await aiAPI.getReplenishmentCount(params, { silent: true })
         if (resCount) {
           if (typeof resCount === 'number') {
             count.value = resCount
@@ -86,7 +129,7 @@ export default {
           }
         }
 
-        const resList = await aiAPI.getRecommendList()
+        const resList = await aiAPI.getRecommendList(params, { silent: true })
         if (resList && resList.data) {
           list.value = resList.data
         } else if (Array.isArray(resList)) {
@@ -94,6 +137,9 @@ export default {
         } else {
           list.value = []
         }
+
+        // write cache
+        writeAiCache({ count: count.value, list: list.value })
       } catch (e) {
         console.error('加载AI补货建议失败', e)
       } finally {
@@ -101,8 +147,8 @@ export default {
       }
     }
 
-    const reload = () => {
-      load()
+    const reload = async () => {
+      await load(true)
     }
 
     const formatAdvice = (text) => {
