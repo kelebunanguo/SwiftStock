@@ -134,11 +134,6 @@
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <!-- 存放位置字段已移除 -->
-          </el-col>
-        </el-row>
         
         <!-- AI 生成商品详情按钮（仅在商品名称不为空时可用），向右偏移与表单输入对齐 -->
         <div style="margin: 0 0 8px 120px;">

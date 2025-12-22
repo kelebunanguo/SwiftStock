@@ -154,6 +154,18 @@ export const supplierAPI = {
   delete: (id) => api.delete(`/suppliers/${id}`)
 }
 
+// 供货记录 API（supply-records）
+export const supplyRecordAPI = {
+  // 分页查询：/supply-records?supplierId=xx&page=xx&size=xx
+  getList: (params) => api.get('/supply-records', { params }),
+  // 创建
+  create: (data) => api.post('/supply-records', data),
+  // 更新
+  update: (id, data) => api.put(`/supply-records/${id}`, data),
+  // 删除
+  delete: (id) => api.delete(`/supply-records/${id}`)
+}
+
 export const categoryAPI = {
   // 获取分类列表
   getList: () => api.get('/categories'),

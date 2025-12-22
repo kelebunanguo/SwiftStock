@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="page-header">
       <h2>供应商管理</h2>
-      <p>管理供应商信息与联系方式</p>
+      <p>管理供应商信息和供货记录</p>
     </div>
 
     <div class="search-form" style="margin-bottom:12px; display:flex; gap:8px; align-items:center;">
@@ -96,7 +96,8 @@ export default {
         const res = await supplierAPI.delete(row.id)
         if (res.success) {
           ElMessage.success('删除成功')
-          load()
+          // 刷新使用分页加载函数，保证 suppliers 为数组（list），避免将分页对象直接赋给表格 data 导致错误
+          loadPage()
         } else {
           ElMessage.error(res.message || '删除失败')
         }

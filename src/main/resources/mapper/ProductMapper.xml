@@ -12,7 +12,6 @@
         <result property="stockQuantity" column="stock_quantity"/>
         <result property="minStockLevel" column="min_stock_level"/>
         <result property="supplier" column="supplier"/>
-        <result property="location" column="location"/>
         <result property="status" column="status"/>
         <result property="stockValue" column="stock_value"/>
         <result property="inTime" column="in_time"/>
@@ -64,10 +63,10 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product (
             name, category_id, description, price, stock_quantity,
-            min_stock_level, supplier, location, status, stock_value, in_time, created_time
+            min_stock_level, supplier, status, stock_value, in_time, created_time
         ) VALUES (
             #{name}, #{categoryId}, #{description}, #{price}, #{stockQuantity},
-            #{minStockLevel}, #{supplier}, #{location}, #{status}, #{stockValue}, #{inTime}, CURRENT_TIMESTAMP
+            #{minStockLevel}, #{supplier}, #{status}, #{stockValue}, #{inTime}, CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -81,7 +80,6 @@
             <if test="stockQuantity != null">stock_quantity = #{stockQuantity},</if>
             <if test="minStockLevel != null">min_stock_level = #{minStockLevel},</if>
             <if test="supplier != null">supplier = #{supplier},</if>
-            <if test="location != null">location = #{location},</if>
             <if test="status != null">status = #{status},</if>
             <if test="stockValue != null">stock_value = #{stockValue},</if>
             <if test="inTime != null">in_time = #{inTime},</if>
@@ -119,9 +117,7 @@
             <if test="supplier != null and supplier != ''">
                 AND p.supplier LIKE CONCAT('%', #{supplier}, '%')
             </if>
-            <if test="location != null and location != ''">
-                AND p.location LIKE CONCAT('%', #{location}, '%')
-            </if>
+            <!-- location 字段已移除 -->
             <if test="stockQuantity != null">
                 AND p.stock_quantity >= #{stockQuantity}
             </if>

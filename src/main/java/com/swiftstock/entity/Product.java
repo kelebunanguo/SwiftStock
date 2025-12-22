@@ -16,7 +16,6 @@ public class Product {
     private Integer stockQuantity;
     private Integer minStockLevel;
     private String supplier;
-    private String location;
     private Integer status;  // 0: 下架, 1: 上架
     private BigDecimal stockValue;  // 库存价值
     private LocalDateTime inTime;   // 入库时间

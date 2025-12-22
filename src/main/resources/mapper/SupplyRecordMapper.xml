@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  MyBatis Mapper: SupplyRecord
+  - 提供供货记录的查询/分页/统计/增删改操作
+  - resultMap 将数据库列映射到 com.swiftstock.entity.SupplyRecord 属性
+-->
 <mapper namespace="com.swiftstock.mapper.SupplyRecordMapper">
 
     <resultMap id="supplyRecordMap" type="com.swiftstock.entity.SupplyRecord">
@@ -14,9 +19,54 @@
         <result property="remark" column="remark"/>
     </resultMap>
 
+    <!-- 查询指定供应商的全部记录（按到货时间、ID 降序） -->
     <select id="findBySupplierId" resultMap="supplyRecordMap" parameterType="long">
         SELECT * FROM supply_record WHERE supplier_id = #{supplierId} ORDER BY receive_time DESC, id DESC
     </select>
+
+    <!-- 分页查询（LIMIT offset, size） -->
+    <select id="findPage" resultMap="supplyRecordMap" parameterType="map">
+        SELECT * FROM supply_record
+        WHERE supplier_id = #{supplierId}
+        ORDER BY receive_time DESC, id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 统计指定供应商记录数 -->
+    <select id="countBySupplierId" resultType="long" parameterType="long">
+        SELECT COUNT(1) FROM supply_record WHERE supplier_id = #{supplierId}
+    </select>
+
+    <!-- 根据 ID 查询单条记录 -->
+    <select id="findById" resultMap="supplyRecordMap" parameterType="long">
+        SELECT * FROM supply_record WHERE id = #{id}
+    </select>
+
+    <!-- 插入新记录，使用自增主键返回 -->
+    <insert id="insert" parameterType="com.swiftstock.entity.SupplyRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO supply_record
+        (supplier_id, product_id, product_name, quantity, unit_price, total_amount, receive_time, remark)
+        VALUES
+        (#{supplierId}, #{productId}, #{productName}, #{quantity}, #{unitPrice}, #{totalAmount}, #{receiveTime}, #{remark})
+    </insert>
+
+    <!-- 更新记录（按 id） -->
+    <update id="update" parameterType="com.swiftstock.entity.SupplyRecord">
+        UPDATE supply_record
+        SET product_id = #{productId},
+            product_name = #{productName},
+            quantity = #{quantity},
+            unit_price = #{unitPrice},
+            total_amount = #{totalAmount},
+            receive_time = #{receiveTime},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM supply_record WHERE id = #{id}
+    </delete>
 
 </mapper>
 
