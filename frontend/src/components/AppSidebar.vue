@@ -10,7 +10,7 @@
     >
       <el-menu-item index="/dashboard">
         <el-icon><House /></el-icon>
-        <span>仪表盘</span>
+        <span>AI运营概览</span>
       </el-menu-item>
       <el-menu-item index="/ai/forecast">
         <el-icon><TrendCharts /></el-icon>

@@ -2,7 +2,9 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>SwiftStock电商仓库管理系统</h1>
+        <h1 class="eng-title">SwiftStock AI</h1>
+        <h2 class="cn-title">电商仓库管理系统</h2>
+        <p class="slogan">AI智能 · 高效管理 · 降本增效</p>
       </div>
       
       <el-form
@@ -41,12 +43,10 @@
             @click="handleLogin"
             class="login-button"
           >
-            登录
+            立即登录
           </el-button>
         </el-form-item>
       </el-form>
-      
-      <!-- 登录页不再展示或依赖默认演示账号，请使用真实账号或由管理员创建账号后登录 -->
     </div>
   </div>
 </template>
@@ -85,13 +85,12 @@ export default {
         await loginFormRef.value.validate()
         loading.value = true
         
-        // 发起登录请求（后端应返回 data.token）
         const response = await authAPI.login(loginForm)
 
         if (response.success) {
-          const token = response.data && response.data.token
+          const token = response.data?.token
           if (!token) {
-            ElMessage.error('服务器未返回 token，请检查后端配置')
+            ElMessage.error('服务器未返回 token')
             return
           }
           localStorage.setItem('token', token)
@@ -122,7 +121,9 @@ export default {
 <style scoped>
 .login-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* 背景图片 + 深色蒙版 */
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+              url('/img/image.jpg') center/cover no-repeat fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,48 +131,51 @@ export default {
 }
 
 .login-box {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  padding: 50px 40px;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  backdrop-filter: blur(10px); /* 毛玻璃效果，更高级 */
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
-.login-header h1 {
-  color: #333;
+.eng-title {
+  color: #2c3e50;
+  font-size: 42px;
+  margin: 0 0 8px 0;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.cn-title {
+  color: #34495e;
   font-size: 28px;
-  margin-bottom: 10px;
+  margin: 0 0 12px 0;
   font-weight: 600;
 }
 
-.login-header p {
-  color: #666;
-  font-size: 14px;
+.slogan {
+  color: #7f8c8d;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
 }
 
 .login-form {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .login-button {
   width: 100%;
-  height: 45px;
-  font-size: 16px;
-}
-
-.login-footer {
-  text-align: center;
-  color: #999;
-  font-size: 12px;
-}
-
-.login-footer p {
-  margin: 0;
+  height: 50px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 8px;
 }
 </style>

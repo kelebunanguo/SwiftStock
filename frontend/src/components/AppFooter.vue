@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy;SwiftStock电商仓库管理系统</p>
+      <p>&copy;SwiftStock AI电商仓库管理系统</p>
     </div>
   </footer>
 </template>

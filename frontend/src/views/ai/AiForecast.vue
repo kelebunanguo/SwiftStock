@@ -127,7 +127,10 @@ export default {
 </script>
 
 <style scoped>
-.page-header h2 { margin: 0; color: #333; }
+.page-header {margin-bottom: 20px;}
+.page-header h2 {color: #333;margin: 0 0 8px 0;}
+.page-header p {color: #666; margin: 0;}
+
 .page-card { background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.04); margin-top:12px; }
 .count-card { background: linear-gradient(90deg,#f0f5ff,#fff); }
 .advice-card { background: linear-gradient(180deg, #f5f7ff, #ffffff); border-radius:6px; padding:10px; }

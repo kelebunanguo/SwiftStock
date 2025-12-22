@@ -9,16 +9,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="AI智能获取商品详细信息开发">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="供应商管理模块的供货记录功能开发">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/product/ProductForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/product/ProductForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppFooter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppFooter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AppSidebar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AppSidebar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/ai/AiForecast.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/ai/AiForecast.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/inventory/InventoryRecords.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/inventory/InventoryRecords.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/order/OrderForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/order/OrderForm.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/supplier/SupplierList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/supplier/SupplierList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/supplier/SupplierView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/supplier/SupplierView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplyRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplyRecordMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ProductMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ProductMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/SupplyRecordMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/SupplyRecordMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,6 +102,11 @@
 }]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\develop\SwiftStock\frontend\public" />
+    </key>
   </component>
   <component name="RunManager" selected="Spring Boot.SwiftStockApplication">
     <configuration name="DeepseekIntegrationTest.integration_callDeepSeek_realClient" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
@@ -451,7 +458,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766389558064</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="供应商管理模块的供货记录功能开发">
+      <option name="closed" value="true" />
+      <created>1766394243390</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1766394243390</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +494,8 @@
     <MESSAGE value="删除无用的类" />
     <MESSAGE value="开发阶段限制API调用，减少Token消耗" />
     <MESSAGE value="AI智能获取商品详细信息开发" />
-    <option name="LAST_COMMIT_MESSAGE" value="AI智能获取商品详细信息开发" />
+    <MESSAGE value="供应商管理模块的供货记录功能开发" />
+    <option name="LAST_COMMIT_MESSAGE" value="供应商管理模块的供货记录功能开发" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -157,7 +157,19 @@ export default {
 </script>
 
 <style scoped>
-.page-header { margin-bottom: 12px; }
+.page-header { 
+  margin-bottom: 20px;
+}
+
+.page-header h2 {
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.page-header p {
+  color: #666;
+  margin: 0; 
+}
 .table-container { background: #fff; padding: 12px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 </style>
 

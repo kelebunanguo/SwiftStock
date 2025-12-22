@@ -1,8 +1,8 @@
 <template>
   <AppLayout>
     <div class="page-header">
-      <h2>仪表盘</h2>
-      <p>欢迎使用SwiftStock电商仓库管理系统</p>
+      <h2>AI运营概览</h2>
+      <p>欢迎使用SwiftStock AI电商仓库管理系统</p>
     </div>
 
     <!-- 顶部统计区域（新版：左右各 50%） -->
