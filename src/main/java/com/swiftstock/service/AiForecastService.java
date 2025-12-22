@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swiftstock.dto.AiReorderRecommendVO;
 import com.swiftstock.entity.Product;
 import com.swiftstock.mapper.ProductMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
+@Slf4j
 @Service
 public class AiForecastService {
 
@@ -66,6 +67,7 @@ public class AiForecastService {
 
         cache.put("recommend_list", top);
         lastRefresh = Instant.now();
+        log.info("AI智能补货推荐计算结束");
         return top;
     }
 
