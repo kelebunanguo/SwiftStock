@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * AI 补货预测服务实现类（放在 impl 包中）。
+ * AI 补货预测服务实现类
  * 实现包含：调用大模型、解析 JSON、缓存结果、定时刷新等具体逻辑。
  */
 @Slf4j
@@ -101,7 +101,12 @@ public class AiForecastServiceImpl implements AiForecastService {
             return result;
         }
 
-        for (Product p : products) {
+        // === 关键修改：测试阶段只处理前 5 个商品，极大减少API调用次数 ===
+        int testLimit = 5;  // 测试阶段只遍历5个商品，完成后  "5"-->"products.size()"
+        int processCount = Math.min(testLimit, products.size());
+
+        for (int i = 0; i < processCount; i++) {
+            Product p = products.get(i);
             try {
                 // 仅考虑在售商品（status == 1）
                 if (p.getStatus() == null || p.getStatus() != 1) {

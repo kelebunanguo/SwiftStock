@@ -19,7 +19,7 @@ public interface AiForecastService {
     int getRecommendCount();
 
     /**
-     * 返回详细补货建议列表（按建议补货数量降序，取前15）。
+     * 返回详细补货建议列表（按建议补货数量降序，取前10）。
      *
      * @return 补货建议列表
      */
