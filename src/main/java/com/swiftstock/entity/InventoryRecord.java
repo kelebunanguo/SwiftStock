@@ -3,6 +3,9 @@ package com.swiftstock.entity;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/**
+ * 库存记录实体
+ */
 @Data
 public class InventoryRecord {
     private Long id;

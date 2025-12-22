@@ -2,6 +2,9 @@ package com.swiftstock.dto;
 
 import lombok.Data;
 
+/**
+ * AI 补货推荐VO
+ */
 @Data
 public class AiReorderRecommendVO {
     private Long productId;

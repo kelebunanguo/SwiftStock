@@ -3,6 +3,9 @@ package com.swiftstock.dto;
 import lombok.Data;
 import java.util.List;
 
+/**
+ * 订单创建DTO
+ */
 @Data
 public class OrderCreateDTO {
     private String orderNo;

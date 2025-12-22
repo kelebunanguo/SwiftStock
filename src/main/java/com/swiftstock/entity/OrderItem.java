@@ -4,6 +4,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * 订单项实体
+ */
 @Data
 public class OrderItem {
     private Long id;

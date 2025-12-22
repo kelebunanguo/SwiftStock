@@ -34,7 +34,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 // 静态资源与 Swagger 接口文档允许匿名访问
                 .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**",
-                        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+                        "/swagger-ui.html", "/swagger-ui/**", "/doc.html", "/doc.html/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
                 // 认证相关接口允许匿名访问（登录/登出等）
                 .requestMatchers("/auth/**").permitAll()
                 // 暴露给前端的公共 API（如无需鉴权的接口）

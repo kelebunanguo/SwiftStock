@@ -9,56 +9,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改AI模块缓存规则">
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="补充统一注释说明">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/Knife4jConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/SwiftStockApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/SwiftStockApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/OpenApiConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiForecastController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiForecastController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiTestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AiTestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/DashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/InventoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/InventoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SalesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SalesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/SupplyRecordDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/SupplyRecordDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/AdminMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/AdminMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/CategoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/CategoryMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/InventoryRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/InventoryRecordMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderItemMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderItemMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderStatusHistoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/OrderStatusHistoryMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/ProductMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/ProductMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplierMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplierMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplyRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/mapper/SupplyRecordMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/security/JwtTokenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/security/JwtTokenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AdminService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/InventoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/InventoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/SupplierService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/SupplierService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AdminServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiProductServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/CategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/InventoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/InventoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/ProductServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SalesServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SalesServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/StockAlertServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/StockAlertServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SupplierServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SupplierServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SupplyRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/SupplyRecordServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/AiReorderRecommendVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/AiReorderRecommendVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/OrderCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/OrderCreateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/dto/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/InventoryRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/InventoryRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/SupplyRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/SupplyRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/AiProductService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -537,14 +504,21 @@
       <option name="project" value="LOCAL" />
       <updated>1766411228266</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="补充统一注释说明">
+      <option name="closed" value="true" />
+      <created>1766419466404</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1766419466404</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="配置修改优化" />
     <MESSAGE value="初始化数据库" />
     <MESSAGE value="添加系统说明" />
     <MESSAGE value="删除log日志" />
@@ -569,7 +543,8 @@
     <MESSAGE value="修复商品模块异常报错" />
     <MESSAGE value="添加登录页面背景图" />
     <MESSAGE value="修改AI模块缓存规则" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改AI模块缓存规则" />
+    <MESSAGE value="补充统一注释说明" />
+    <option name="LAST_COMMIT_MESSAGE" value="补充统一注释说明" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

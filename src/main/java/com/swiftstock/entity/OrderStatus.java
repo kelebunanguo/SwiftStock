@@ -1,5 +1,8 @@
 package com.swiftstock.entity;
 
+/**
+ * 订单状态枚举
+ */
 public enum OrderStatus {
     UNPAID("待付款"),
     PAID("已付款"),

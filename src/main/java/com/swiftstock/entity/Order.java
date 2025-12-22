@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 订单实体
+ */
 @Data
 public class Order {
     private Long id;
