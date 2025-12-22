@@ -319,14 +319,17 @@ export default {
     const aiLoading = ref(false)
     const aiSuccess = ref(false)
 
-    const loadAiReplenish = async () => {
+    const loadAiReplenish = async (force = false) => {
       aiLoading.value = true
       aiSuccess.value = false
       try {
         // pass silent:true to avoid global error messages for this request
-        const res = await aiAPI.getReplenishmentCount({ days: 7 }, { silent: true })
+        // add cacheBust param when force=true to bypass any HTTP caches/proxies
+        const params = { days: 7 }
+        if (force) params.cacheBust = Date.now()
+        const res = await aiAPI.getReplenishmentCount(params, { silent: true })
         // 调试日志，便于前端排查返回结构
-        console.debug('loadAiReplenish response ->', res)
+        console.debug('loadAiReplenish response ->', res, 'force=', force)
 
         // 兼容多种返回结构：直接数值、{data: num}、{success,data:num}、{code,data}
         let value = null
@@ -390,9 +393,15 @@ export default {
 
     const refreshAi = async () => {
       try {
-        await loadAiReplenish()
+        // remove local cache first to ensure we fetch fresh data
+        try { localStorage.removeItem(AI_CACHE_KEY) } catch (e) { /* ignore */ }
+        await loadAiReplenish(true)
         if (aiSuccess.value && aiReplenishCount.value !== null) {
-          writeAiCache(aiReplenishCount.value)
+          // 写入统一对象格式，便于 ai 页面和 dashboard 统一读取
+          writeAiCache({ count: aiReplenishCount.value, list: null })
+        } else {
+          // if backend returns failure, ensure cached value is not stale (remove)
+          try { localStorage.removeItem(AI_CACHE_KEY) } catch (e) {}
         }
       } catch (e) {
         console.error('refreshAi error', e)
@@ -463,7 +472,14 @@ export default {
       // 首次进入页面：若缓存存在且未过期，直接读取缓存并显示；否则自动发起一次请求并缓存
       const cached = readAiCache()
       if (cached !== null) {
-        aiReplenishCount.value = cached
+        // 兼容缓存可能是数字或对象 {count, list}
+        if (typeof cached === 'object' && cached.count !== undefined) {
+          aiReplenishCount.value = cached.count
+        } else if (typeof cached === 'number') {
+          aiReplenishCount.value = cached
+        } else {
+          aiReplenishCount.value = null
+        }
       } else {
         // 首次进入页面自动刷新并写缓存
         refreshAi()
