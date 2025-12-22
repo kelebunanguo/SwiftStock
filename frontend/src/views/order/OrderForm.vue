@@ -152,7 +152,6 @@
                     <el-input-number
                       v-model="scope.row.quantity"
                       :min="1"
-                      :max="scope.row.stockQuantity"
                       @change="updateItemAmount(scope.$index)"
                     />
                   </template>
@@ -248,7 +247,7 @@
 <script>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { orderAPI, productAPI } from '@/api'
 
@@ -312,8 +311,24 @@ export default {
     }
 
     // 更新商品金额
-    const updateItemAmount = (index) => {
+    const updateItemAmount = async (index) => {
       const item = form.items[index]
+      // 记录当前输入前的有效数量（用于恢复）
+      const prevQuantity = typeof item._prevQuantity === 'number' ? item._prevQuantity : (item.quantity || 1)
+
+      // 校验库存：如果输入数量超过库存，弹出确认对话框，用户选择是否使用最大可用量
+      if (typeof item.stockQuantity === 'number' && item.quantity > item.stockQuantity) {
+        // 仅保留单按钮确认：点击确定则自动调整为最大可用量
+        await ElMessageBox.alert(
+          `库存不足，商品 "${item.productName}" 当前库存剩余 ${item.stockQuantity}，点击确定将自动调整为最大可用量。`,
+          '库存不足',
+          { confirmButtonText: '确定', type: 'warning' }
+        )
+        item.quantity = item.stockQuantity
+      }
+
+      // 更新上一次有效数量并金额
+      item._prevQuantity = item.quantity
       item.amount = item.quantity * item.price
     }
 
@@ -381,6 +396,14 @@ export default {
         if (form.items.length === 0) {
           ElMessage.error('请至少添加一个商品')
           return
+        }
+
+        // 提交前二次校验库存，防止并发或前端绕过
+        for (const item of form.items) {
+          if (typeof item.stockQuantity === 'number' && item.quantity > item.stockQuantity) {
+            ElMessage.error(`库存不足，商品 "${item.productName}" 当前库存剩余 ${item.stockQuantity}，请调整数量`)
+            return
+          }
         }
 
         loading.value = true

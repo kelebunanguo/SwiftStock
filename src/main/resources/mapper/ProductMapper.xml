@@ -117,7 +117,7 @@
             <if test="supplier != null and supplier != ''">
                 AND p.supplier LIKE CONCAT('%', #{supplier}, '%')
             </if>
-            <!-- location 字段已移除 -->
+            
             <if test="stockQuantity != null">
                 AND p.stock_quantity >= #{stockQuantity}
             </if>

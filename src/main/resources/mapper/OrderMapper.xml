@@ -35,7 +35,6 @@
                 <result property="stockQuantity" column="stock_quantity"/>
                 <result property="minStockLevel" column="min_stock_level"/>
                 <result property="supplier" column="supplier"/>
-                <result property="location" column="location"/>
             </association>
         </collection>
     </resultMap>
@@ -168,8 +167,7 @@
             p.price as product_price,
             p.stock_quantity,
             p.min_stock_level,
-            p.supplier,
-            p.location
+            p.supplier
         FROM orders o
         LEFT JOIN admin a ON o.operator_id = a.id
         LEFT JOIN order_item i ON o.id = i.order_id

@@ -292,10 +292,6 @@ export default {
         const response = await productAPI.getDetail(route.params.id)
         if (response.success) {
           Object.assign(form, response.data)
-          // 清理后端可能返回的已移除字段，防止反应式对象产生不必要的属性
-          if ('location' in form) {
-            delete form.location
-          }
         } else {
           ElMessage.error(response.message || '加载商品详情失败')
         }
@@ -316,16 +312,14 @@ export default {
         
         if (isEdit.value) {
           const submitData = { ...form }
-          // 不再提交或更新 location 字段
+          // 不再提交 code 字段（由数据库生成）
           delete submitData.code
-          delete submitData.location
           await productAPI.update(form.id, submitData)
           ElMessage.success('商品更新成功')
         } else {
-          // 新增时，不传递code字段，由数据库自动生成
+          // 新增时，不传递 code 字段，由数据库自动生成
           const submitData = { ...form }
           delete submitData.code
-          delete submitData.location
           await productAPI.create(submitData)
           ElMessage.success('商品创建成功')
         }
