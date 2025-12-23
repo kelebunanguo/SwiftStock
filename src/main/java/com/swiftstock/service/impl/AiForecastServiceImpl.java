@@ -120,8 +120,7 @@ public class AiForecastServiceImpl implements AiForecastService {
         }
 
         //修改为真实的商品遍历
-        int testLimit = products.size();
-        int processCount = Math.min(testLimit, products.size());
+        int processCount = products.size();
 
         for (int i = 0; i < processCount; i++) {
             Product p = products.get(i);
