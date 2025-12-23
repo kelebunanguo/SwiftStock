@@ -20,7 +20,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springdoc.version>2.7.0</springdoc.version>
+        <springdoc.version>2.8.0</springdoc.version>
         <mybatis.version>3.0.4</mybatis.version>
     </properties>
 
@@ -98,14 +98,22 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring AI -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
+
+
+
     </dependencies>
 
+
+
+    
     <dependencyManagement>
         <dependencies>
+            <!-- Spring AI BOM -->
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
