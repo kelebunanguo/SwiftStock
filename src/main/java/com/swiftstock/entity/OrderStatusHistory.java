@@ -19,7 +19,6 @@ public class OrderStatusHistory {
     private OrderStatus fromStatus;
     private OrderStatus toStatus;
     private String reason;
-    private Long operatorId;
     private LocalDateTime changedTime;
 }
 

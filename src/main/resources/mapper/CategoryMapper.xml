@@ -10,7 +10,6 @@
         <result property="level" column="level"/>
         <result property="sortOrder" column="sort_order"/>
         <result property="description" column="description"/>
-        <result property="status" column="status"/>
         <result property="createdTime" column="created_time"/>
         <result property="updatedTime" column="updated_time"/>
         <result property="fullPath" column="full_path"/>
@@ -38,21 +37,21 @@
         FROM category c
         LEFT JOIN category p2 ON c.parent_id = p2.id
         LEFT JOIN category p1 ON p2.parent_id = p1.id
-        WHERE c.status = 1
+        
         ORDER BY c.level, c.sort_order
     </select>
     
     <!-- 根据父级ID查询子分类 -->
     <select id="findByParentId" resultMap="CategoryResultMap">
         SELECT * FROM category 
-        WHERE parent_id = #{parentId} AND status = 1
+        WHERE parent_id = #{parentId}
         ORDER BY sort_order
     </select>
     
     <!-- 查询一级分类 -->
     <select id="findRootCategories" resultMap="CategoryResultMap">
         SELECT * FROM category 
-        WHERE parent_id IS NULL AND status = 1
+        WHERE parent_id IS NULL
         ORDER BY sort_order
     </select>
     
@@ -64,14 +63,14 @@
         FROM category c
         LEFT JOIN category p2 ON c.parent_id = p2.id
         LEFT JOIN category p1 ON p2.parent_id = p1.id
-        WHERE c.level = 3 AND c.status = 1
+        WHERE c.level = 3
         ORDER BY c.sort_order
     </select>
     
     <!-- 插入分类 -->
     <insert id="insert" parameterType="com.swiftstock.entity.Category" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO category(name, parent_id, level, sort_order, description, status) 
-        VALUES(#{name}, #{parentId}, #{level}, #{sortOrder}, #{description}, #{status})
+        INSERT INTO category(name, parent_id, level, sort_order, description) 
+        VALUES(#{name}, #{parentId}, #{level}, #{sortOrder}, #{description})
     </insert>
     
     <!-- 更新分类 -->
@@ -82,7 +81,7 @@
             level = #{level},
             sort_order = #{sortOrder},
             description = #{description}, 
-            status = #{status},
+            
             updated_time = CURRENT_TIMESTAMP 
         WHERE id = #{id}
     </update>

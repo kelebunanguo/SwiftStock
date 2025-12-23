@@ -510,7 +510,6 @@ public class OrderServiceImpl implements OrderService {
         history.setFromStatus(fromStatus);
         history.setToStatus(toStatus);
         history.setReason(reason);
-        history.setOperatorId(order.getOperatorId());
         history.setChangedTime(LocalDateTime.now());
         orderStatusHistoryMapper.insert(history);
     }

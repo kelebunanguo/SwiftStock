@@ -17,7 +17,6 @@ public class Category {
     private Integer level;         // 分类层级：1-一级分类，2-二级分类，3-三级分类
     private Integer sortOrder;    // 排序字段
     private String description;
-    private Integer status;       // 状态：0-禁用，1-启用
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     

@@ -9,15 +9,10 @@
         <result property="customerPhone" column="customer_phone"/>
         <result property="totalAmount" column="total_amount"/>
         <result property="status" column="status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
-        <result property="operatorId" column="operator_id"/>
         <result property="remark" column="remark"/>
         <result property="createdTime" column="created_time"/>
         <result property="updatedTime" column="updated_time"/>
-        <association property="operator" javaType="com.swiftstock.entity.Admin">
-            <id property="id" column="operator_id"/>
-            <result property="username" column="operator_username"/>
-            <result property="name" column="operator_name"/>
-        </association>
+        <!-- operator_id / operator 关联已移除 -->
         <collection property="items" ofType="com.swiftstock.entity.OrderItem">
             <id property="id" column="item_id"/>
             <result property="orderId" column="order_id"/>
@@ -42,8 +37,6 @@
     <select id="findByCondition" parameterType="com.swiftstock.entity.Order" resultMap="orderMap">
         SELECT DISTINCT
             o.*,
-            a.username as operator_username,
-            a.name as operator_name,
             i.id as item_id,
             i.quantity,
             i.price,
@@ -51,7 +44,6 @@
             i.product_id,
             i.product_name
         FROM orders o
-        LEFT JOIN admin a ON o.operator_id = a.id
         LEFT JOIN order_item i ON o.id = i.order_id
         <where>
             <if test="orderNo != null and orderNo != ''">
@@ -79,8 +71,6 @@
     <select id="findById" parameterType="long" resultMap="orderMap">
         SELECT 
             o.*,
-            a.username as operator_username,
-            a.name as operator_name,
             i.id as item_id,
             i.quantity,
             i.price,
@@ -88,7 +78,6 @@
             i.product_id,
             i.product_name
         FROM orders o
-        LEFT JOIN admin a ON o.operator_id = a.id
         LEFT JOIN order_item i ON o.id = i.order_id
         WHERE o.id = #{id}
     </select>
@@ -137,8 +126,6 @@
     <select id="selectAll" resultMap="orderMap">
         SELECT 
             o.*,
-            a.username as operator_username,
-            a.name as operator_name,
             i.id as item_id,
             i.quantity,
             i.price,
@@ -146,7 +133,6 @@
             i.product_id,
             i.product_name
         FROM orders o
-        LEFT JOIN admin a ON o.operator_id = a.id
         LEFT JOIN order_item i ON o.id = i.order_id
         ORDER BY o.created_time DESC
     </select>
@@ -154,8 +140,6 @@
     <select id="selectById" resultMap="orderMap">
         SELECT 
             o.*,
-            a.username as operator_username,
-            a.name as operator_name,
             i.id as item_id,
             i.quantity,
             i.price,
@@ -169,7 +153,6 @@
             p.min_stock_level,
             p.supplier
         FROM orders o
-        LEFT JOIN admin a ON o.operator_id = a.id
         LEFT JOIN order_item i ON o.id = i.order_id
         LEFT JOIN product p ON i.product_id = p.id
         WHERE o.id = #{id}

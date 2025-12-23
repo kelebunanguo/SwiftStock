@@ -18,8 +18,6 @@ public class Order {
     private OrderStatus status;
     private BigDecimal totalAmount;
     private String remark;
-    private Long operatorId;
-    private Admin operator;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     private List<OrderItem> items = new ArrayList<>();

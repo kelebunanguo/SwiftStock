@@ -8,19 +8,17 @@
         <result property="fromStatus" column="from_status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
         <result property="toStatus" column="to_status" typeHandler="com.swiftstock.config.OrderStatusTypeHandler"/>
         <result property="reason" column="reason"/>
-        <result property="operatorId" column="operator_id"/>
         <result property="changedTime" column="changed_time"/>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO order_status_history (
-            order_id, from_status, to_status, reason, operator_id, changed_time
+            order_id, from_status, to_status, reason, changed_time
         ) VALUES (
             #{orderId},
             #{fromStatus, typeHandler=com.swiftstock.config.OrderStatusTypeHandler},
             #{toStatus, typeHandler=com.swiftstock.config.OrderStatusTypeHandler},
             #{reason},
-            #{operatorId},
             #{changedTime}
         )
     </insert>

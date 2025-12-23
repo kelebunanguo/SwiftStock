@@ -71,11 +71,7 @@ public class ReportController {
                 .map(p -> p.getPrice().multiply(BigDecimal.valueOf(p.getStockQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
             
-            // 为每个商品添加库存价值（前端明细表/报表显示）
-            products.forEach(p -> {
-                BigDecimal stockValue = p.getPrice().multiply(BigDecimal.valueOf(p.getStockQuantity()));
-                p.setStockValue(stockValue);
-            });
+            // 库存价值由前端/临时计算，不持久化到数据库，Report 返回时直接计算展示
             
             Map<String, Object> data = new HashMap<>();
             data.put("stats", stats);

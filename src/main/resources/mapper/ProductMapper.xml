@@ -13,7 +13,6 @@
         <result property="minStockLevel" column="min_stock_level"/>
         <result property="supplier" column="supplier"/>
         <result property="status" column="status"/>
-        <result property="stockValue" column="stock_value"/>
         <result property="inTime" column="in_time"/>
         <result property="outTime" column="out_time"/>
         <result property="createdTime" column="created_time"/>
@@ -63,10 +62,10 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product (
             name, category_id, description, price, stock_quantity,
-            min_stock_level, supplier, status, stock_value, in_time, created_time
+            min_stock_level, supplier, status, in_time, created_time
         ) VALUES (
             #{name}, #{categoryId}, #{description}, #{price}, #{stockQuantity},
-            #{minStockLevel}, #{supplier}, #{status}, #{stockValue}, #{inTime}, CURRENT_TIMESTAMP
+            #{minStockLevel}, #{supplier}, #{status}, #{inTime}, CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -81,7 +80,6 @@
             <if test="minStockLevel != null">min_stock_level = #{minStockLevel},</if>
             <if test="supplier != null">supplier = #{supplier},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="stockValue != null">stock_value = #{stockValue},</if>
             <if test="inTime != null">in_time = #{inTime},</if>
             <if test="outTime != null">out_time = #{outTime},</if>
             updated_time = CURRENT_TIMESTAMP
