@@ -119,8 +119,8 @@ public class AiForecastServiceImpl implements AiForecastService {
             return result;
         }
 
-        //修改为真实的商品遍历
-        int processCount = products.size();
+        //测试阶段省token时使用（临时）
+        int processCount = Math.min(5, products.size());
 
         for (int i = 0; i < processCount; i++) {
             Product p = products.get(i);
