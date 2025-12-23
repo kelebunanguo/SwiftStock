@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 库存预警控制器
+ * 首页库存预警控制器
  *
  * <p>预警规则（与 Service 保持一致）：
  * <ul>
