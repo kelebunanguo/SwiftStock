@@ -168,13 +168,7 @@ export const supplyRecordAPI = {
 
 export const categoryAPI = {
   // 获取分类列表
-  getList: () => api.get('/categories'),
-  // 创建分类
-  create: (data) => api.post('/categories', data),
-  // 更新分类
-  update: (id, data) => api.put(`/categories/${id}`, data),
-  // 删除分类
-  delete: (id) => api.delete(`/categories/${id}`)
+  getList: () => api.get('/categories')
 }
 
 export const reportAPI = {
