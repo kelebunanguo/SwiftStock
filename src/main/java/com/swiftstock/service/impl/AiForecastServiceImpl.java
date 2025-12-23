@@ -119,8 +119,8 @@ public class AiForecastServiceImpl implements AiForecastService {
             return result;
         }
 
-        // === 关键修改：测试阶段只处理前 5 个商品，极大减少API调用次数 ===
-        int testLimit = 5;  // 测试阶段只遍历5个商品，完成后  "5"-->"products.size()"
+        //修改为真实的商品遍历
+        int testLimit = products.size();
         int processCount = Math.min(testLimit, products.size());
 
         for (int i = 0; i < processCount; i++) {
