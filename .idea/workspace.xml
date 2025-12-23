@@ -9,19 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改为真实的商品遍历">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecommerce_warehouse.sql" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce_warehouse.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderStatusHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/OrderStatusHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/CategoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/CategoryMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/OrderMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/OrderMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/OrderStatusHistoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/OrderStatusHistoryMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ProductMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ProductMapper.xml" afterDir="false" />
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="删除不需要的功能">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/service/impl/AiForecastServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -284,7 +273,7 @@
       <workItem from="1766280121312" duration="25319000" />
       <workItem from="1766329600895" duration="3268000" />
       <workItem from="1766473765666" duration="3950000" />
-      <workItem from="1766479979755" duration="4591000" />
+      <workItem from="1766479979755" duration="4884000" />
     </task>
     <task id="LOCAL-00001" summary="完善功能、添加注释">
       <option name="closed" value="true" />
@@ -550,7 +539,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766480722978</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="修改数据库，添加注释">
+      <option name="closed" value="true" />
+      <created>1766484642817</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1766484642817</updated>
+    </task>
+    <task id="LOCAL-00035" summary="删除不需要的功能">
+      <option name="closed" value="true" />
+      <created>1766484655481</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1766484655481</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -568,8 +573,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="删除log日志" />
-    <MESSAGE value="修改数据库脚本" />
     <MESSAGE value="添加Spring Security" />
     <MESSAGE value="新增供应商管理模块" />
     <MESSAGE value="修改商品模块中供应商下拉列表" />
@@ -593,7 +596,9 @@
     <MESSAGE value="修改注释" />
     <MESSAGE value="删除分类无用的功能" />
     <MESSAGE value="修改为真实的商品遍历" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改为真实的商品遍历" />
+    <MESSAGE value="修改数据库，添加注释" />
+    <MESSAGE value="删除不需要的功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="删除不需要的功能" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
