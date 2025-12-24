@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PreDestroy;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -208,11 +209,12 @@ public class AiForecastServiceImpl implements AiForecastService {
         if (products == null || products.isEmpty()) {
             return result;
         }
-
+        long startTime = System.currentTimeMillis();
+        log.info("开始并行处理，时间: {}", LocalDateTime.now());
         log.info("开始并行处理 {} 个商品的AI补货建议", products.size());
 
         // === 测试专用：限制只处理前5个商品（省token，快速出结果）===
-        int testLimit = 5;  // ← 改这里控制数量
+        int testLimit = 3;  // ← 改这里控制数量
         products = products.subList(0, Math.min(testLimit, products.size()));
         // === 正式演示时注释或删除上面3行 ===
 
@@ -241,8 +243,12 @@ public class AiForecastServiceImpl implements AiForecastService {
                     log.warn("收集AI补货建议结果时发生异常: {}", e.getMessage());
                 }
             }
-
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime ;
+            double elapsedTimes = elapsedTime / 1000.0; // 转换为秒
+            log.info("方法执行完成，耗时: {} ms", elapsedTimes);
             log.info("AI补货建议并行处理完成，共获得 {} 个有效建议", result.size());
+            
 
         } catch (Exception e) {
             log.error("并行处理AI补货建议时发生异常: {}", e.getMessage());
