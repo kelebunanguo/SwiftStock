@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <style>
+    .layer { fill:#fff; stroke:#0b5ed7; stroke-width:2; rx:6; }
+    .text { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
+    .arrow { stroke:#334155; stroke-width:2; fill:none; marker-end:url(#a); }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <!-- Frontend -->
+  <rect class="layer" x="40" y="30" width="200" height="80"/>
+  <text class="text" x="140" y="60" text-anchor="middle">前端 (Vue)</text>
+  <text class="text" x="140" y="78" text-anchor="middle">仪表盘 / 商品列表 / 补货建议</text>
+
+  <!-- Controllers -->
+  <rect class="layer" x="320" y="20" width="240" height="100"/>
+  <text class="text" x="440" y="45" text-anchor="middle">Controller 层</text>
+  <text class="text" x="440" y="65" text-anchor="middle">Auth / Product / Inventory / Order / AI</text>
+
+  <!-- Services -->
+  <rect class="layer" x="320" y="140" width="240" height="120"/>
+  <text class="text" x="440" y="165" text-anchor="middle">Service 层</text>
+  <text class="text" x="440" y="185" text-anchor="middle">ProductService / InventoryService / AiForecastService</text>
+
+  <!-- Persistence -->
+  <rect class="layer" x="640" y="40" width="220" height="220"/>
+  <text class="text" x="750" y="65" text-anchor="middle">持久层 / DB</text>
+  <text class="text" x="750" y="85" text-anchor="middle">MyBatis Mapper → MySQL</text>
+
+  <!-- AI model -->
+  <rect class="layer" x="40" y="160" width="200" height="80"/>
+  <text class="text" x="140" y="190" text-anchor="middle">AI 服务</text>
+  <text class="text" x="140" y="208" text-anchor="middle">Spring AI (ChatClient) / 外部模型</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M240 70 L320 70" />
+  <path class="arrow" d="M560 70 L640 70" />
+  <path class="arrow" d="M440 120 L440 140" />
+  <path class="arrow" d="M240 200 L320 200" />
+  <path class="arrow" d="M240 200 L140 200" />
+  <path class="arrow" d="M560 200 L640 200" />
+
+  <text class="text" x="450" y="250" text-anchor="middle">数据流与调用关系示意</text>
+</svg>
+
+

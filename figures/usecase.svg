@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420" viewBox="0 0 700 420">
+  <style>
+    .actor { font-family: Arial, sans-serif; font-size:14px; fill:#0b1220; }
+    .oval { fill:#fff; stroke:#0b5ed7; stroke-width:2; rx:30; }
+    .line { stroke:#334155; stroke-width:2; }
+    .label { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
+  </style>
+
+  <!-- Actor -->
+  <text class="actor" x="40" y="60">系统管理员</text>
+  <line class="line" x1="140" y1="70" x2="200" y2="70"/>
+
+  <!-- Use cases as ovals -->
+  <ellipse class="oval" cx="360" cy="70" rx="120" ry="28"/>
+  <text class="label" x="360" y="76" text-anchor="middle">登录 / 鉴权</text>
+
+  <ellipse class="oval" cx="360" cy="140" rx="120" ry="28"/>
+  <text class="label" x="360" y="146" text-anchor="middle">库存查询 / 记录</text>
+
+  <ellipse class="oval" cx="360" cy="210" rx="120" ry="28"/>
+  <text class="label" x="360" y="216" text-anchor="middle">入库 / 出库 / 调整</text>
+
+  <ellipse class="oval" cx="360" cy="280" rx="140" ry="28"/>
+  <text class="label" x="360" y="286" text-anchor="middle">生成补货建议 / 审核 / 生成采购单</text>
+
+  <ellipse class="oval" cx="360" cy="350" rx="120" ry="28"/>
+  <text class="label" x="360" y="356" text-anchor="middle">查看预测报表 / 导出</text>
+
+  <!-- Lines from actor to use cases -->
+  <line class="line" x1="200" y1="70" x2="240" y2="70"/>
+  <line class="line" x1="200" y1="70" x2="240" y2="140"/>
+  <line class="line" x1="200" y1="70" x2="240" y2="210"/>
+  <line class="line" x1="200" y1="70" x2="240" y2="280"/>
+  <line class="line" x1="200" y1="70" x2="240" y2="350"/>
+</svg>
+

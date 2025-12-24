@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <style>
+    .card { fill:#ffffff; stroke:#cbd5e1; stroke-width:1.6; rx:6; }
+    .title { font-family: Arial, sans-serif; font-size:16px; fill:#0b1220; font-weight:700; }
+    .text { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
+  </style>
+  <!-- Dashboard header -->
+  <rect x="20" y="20" width="860" height="60" class="card"/>
+  <text class="title" x="40" y="60">SwiftStock 仪表盘示意</text>
+
+  <!-- Cards -->
+  <rect class="card" x="40" y="100" width="200" height="100"/>
+  <text class="text" x="140" y="150" text-anchor="middle">总商品数</text>
+  <rect class="card" x="260" y="100" width="200" height="100"/>
+  <text class="text" x="360" y="150" text-anchor="middle">订单数</text>
+  <rect class="card" x="480" y="100" width="200" height="100"/>
+  <text class="text" x="580" y="150" text-anchor="middle">库存总量</text>
+  <rect class="card" x="700" y="100" width="160" height="100"/>
+  <text class="text" x="780" y="150" text-anchor="middle">低库存数</text>
+
+  <!-- Table mockup -->
+  <rect class="card" x="40" y="220" width="820" height="240"/>
+  <text class="text" x="60" y="250">商品列表（示意）</text>
+  <line x1="60" y1="260" x2="840" y2="260" stroke="#e2e8f0"/>
+  <text class="text" x="80" y="290">商品名</text>
+  <text class="text" x="320" y="290">库存</text>
+  <text class="text" x="480" y="290">安全库存</text>
+  <text class="text" x="640" y="290">操作</text>
+
+  <!-- Action button -->
+  <rect x="740" y="320" width="100" height="36" rx="4" class="card" />
+  <text class="text" x="790" y="344" text-anchor="middle">生成补货建议</text>
+</svg>
+
+

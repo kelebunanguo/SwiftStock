@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <style>
+    .box { fill:#ffffff; stroke:#0b5ed7; stroke-width:2; rx:6; }
+    .text { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
+    .small { font-size:12px; fill:#475569; }
+    .arrow { stroke:#334155; stroke-width:2; fill:none; marker-end:url(#a); }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect class="box" x="36" y="30" width="200" height="64"/>
+  <text class="text" x="136" y="68" text-anchor="middle">前端提交商品上下文</text>
+
+  <rect class="box" x="270" y="30" width="200" height="64"/>
+  <text class="text" x="370" y="68" text-anchor="middle">AiProductService 构造 Prompt</text>
+
+  <rect class="box" x="504" y="30" width="200" height="64"/>
+  <text class="text" x="604" y="68" text-anchor="middle">调用模型生成候选文案</text>
+
+  <path class="arrow" d="M236,62 L270,62"/>
+  <path class="arrow" d="M470,62 L504,62"/>
+
+  <rect class="box" x="270" y="130" width="200" height="64"/>
+  <text class="text" x="370" y="168" text-anchor="middle">后处理与可编辑候选</text>
+
+  <path class="arrow" d="M604,94 L370,130"/>
+  <path class="arrow" d="M370,94 L370,130"/>
+
+  <rect class="box" x="270" y="230" width="200" height="64"/>
+  <text class="text" x="370" y="268" text-anchor="middle">返回前端供管理员编辑/保存</text>
+
+  <path class="arrow" d="M370,194 L370,230"/>
+  <text class="small" x="36" y="110">（包含输入：name、category、supplier、attributes）</text>
+
+  <text class="small" x="36" y="400">图：AI 生成商品详情流程示意</text>
+</svg>
+

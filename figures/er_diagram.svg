@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <style>
+    .entity { fill:#fff; stroke:#0b5ed7; stroke-width:1.8; rx:6; }
+    .title { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; font-weight:700; }
+    .field { font-family: Arial, sans-serif; font-size:12px; fill:#0b1220; }
+    .line { stroke:#334155; stroke-width:1.4; }
+  </style>
+
+  <!-- Product -->
+  <rect class="entity" x="40" y="40" width="220" height="120"/>
+  <text class="title" x="150" y="64" text-anchor="middle">Product</text>
+  <text class="field" x="60" y="90">product_id PK</text>
+  <text class="field" x="60" y="110">name</text>
+  <text class="field" x="60" y="130">category_id FK</text>
+  <text class="field" x="60" y="150">price, stock_quantity, min_stock_level</text>
+
+  <!-- Category -->
+  <rect class="entity" x="320" y="40" width="200" height="80"/>
+  <text class="title" x="420" y="64" text-anchor="middle">Category</text>
+  <text class="field" x="340" y="90">category_id PK</text>
+  <text class="field" x="340" y="110">name</text>
+
+  <!-- Order -->
+  <rect class="entity" x="40" y="220" width="260" height="100"/>
+  <text class="title" x="170" y="244" text-anchor="middle">Order</text>
+  <text class="field" x="60" y="270">order_id PK</text>
+  <text class="field" x="60" y="290">order_no, created_time, status, total_amount</text>
+
+  <!-- OrderItem -->
+  <rect class="entity" x="360" y="220" width="260" height="100"/>
+  <text class="title" x="490" y="244" text-anchor="middle">OrderItem</text>
+  <text class="field" x="380" y="270">item_id PK</text>
+  <text class="field" x="380" y="290">order_id FK, product_id FK, quantity, unit_price</text>
+
+  <!-- InventoryRecord -->
+  <rect class="entity" x="40" y="360" width="260" height="100"/>
+  <text class="title" x="170" y="384" text-anchor="middle">InventoryRecord</text>
+  <text class="field" x="60" y="410">record_id PK</text>
+  <text class="field" x="60" y="430">product_id FK, type, quantity, reason, created_time</text>
+
+  <!-- Supplier & SupplyRecord -->
+  <rect class="entity" x="360" y="360" width="260" height="100"/>
+  <text class="title" x="490" y="384" text-anchor="middle">Supplier / SupplyRecord</text>
+  <text class="field" x="380" y="410">supplier_id PK, name, contact</text>
+  <text class="field" x="380" y="430">supply_record: record_id PK, supplier_id FK, product_id FK, quantity, receive_time</text>
+
+  <!-- Admin -->
+  <rect class="entity" x="660" y="40" width="200" height="80"/>
+  <text class="title" x="760" y="64" text-anchor="middle">Admin</text>
+  <text class="field" x="680" y="90">admin_id PK, username, password_hash, name</text>
+
+  <!-- Relations lines -->
+  <line class="line" x1="260" y1="120" x2="320" y2="120"/>
+  <line class="line" x1="170" y1="220" x2="170" y2="240"/>
+  <line class="line" x1="300" y1="260" x2="360" y2="260"/>
+  <line class="line" x1="170" y1="320" x2="170" y2="360"/>
+  <line class="line" x1="300" y1="420" x2="360" y2="420"/>
+</svg>
+

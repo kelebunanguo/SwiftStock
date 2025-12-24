@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="900" viewBox="0 0 480 900">
+  <style>
+    .box { fill:#ffffff; stroke:#0b5ed7; stroke-width:2; rx:8; filter: drop-shadow(0 2px 4px rgba(11,94,215,0.12)); }
+    .text { font-family: "Helvetica Neue", Arial, sans-serif; font-size:14px; fill:#0b1220; }
+    .small { font-size:12px; fill:#42526e; }
+    .arrow { stroke:#334155; stroke-width:2.4; fill:none; marker-end:url(#arrowhead); }
+    .note { font-size:12px; fill:#64748b; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <!-- Vertical layout boxes -->
+  <rect class="box" x="80" y="40" width="320" height="64"/>
+  <text class="text" x="240" y="82" text-anchor="middle">商品 / 供应商建档</text>
+
+  <rect class="box" x="80" y="140" width="320" height="72"/>
+  <text class="text" x="240" y="175" text-anchor="middle">定期 / 触发 AI 预测</text>
+  <text class="small" x="240" y="193" text-anchor="middle">（结合促销 / 节假日等外部事件）</text>
+
+  <rect class="box" x="80" y="260" width="320" height="72"/>
+  <text class="text" x="240" y="295" text-anchor="middle">生成补货建议列表</text>
+  <text class="small" x="240" y="313" text-anchor="middle">（优先级排序、建议数量）</text>
+
+  <rect class="box" x="80" y="380" width="320" height="64"/>
+  <text class="text" x="240" y="420" text-anchor="middle">管理员 审阅 / 调整</text>
+
+  <rect class="box" x="80" y="500" width="320" height="64"/>
+  <text class="text" x="240" y="540" text-anchor="middle">生成采购单 / 下发供应商</text>
+
+  <rect class="box" x="80" y="620" width="320" height="64"/>
+  <text class="text" x="240" y="660" text-anchor="middle">供应商发货 / 入库</text>
+
+  <rect class="box" x="80" y="740" width="320" height="64"/>
+  <text class="text" x="240" y="780" text-anchor="middle">更新库存记录 / 更新看板</text>
+
+  <!-- Arrows connecting vertically -->
+  <path class="arrow" d="M240,104 L240,140" />
+  <path class="arrow" d="M240,212 L240,260" />
+  <path class="arrow" d="M240,332 L240,380" />
+  <path class="arrow" d="M240,444 L240,500" />
+  <path class="arrow" d="M240,564 L240,620" />
+  <path class="arrow" d="M240,704 L240,740" />
+
+  <!-- External event side label with dashed connector -->
+  <text class="small" x="30" y="170">外部事件：促销 / 节假日</text>
+  <path stroke="#94a3b8" stroke-dasharray="4 4" d="M120,150 L60,110" fill="none" />
+
+  <!-- Footnote / caption hint -->
+  <text class="note" x="20" y="880">图 2-1 SwiftStock 系统业务流程示意图</text>
+</svg>  
+
