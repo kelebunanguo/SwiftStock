@@ -1,37 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420" viewBox="0 0 700 420">
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="920" viewBox="0 0 420 920" role="img" aria-label="系统业务流程 - 用例/流程图">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2b4368"/>
+    </marker>
+  </defs>
   <style>
-    .actor { font-family: Arial, sans-serif; font-size:14px; fill:#0b1220; }
-    .oval { fill:#fff; stroke:#0b5ed7; stroke-width:2; rx:30; }
-    .line { stroke:#334155; stroke-width:2; }
-    .label { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
+    .bg { fill: #ffffff; }
+    .box { fill:#1f6feb; stroke:#183b66; stroke-width:2; rx:10; }
+    .box-dark { fill:#163a57; stroke:#0b2740; stroke-width:2; rx:10; }
+    .box-light { fill:#8fd1ff; stroke:#3aa0ff; stroke-width:1.5; rx:8; }
+    .text { font-family: "Helvetica Neue", Arial, sans-serif; font-size:13px; fill:#ffffff; }
+    .text-dark { font-family: "Helvetica Neue", Arial, sans-serif; font-size:13px; fill:#0b1220; }
+    .note { font-family: Arial, sans-serif; font-size:12px; fill:#64748b; }
+    .diamond { fill:#06a6f0; stroke:#034f80; stroke-width:1.8; }
+    .line { stroke:#2b4368; stroke-width:2; fill:none; marker-end: url(#arrow); }
   </style>
 
-  <!-- Actor -->
-  <text class="actor" x="40" y="60">系统管理员</text>
-  <line class="line" x1="140" y1="70" x2="200" y2="70"/>
+  <!-- Start -->
+  <rect class="box-light" x="150" y="20" width="120" height="44" rx="22"/>
+  <text class="text-dark" x="210" y="50" text-anchor="middle">开始</text>
 
-  <!-- Use cases as ovals -->
-  <ellipse class="oval" cx="360" cy="70" rx="120" ry="28"/>
-  <text class="label" x="360" y="76" text-anchor="middle">登录 / 鉴权</text>
+  <!-- New product / maintenance -->
+  <rect class="box-light" x="90" y="90" width="240" height="56"/>
+  <text class="text-dark" x="210" y="118" text-anchor="middle">新品上架 / 商品维护</text>
+  <text class="text-dark" x="210" y="136" text-anchor="middle">含 AI 智能生成商品描述</text>
+  <path class="line" d="M210 64 L210 90" />
 
-  <ellipse class="oval" cx="360" cy="140" rx="120" ry="28"/>
-  <text class="label" x="360" y="146" text-anchor="middle">库存查询 / 记录</text>
+  <!-- Branch left: supplier supply -->
+  <rect class="box-dark" x="40" y="180" width="160" height="56" rx="8"/>
+  <text class="text" x="120" y="213" text-anchor="middle">供应商供货 / 入库记录</text>
+  <path class="line" d="M150 146 L120 180" />
 
-  <ellipse class="oval" cx="360" cy="210" rx="120" ry="28"/>
-  <text class="label" x="360" y="216" text-anchor="middle">入库 / 出库 / 调整</text>
+  <!-- Branch right: receive order -->
+  <rect class="box-dark" x="220" y="180" width="160" height="56" rx="8"/>
+  <text class="text" x="300" y="203" text-anchor="middle">接收订单</text>
+  <path class="line" d="M270 146 L300 180" />
 
-  <ellipse class="oval" cx="360" cy="280" rx="140" ry="28"/>
-  <text class="label" x="360" y="286" text-anchor="middle">生成补货建议 / 审核 / 生成采购单</text>
+  <!-- Inventory increase from supplier -->
+  <rect class="box-dark" x="40" y="260" width="160" height="56" rx="8"/>
+  <text class="text" x="120" y="293" text-anchor="middle">库存增加</text>
+  <path class="line" d="M120 236 L120 260" marker-end="url(#arrow)"/>
 
-  <ellipse class="oval" cx="360" cy="350" rx="120" ry="28"/>
-  <text class="label" x="360" y="356" text-anchor="middle">查看预测报表 / 导出</text>
+  <!-- Order processing -->
+  <rect class="box-dark" x="220" y="240" width="160" height="76" rx="8"/>
+  <text class="text" x="300" y="268" text-anchor="middle">订单处理</text>
+  <text class="text" x="300" y="288" text-anchor="middle">(创建、状态流转、订单项管理)</text>
+  <path class="line" d="M300 236 L300 240" marker-end="url(#arrow)"/>
 
-  <!-- Lines from actor to use cases -->
-  <line class="line" x1="200" y1="70" x2="240" y2="70"/>
-  <line class="line" x1="200" y1="70" x2="240" y2="140"/>
-  <line class="line" x1="200" y1="70" x2="240" y2="210"/>
-  <line class="line" x1="200" y1="70" x2="240" y2="280"/>
-  <line class="line" x1="200" y1="70" x2="240" y2="350"/>
+  <!-- Order status diamond -->
+  <polygon class="diamond" points="300,340 330,370 300,400 270,370"/>
+  <text class="text" x="300" y="372" text-anchor="middle">订单状态？</text>
+  <path class="line" d="M300 316 L300 340" marker-end="url(#arrow)"/>
+
+  <!-- From diamond: normal -> out stock -->
+  <rect class="box-dark" x="220" y="420" width="160" height="56" rx="8"/>
+  <text class="text" x="300" y="454" text-anchor="middle">出库操作 / 库存扣减</text>
+  <path class="line" d="M300 400 L300 420" marker-end="url(#arrow)"/>
+
+  <!-- From diamond: refund -> stock increase (left) -->
+  <path class="line" d="M270 372 L200 300 L200 320" />
+  <rect class="box-dark" x="40" y="340" width="160" height="56" rx="8"/>
+  <text class="text" x="120" y="373" text-anchor="middle">异常处理 / 取消 / 退款</text>
+  <path class="line" d="M120 396 L120 420" marker-end="url(#arrow)"/>
+  <path class="line" d="M120 396 L120 420" />
+  <path class="line" d="M120 396 L120 420" />
+
+  <!-- Join to inventory management -->
+  <rect class="box" x="120" y="500" width="180" height="64" rx="10"/>
+  <text class="text" x="210" y="533" text-anchor="middle">库存管理</text>
+  <text class="text" x="210" y="553" text-anchor="middle">(调整、实时监测)</text>
+  <path class="line" d="M120 416 L210 500" marker-end="url(#arrow)"/>
+  <path class="line" d="M300 476 L210 500" marker-end="url(#arrow)"/>
+  <path class="line" d="M120 476 L210 500" marker-end="url(#arrow)"/>
+
+  <!-- Inventory decision -->
+  <polygon class="diamond" points="210,590 240,620 210,650 180,620" />
+  <text class="text" x="210" y="625" text-anchor="middle">库存是否低于阈值？</text>
+  <path class="line" d="M210 564 L210 590" marker-end="url(#arrow)"/>
+
+  <!-- No -> continue operations -->
+  <rect class="box-dark" x="300" y="620" width="100" height="48" rx="8"/>
+  <text class="text" x="350" y="652" text-anchor="middle">继续运营</text>
+  <path class="line" d="M240 620 L300 646" marker-end="url(#arrow)"/>
+
+  <!-- Yes -> inventory warning -> AI recommendation -->
+  <rect class="box-dark" x="80" y="680" width="120" height="48" rx="8"/>
+  <text class="text" x="140" y="712" text-anchor="middle">库存预警</text>
+  <path class="line" d="M210 654 L140 680" marker-end="url(#arrow)"/>
+
+  <rect class="box-light" x="80" y="740" width="180" height="56" rx="10"/>
+  <text class="text-dark" x="170" y="768" text-anchor="middle">AI 智能补货推荐</text>
+  <text class="text-dark" x="170" y="788" text-anchor="middle">预测 + 建议（批处理约 60s）</text>
+  <path class="line" d="M140 728 L140 740" marker-end="url(#arrow)"/>
+
+  <!-- Procurement -->
+  <rect class="box-dark" x="120" y="820" width="120" height="56" rx="8"/>
+  <text class="text" x="180" y="850" text-anchor="middle">采购 / 补货</text>
+  <path class="line" d="M170 796 L170 820" marker-end="url(#arrow)"/>
+
+  <!-- Loop back to supplier supply -->
+  <path class="line" d="M170 876 L80 876 L80 232" marker-end="url(#arrow)"/>
+
+  <!-- Footnote / caption hint (for reference, caption placed in markdown) -->
+  <text class="note" x="12" y="912">示例流程图：新品维护→供应入库/接单→出入库→库存管理→AI补货建议→采购</text>
 </svg>
-
