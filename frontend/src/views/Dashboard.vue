@@ -59,7 +59,7 @@
                 <span v-else class="ai-hero-number">-</span>
               </div>
 
-              <div class="ai-hero-sub">件商品需补货</div>
+              <div class="ai-hero-sub">种商品需补货</div>
 
             <div class="ai-hero-buttons">
               <div style="width:100%; display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
