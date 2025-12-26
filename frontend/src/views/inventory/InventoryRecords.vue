@@ -152,6 +152,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { inventoryAPI } from '@/api'
+import { formatDateTime } from '@/utils/time'
+// 时间格式化导入
 
 export default {
   name: 'InventoryRecords',
@@ -164,12 +166,6 @@ export default {
     const product = ref(null)
     const records = ref([])
 
-    // 格式化日期时间
-    const formatDateTime = (dateTime) => {
-      if (!dateTime) return ''
-      const date = new Date(dateTime)
-      return date.toLocaleString('zh-CN')
-    }
 
     // 加载库存记录
     const loadRecords = async () => {

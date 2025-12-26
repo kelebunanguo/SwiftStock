@@ -84,7 +84,7 @@
         </el-table-column>
         <el-table-column prop="createdTime" label="创建时间" width="160">
           <template #default="scope">
-            {{ formatDate(scope.row.createdTime) }}
+            {{ formatDateTime(scope.row.createdTime) }}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180" fixed="right">
@@ -130,6 +130,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh, Plus } from '@element-plus/icons-vue'
 import { productAPI, categoryAPI } from '@/api'
 import AppLayout from '@/components/AppLayout.vue'
+import { formatDateTime } from '@/utils/time'
+// 时间格式化导入
 
 export default {
   name: 'ProductList',
@@ -178,18 +180,6 @@ export default {
       return buildTree(categories.value)
     })
     
-    // 格式化日期
-    const formatDate = (dateString) => {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
     
     
     // 加载商品列表
@@ -304,7 +294,7 @@ export default {
       categories,
       cascaderProps,
       categoryOptions,
-      formatDate,
+      formatDateTime,
       handleCategoryChange,
       handleSearch,
       handleReset,

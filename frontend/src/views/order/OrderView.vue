@@ -43,11 +43,11 @@
           </div>
           <div class="detail-item">
             <label>创建时间：</label>
-            <span>{{ order.createdTime }}</span>
+            <span>{{ formatDateTime(order.createdTime) }}</span>
           </div>
           <div class="detail-item">
             <label>更新时间：</label>
-            <span>{{ order.updatedTime || '-' }}</span>
+            <span>{{ order.updatedTime ? formatDateTime(order.updatedTime) : '-' }}</span>
           </div>
         </div>
         <div class="detail-row" v-if="order.remark">
@@ -166,6 +166,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { orderAPI } from '@/api'
 import AppLayout from '@/components/AppLayout.vue'
+import { formatDateTime } from '@/utils/time'
+// 时间格式化导入
 
 export default {
   name: 'OrderView',
@@ -365,6 +367,7 @@ export default {
       canRefundOrder,
       getStatusType,
       getStatusText,
+      formatDateTime,
       handleStatusTransition,
       handleCancelOrder,
       handleRefundOrder,

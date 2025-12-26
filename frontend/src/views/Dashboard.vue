@@ -136,7 +136,11 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="createdTime" label="创建时间" width="160" />
+          <el-table-column prop="createdTime" label="创建时间" width="160">
+            <template #default="scope">
+              {{ formatDateTime(scope.row.createdTime) }}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -159,6 +163,8 @@ import VChart from 'vue-echarts'
 import { dashboardAPI, categoryAPI, salesAPI, productAPI, aiAPI } from '@/api'
 import StockAlertWidget from '@/components/StockAlertWidget.vue'
 import AppLayout from '@/components/AppLayout.vue'
+import { formatDateTime } from '@/utils/time'
+// 时间格式化导入
 import { Connection , Loading, Refresh, ArrowRight } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
@@ -516,6 +522,7 @@ export default {
       categoryChartOption,
       getStatusType,
       getStatusText,
+      formatDateTime,
       aiReplenishCount,
       aiLoading,
       refreshAi,

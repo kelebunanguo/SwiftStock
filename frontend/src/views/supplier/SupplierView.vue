@@ -108,6 +108,8 @@ import { supplierAPI, productAPI, supplyRecordAPI } from '@/api'
 import api from '@/api'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { formatDateTime } from '@/utils/time'
+// 时间格式化导入
 
 export default {
 	name: 'SupplierView',
@@ -212,17 +214,6 @@ export default {
 			loadRecords(1)
 		}
 
-		// 格式化时间为 YYYY-MM-DD HH:mm:ss（用于默认 receiveTime）
-		const formatDateTime = (date) => {
-			const pad = (n) => String(n).padStart(2, '0')
-			const Y = date.getFullYear()
-			const M = pad(date.getMonth() + 1)
-			const D = pad(date.getDate())
-			const h = pad(date.getHours())
-			const m = pad(date.getMinutes())
-			const s = pad(date.getSeconds())
-			return `${Y}-${M}-${D} ${h}:${m}:${s}`
-		}
 
 		const openAdd = () => {
 			// debug: 打开新增弹窗
@@ -360,7 +351,8 @@ export default {
 			save,
 			confirmDelete,
 			totalAmountDisplay,
-			recomputeTotal
+			recomputeTotal,
+			formatDateTime
 		}
 	}
 }
