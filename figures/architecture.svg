@@ -1,50 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-label="SwiftStock 系统总体架构图">
   <style>
-    .layer { fill:#fff; stroke:#0b5ed7; stroke-width:2; rx:6; }
-    .text { font-family: Arial, sans-serif; font-size:13px; fill:#0b1220; }
-    .arrow { stroke:#334155; stroke-width:2; fill:none; marker-end:url(#a); }
+    .box { fill:#ffffff; stroke:#0b5ed7; stroke-width:2; rx:8; }
+    .box-ghost { fill:#f8fafc; stroke:#c7e0ff; stroke-width:1.2; rx:6; }
+    .service { fill:#ffffff; stroke:#0b5ed7; stroke-width:1.6; rx:6; }
+    .text { font-family: "Helvetica Neue", Arial, sans-serif; font-size:13px; fill:#0b1220; }
+    .muted { font-family: Arial, sans-serif; font-size:12px; fill:#475569; }
+    .arrow { stroke:#334155; stroke-width:2; fill:none; marker-end:url(#arrowhead); }
+    .dashed { stroke:#334155; stroke-width:1.6; stroke-dasharray:6 4; fill:none; marker-end:url(#arrowhead); }
+    .component { fill:#f1f5f9; stroke:#e2e8f0; stroke-width:1.2; rx:6; }
   </style>
   <defs>
-    <marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#334155"/>
     </marker>
   </defs>
 
-  <!-- Frontend -->
-  <rect class="layer" x="40" y="30" width="200" height="80"/>
-  <text class="text" x="140" y="60" text-anchor="middle">前端 (Vue)</text>
-  <text class="text" x="140" y="78" text-anchor="middle">仪表盘 / 商品列表 / 补货建议</text>
+  <!-- Presentation Layer -->
+  <rect class="box" x="40" y="36" width="220" height="112"/>
+  <text class="text" x="150" y="62" text-anchor="middle">表示层 — 前端 (Vue 3)</text>
+  <text class="muted" x="150" y="82" text-anchor="middle">仪表盘 / 商品管理 / 订单与库存操作</text>
+  <text class="muted" x="150" y="100" text-anchor="middle">与后端通过 RESTful API 通信 (JWT)</text>
 
-  <!-- Controllers -->
-  <rect class="layer" x="320" y="20" width="240" height="100"/>
-  <text class="text" x="440" y="45" text-anchor="middle">Controller 层</text>
-  <text class="text" x="440" y="65" text-anchor="middle">Auth / Product / Inventory / Order / AI</text>
+  <!-- API / Controller Layer -->
+  <rect class="box" x="320" y="20" width="260" height="96"/>
+  <text class="text" x="450" y="44" text-anchor="middle">表示层接口 — Controller / REST API</text>
+  <text class="muted" x="450" y="64" text-anchor="middle">鉴权(Auth) · 商品 · 订单 · 库存 · AI 接口</text>
 
-  <!-- Services -->
-  <rect class="layer" x="320" y="140" width="240" height="120"/>
-  <text class="text" x="440" y="165" text-anchor="middle">Service 层</text>
-  <text class="text" x="440" y="185" text-anchor="middle">ProductService / InventoryService / AiForecastService</text>
+  <!-- Service Layer -->
+  <rect class="box" x="320" y="140" width="260" height="140"/>
+  <text class="text" x="450" y="164" text-anchor="middle">业务逻辑层 — Service</text>
+  <text class="muted" x="450" y="184" text-anchor="middle">ProductService / InventoryService / OrderService / AiForecastService</text>
+  <text class="muted" x="450" y="202" text-anchor="middle">事务管理 (@Transactional) · DTO 验证 · 异步任务</text>
 
-  <!-- Persistence -->
-  <rect class="layer" x="640" y="40" width="220" height="220"/>
-  <text class="text" x="750" y="65" text-anchor="middle">持久层 / DB</text>
-  <text class="text" x="750" y="85" text-anchor="middle">MyBatis Mapper → MySQL</text>
+  <!-- Persistence Layer -->
+  <rect class="box" x="660" y="60" width="240" height="220"/>
+  <text class="text" x="780" y="84" text-anchor="middle">持久层 & 存储</text>
+  <text class="muted" x="780" y="104" text-anchor="middle">MyBatis Mapper → MySQL</text>
+  <text class="muted" x="780" y="124" text-anchor="middle">数据表：product, inventory, order, supplier, recommend</text>
 
-  <!-- AI model -->
-  <rect class="layer" x="40" y="160" width="200" height="80"/>
-  <text class="text" x="140" y="190" text-anchor="middle">AI 服务</text>
-  <text class="text" x="140" y="208" text-anchor="middle">Spring AI (ChatClient) / 外部模型</text>
+  <!-- AI / Model Service -->
+  <rect class="component" x="40" y="200" width="220" height="120"/>
+  <text class="text" x="150" y="224" text-anchor="middle">AI 服务 (Spring AI)</text>
+  <text class="muted" x="150" y="244" text-anchor="middle">ChatClient / DeepSeek 或外部推理服务</text>
+  <text class="muted" x="150" y="262" text-anchor="middle">异步批处理 · 降级策略（规则引擎）</text>
 
-  <!-- Arrows -->
-  <path class="arrow" d="M240 70 L320 70" />
-  <path class="arrow" d="M560 70 L640 70" />
-  <path class="arrow" d="M440 120 L440 140" />
-  <path class="arrow" d="M240 200 L320 200" />
-  <path class="arrow" d="M240 200 L140 200" />
-  <path class="arrow" d="M560 200 L640 200" />
+  <!-- Cache / MQ / Monitoring -->
+  <rect class="component" x="660" y="300" width="240" height="80"/>
+  <text class="text" x="780" y="324" text-anchor="middle">中间件与监控</text>
+  <text class="muted" x="780" y="344" text-anchor="middle">Redis (缓存) · RabbitMQ (异步) · Prometheus/Grafana</text>
 
-  <text class="text" x="450" y="250" text-anchor="middle">数据流与调用关系示意</text>
+  <!-- Arrows: front -> controller -> service -> persistence -->
+  <path class="arrow" d="M260 92 L320 68" />
+  <path class="arrow" d="M580 68 L660 92" />
+  <path class="arrow" d="M450 160 L450 140" />
+
+  <!-- Data flow for AI -->
+  <path class="arrow" d="M420 220 L260 260" />
+  <path class="dashed" d="M260 320 L420 320" />
+  <text class="muted" x="340" y="238" text-anchor="middle">调用 AI 推理 (异步)</text>
+
+  <!-- Service -> Persistence -->
+  <path class="arrow" d="M580 220 L660 220" />
+
+  <!-- Persistence -> Cache / MQ -->
+  <path class="arrow" d="M780 220 L780 300" />
+
+  <!-- Monitoring arrows -->
+  <path class="dashed" d="M520 40 L760 320" />
+  <text class="muted" x="640" y="36" text-anchor="middle">监控 & 指标采集</text>
+
+  <!-- Extensibility note -->
+  <rect class="box-ghost" x="40" y="340" width="860" height="120"/>
+  <text class="muted" x="120" y="362">系统层次性与模块化设计：</text>
+  <text class="muted" x="140" y="382">- 分层（表示层/控制器/服务/持久层/模型服务）保证关注点分离；</text>
+  <text class="muted" x="140" y="400">- 模块化服务（Service 与 AI 子系统）便于独立扩展与替换；</text>
+  <text class="muted" x="140" y="418">- 通过 Redis 与消息队列支持异步与缓存，提升并发与可用性；</text>
+  <text class="muted" x="140" y="436">- 可扩展点：水平扩展服务容器、模型分片/批处理、读写分离数据库。</text>
+
 </svg>
 
 
