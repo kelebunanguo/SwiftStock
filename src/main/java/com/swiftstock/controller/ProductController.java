@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.swiftstock.dto.Result;
 
 /**
  * 商品管理接口（Controller）
@@ -36,40 +37,34 @@ public class ProductController {
      * <p>分页说明：当前为内存分页（subList），适合演示；生产环境建议在 Mapper 层做分页。
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getProducts(
+    public ResponseEntity<Result<Map<String, Object>>> getProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+
         try {
             Product searchParams = new Product();
             searchParams.setName(name);
             searchParams.setCategoryId(categoryId);
-            
+
             List<Product> products = productService.findByCondition(searchParams);
-            
+
             // 简单分页处理
             int start = (page - 1) * size;
             int end = Math.min(start + size, products.size());
             List<Product> pageProducts = products.subList(start, end);
-            
+
             Map<String, Object> data = new HashMap<>();
             data.put("list", pageProducts);
             data.put("total", products.size());
             data.put("page", page);
             data.put("size", size);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取商品列表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取商品列表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -78,48 +73,35 @@ public class ProductController {
      * <p>可用的定义：库存 > 0。用于避免下单时选择到“缺货商品”。
      */
     @GetMapping("/available")
-    public ResponseEntity<Map<String, Object>> getAvailableProducts() {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Map<String, Object>>> getAvailableProducts() {
         try {
             List<Product> products = productService.findAllAvailable();
-            
+
             Map<String, Object> data = new HashMap<>();
             data.put("list", products);
             data.put("total", products.size());
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取可用商品列表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取可用商品列表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
      * 获取商品详情
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getProduct(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Product>> getProduct(@PathVariable Long id) {
         try {
             Product product = productService.findById(id);
             if (product == null) {
-                response.put("success", false);
-                response.put("message", "商品不存在");
+                return ResponseEntity.ok(Result.fail("商品不存在"));
             } else {
-                response.put("success", true);
-                response.put("data", product);
+                return ResponseEntity.ok(Result.ok(product));
             }
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取商品详情失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取商品详情失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -128,47 +110,32 @@ public class ProductController {
      * <p>数据库层存在触发器自动生成商品编码 {@code product.code}（见 SQL 脚本）。
      */
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Product product) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Product>> createProduct(@RequestBody Product product) {
         try {
             productService.save(product);
-            response.put("success", true);
-            response.put("message", "商品创建成功");
-            response.put("data", product);
+            return ResponseEntity.ok(Result.ok(product, "商品创建成功"));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "商品创建失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("商品创建失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
      * 更新商品
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Product>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         try {
             Product existingProduct = productService.findById(id);
             if (existingProduct == null) {
-                response.put("success", false);
-                response.put("message", "商品不存在");
+                return ResponseEntity.ok(Result.fail("商品不存在"));
             } else {
                 product.setId(id);
                 productService.save(product);
-                response.put("success", true);
-                response.put("message", "商品更新成功");
-                response.put("data", product);
+                return ResponseEntity.ok(Result.ok(product, "商品更新成功"));
             }
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "商品更新失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("商品更新失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -177,19 +144,13 @@ public class ProductController {
      * <p>注意：商品如果被订单项引用，数据库外键约束可能会阻止删除（取决于约束配置）。
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> deleteProduct(@PathVariable Long id) {
         try {
             productService.deleteById(id);
-            response.put("success", true);
-            response.put("message", "商品删除成功");
+            return ResponseEntity.ok(Result.ok(null, "商品删除成功"));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "商品删除失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("商品删除失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -198,19 +159,13 @@ public class ProductController {
      * <p>说明：系统同时提供 {@code /categories} 独立分类接口；此处是商品模块下的便捷入口。
      */
     @GetMapping("/categories")
-    public ResponseEntity<Map<String, Object>> getCategories() {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<List<com.swiftstock.entity.Category>>> getCategories() {
         try {
             List<com.swiftstock.entity.Category> categories = categoryService.findAll();
-            response.put("success", true);
-            response.put("data", categories);
+            return ResponseEntity.ok(Result.ok(categories));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取分类列表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取分类列表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
 }

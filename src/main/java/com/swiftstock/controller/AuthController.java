@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.swiftstock.mapper.AdminMapper;
 import com.swiftstock.entity.Admin;
 import com.swiftstock.security.JwtTokenUtil;
+import com.swiftstock.dto.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,25 +43,19 @@ public class AuthController {
      * </pre>
      */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
-        Map<String, Object> response = new HashMap<>();
-
+    public ResponseEntity<Result<Map<String, Object>>> login(@RequestBody Map<String, String> loginRequest) {
         String username = loginRequest.get("username");
         String password = loginRequest.get("password");
 
         if (username == null || password == null) {
-            response.put("success", false);
-            response.put("message", "缺少用户名或密码");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Result.fail("缺少用户名或密码"));
         }
 
         logger.info("Login attempt for username={}", username);
         Admin admin = adminMapper.findByUsername(username);
         if (admin == null) {
             logger.warn("Login failed: user not found username={}", username);
-            response.put("success", false);
-            response.put("message", "用户不存在");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Result.fail("用户不存在"));
         }
 
         // 比对 bcrypt 哈希密码，捕获异常并打印调试信息
@@ -71,16 +66,12 @@ public class AuthController {
             logger.debug("Password match result for username={} : {}", username, matches);
         } catch (Exception ex) {
             logger.error("Error while matching password for username={}", username, ex);
-            response.put("success", false);
-            response.put("message", "服务器内部错误：密码校验失败");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Result.fail("服务器内部错误：密码校验失败"));
         }
 
         if (!matches) {
             logger.warn("Login failed: invalid credentials for username={}", username);
-            response.put("success", false);
-            response.put("message", "用户名或密码错误");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Result.fail("用户名或密码错误"));
         }
 
         // 生成 JWT
@@ -92,10 +83,7 @@ public class AuthController {
         data.put("name", admin.getName());
         data.put("role", "ADMIN");
 
-        response.put("success", true);
-        response.put("message", "登录成功");
-        response.put("data", data);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Result.ok(data, "登录成功"));
     }
 
     /**
@@ -103,11 +91,8 @@ public class AuthController {
      *
      */
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "登出成功");
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Result<Void>> logout() {
+        return ResponseEntity.ok(Result.ok(null, "登出成功"));
     }
 
     /**
@@ -115,9 +100,7 @@ public class AuthController {
      *
      */
     @GetMapping("/userinfo")
-    public ResponseEntity<Map<String, Object>> getUserInfo() {
-        Map<String, Object> response = new HashMap<>();
-
+    public ResponseEntity<Result<Map<String, Object>>> getUserInfo() {
         // 从 SecurityContext 获取当前认证用户（由 JwtAuthenticationFilter 设置）
         org.springframework.security.core.Authentication authentication =
                 org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
@@ -128,17 +111,11 @@ public class AuthController {
             data.put("username", admin.getUsername());
             data.put("name", admin.getName());
             data.put("role", "ADMIN");
+            return ResponseEntity.ok(Result.ok(data));
         } else {
             // 若未认证则返回未认证提示（不再依赖内置/演示账号）
-            response.put("success", false);
-            response.put("message", "用户未认证");
-            response.put("data", data);
-            return ResponseEntity.status(401).body(response);
+            return ResponseEntity.status(401).body(Result.fail("用户未认证"));
         }
-
-        response.put("success", true);
-        response.put("data", data);
-        return ResponseEntity.ok(response);
     }
 }
 

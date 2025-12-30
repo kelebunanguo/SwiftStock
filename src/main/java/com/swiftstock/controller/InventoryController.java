@@ -1,5 +1,6 @@
 package com.swiftstock.controller;
 
+import com.swiftstock.dto.Result;
 import com.swiftstock.entity.InventoryRecord;
 import com.swiftstock.entity.Product;
 import com.swiftstock.service.InventoryService;
@@ -57,19 +58,17 @@ public class InventoryController {
      * <p>分页说明：当前为内存分页（subList），适用于毕业设计演示；生产环境建议数据库分页。
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getInventoryList(
+    public ResponseEntity<Result<Map<String, Object>>> getInventoryList(
             @RequestParam(required = false) String productName,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String stockStatus,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+
         try {
-            logger.info("Accessing inventory list with params: productName={}, categoryId={}, stockStatus={}", 
+            logger.info("Accessing inventory list with params: productName={}, categoryId={}, stockStatus={}",
                        productName, categoryId, stockStatus);
-            
+
             List<Product> products = productService.findAll();
             
             // 1) 应用搜索过滤：商品名称模糊匹配
@@ -129,16 +128,12 @@ public class InventoryController {
             data.put("total", products.size());
             data.put("page", page);
             data.put("size", size);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
             logger.error("Error while retrieving product list", e);
-            response.put("success", false);
-            response.put("message", "获取库存列表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取库存列表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -147,43 +142,35 @@ public class InventoryController {
      * <p>返回结构：{@code {product: 商品信息, records: 库存变动列表}}。
      */
     @GetMapping("/records/{productId}")
-    public ResponseEntity<Map<String, Object>> getInventoryRecords(@PathVariable Long productId) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Map<String, Object>>> getInventoryRecords(@PathVariable Long productId) {
         try {
             logger.info("Accessing inventory record with product ID: {}", productId);
-            
+
             // 获取商品信息
             Product product = productService.findById(productId);
             if (product == null) {
                 logger.error("Product not found with ID: {}", productId);
-                response.put("success", false);
-                response.put("message", "商品不存在");
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(Result.fail("商品不存在"));
             }
-            
+
             // 获取库存记录
             List<InventoryRecord> records = inventoryService.findByProductId(productId);
             if (records == null) {
                 records = Collections.emptyList();
             }
-            
-            logger.info("Successfully retrieved product and {} inventory records for product ID: {}", 
+
+            logger.info("Successfully retrieved product and {} inventory records for product ID: {}",
                        records.size(), productId);
-            
+
             Map<String, Object> data = new HashMap<>();
             data.put("product", product);
             data.put("records", records);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
             logger.error("Error while retrieving inventory records for product ID: " + productId, e);
-            response.put("success", false);
-            response.put("message", "获取库存记录失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取库存记录失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -192,34 +179,26 @@ public class InventoryController {
      * <p>业务含义：库存增加 + 写入一条 {@code inventory_record(type=IN)}。
      */
     @PostMapping("/in")
-    public ResponseEntity<Map<String, Object>> stockIn(@RequestBody Map<String, Object> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> stockIn(@RequestBody Map<String, Object> request) {
         try {
             Long productId = Long.valueOf(request.get("productId").toString());
             Integer quantity = Integer.valueOf(request.get("quantity").toString());
             String reason = request.get("reason").toString();
-            
+
             logger.info("Processing stock in request - Product ID: {}, Quantity: {}", productId, quantity);
-            
+
             if (quantity <= 0) {
                 logger.warn("Invalid quantity for stock in: {}", quantity);
-                response.put("success", false);
-                response.put("message", "入库数量必须大于0");
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(Result.fail("入库数量必须大于0"));
             }
-            
+
             inventoryService.addStock(productId, quantity, reason);
-            
-            response.put("success", true);
-            response.put("message", "入库操作成功");
+
+            return ResponseEntity.ok(Result.ok(null, "入库操作成功"));
         } catch (Exception e) {
             logger.error("Error processing stock in request", e);
-            response.put("success", false);
-            response.put("message", "入库操作失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("入库操作失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -229,34 +208,26 @@ public class InventoryController {
      * 实际扣减会在 {@code ProductService.updateStock} 中校验“不能扣成负库存”。
      */
     @PostMapping("/out")
-    public ResponseEntity<Map<String, Object>> stockOut(@RequestBody Map<String, Object> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> stockOut(@RequestBody Map<String, Object> request) {
         try {
             Long productId = Long.valueOf(request.get("productId").toString());
             Integer quantity = Integer.valueOf(request.get("quantity").toString());
             String reason = request.get("reason").toString();
-            
+
             logger.info("Processing stock out request - Product ID: {}, Quantity: {}", productId, quantity);
-            
+
             if (quantity <= 0) {
                 logger.warn("Invalid quantity for stock out: {}", quantity);
-                response.put("success", false);
-                response.put("message", "出库数量必须大于0");
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(Result.fail("出库数量必须大于0"));
             }
-            
+
             inventoryService.reduceStock(productId, quantity, reason);
-            
-            response.put("success", true);
-            response.put("message", "出库操作成功");
+
+            return ResponseEntity.ok(Result.ok(null, "出库操作成功"));
         } catch (Exception e) {
             logger.error("Error processing stock out request", e);
-            response.put("success", false);
-            response.put("message", "出库操作失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("出库操作失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -269,25 +240,21 @@ public class InventoryController {
      * </ul>
      */
     @PostMapping("/operation")
-    public ResponseEntity<Map<String, Object>> stockOperation(@RequestBody Map<String, Object> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> stockOperation(@RequestBody Map<String, Object> request) {
         try {
             Long productId = Long.valueOf(request.get("productId").toString());
             Integer quantity = Integer.valueOf(request.get("quantity").toString());
             String reason = request.get("reason").toString();
             String operationType = request.get("operationType").toString();
-            
-            logger.info("Processing stock operation - Product ID: {}, Quantity: {}, Type: {}", 
+
+            logger.info("Processing stock operation - Product ID: {}, Quantity: {}, Type: {}",
                        productId, quantity, operationType);
-            
+
             if (quantity <= 0) {
                 logger.warn("Invalid quantity for stock operation: {}", quantity);
-                response.put("success", false);
-                response.put("message", "操作数量必须大于0");
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(Result.fail("操作数量必须大于0"));
             }
-            
+
             // 根据操作类型处理
             switch (operationType) {
                 case "purchase":
@@ -301,20 +268,14 @@ public class InventoryController {
                     inventoryService.reduceStock(productId, quantity, reason);
                     break;
                 default:
-                    response.put("success", false);
-                    response.put("message", "不支持的操作类型");
-                    return ResponseEntity.ok(response);
+                    return ResponseEntity.ok(Result.fail("不支持的操作类型"));
             }
-            
-            response.put("success", true);
-            response.put("message", "库存操作成功");
+
+            return ResponseEntity.ok(Result.ok(null, "库存操作成功"));
         } catch (Exception e) {
             logger.error("Error processing stock operation", e);
-            response.put("success", false);
-            response.put("message", "库存操作失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("库存操作失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
 
@@ -325,26 +286,22 @@ public class InventoryController {
      * 因此是“部分成功”的批处理策略，适合演示；如需强一致可改为整体事务回滚。
      */
     @PostMapping("/batch-operation")
-    public ResponseEntity<Map<String, Object>> batchStockOperation(@RequestBody Map<String, Object> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> batchStockOperation(@RequestBody Map<String, Object> request) {
         try {
             @SuppressWarnings("unchecked")
             List<Long> productIds = (List<Long>) request.get("productIds");
             Integer quantity = Integer.valueOf(request.get("quantity").toString());
             String reason = request.get("reason").toString();
             String operationType = request.get("operationType").toString();
-            
-            logger.info("Processing batch stock operation - Products: {}, Quantity: {}, Type: {}", 
+
+            logger.info("Processing batch stock operation - Products: {}, Quantity: {}, Type: {}",
                        productIds.size(), quantity, operationType);
-            
+
             if (quantity <= 0) {
                 logger.warn("Invalid quantity for batch operation: {}", quantity);
-                response.put("success", false);
-                response.put("message", "操作数量必须大于0");
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(Result.fail("操作数量必须大于0"));
             }
-            
+
             int successCount = 0;
             for (Long productId : productIds) {
                 try {
@@ -365,16 +322,12 @@ public class InventoryController {
                     logger.warn("Failed to process product ID {}: {}", productId, e.getMessage());
                 }
             }
-            
-            response.put("success", true);
-            response.put("message", String.format("批量操作完成，成功处理 %d/%d 个商品", successCount, productIds.size()));
+
+            return ResponseEntity.ok(Result.ok(null, String.format("批量操作完成，成功处理 %d/%d 个商品", successCount, productIds.size())));
         } catch (Exception e) {
             logger.error("Error processing batch stock operation", e);
-            response.put("success", false);
-            response.put("message", "批量操作失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("批量操作失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
 }

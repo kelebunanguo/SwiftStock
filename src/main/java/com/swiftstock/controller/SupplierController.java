@@ -1,5 +1,6 @@
 package com.swiftstock.controller;
 
+import com.swiftstock.dto.Result;
 import com.swiftstock.entity.Supplier;
 import com.swiftstock.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,12 @@ public class SupplierController {
      */
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> list(
+    public ResponseEntity<Result<Map<String, Object>>> list(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String contactPerson,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        Map<String, Object> resp = new HashMap<>();
         int p = page != null && page > 0 ? page : 1;
         int s = size != null && size > 0 ? size : 10;
         int offset = (p - 1) * s;
@@ -56,84 +56,76 @@ public class SupplierController {
         data.put("page", p);
         data.put("size", s);
 
-        resp.put("success", true);
-        resp.put("data", data);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(Result.ok(data));
     }
 
     /**
      * 根据ID查询供应商
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<Supplier>> getById(@PathVariable Long id) {
         Supplier s = supplierService.findById(id);
-        resp.put("success", true);
-        resp.put("data", s);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(Result.ok(s));
     }
 
     /**
      * 返回全部供应商
      */
     @GetMapping("/all")
-    public ResponseEntity<Map<String, Object>> listAll() {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<List<Supplier>>> listAll() {
         java.util.List<Supplier> list = supplierService.findAll();
-        resp.put("success", true);
-        resp.put("data", list);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(Result.ok(list));
     }
 
     /**
      * 根据ID查询供应商供货记录
      */
     @GetMapping("/{id}/records")
-    public ResponseEntity<Map<String, Object>> getRecords(@PathVariable Long id) {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<List<com.swiftstock.entity.SupplyRecord>>> getRecords(@PathVariable Long id) {
         java.util.List<com.swiftstock.entity.SupplyRecord> records = supplierService instanceof com.swiftstock.service.impl.SupplierServiceImpl
                 ? ((com.swiftstock.service.impl.SupplierServiceImpl) supplierService).findRecords(id)
                 : java.util.Collections.emptyList();
-        resp.put("success", true);
-        resp.put("data", records);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(Result.ok(records));
     }
 
     /**
      * 创建供应商
      */
     @PostMapping
-    public ResponseEntity<Map<String, Object>> create(@RequestBody Supplier supplier) {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<Boolean>> create(@RequestBody Supplier supplier) {
         boolean ok = supplierService.create(supplier);
-        resp.put("success", ok);
-        resp.put("message", ok ? "创建成功" : "创建失败");
-        return ResponseEntity.ok(resp);
+        if (ok) {
+            return ResponseEntity.ok(Result.ok(true, "创建成功"));
+        } else {
+            return ResponseEntity.ok(Result.fail("创建失败"));
+        }
     }
 
     /**
      * 更新供应商
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Supplier supplier) {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<Boolean>> update(@PathVariable Long id, @RequestBody Supplier supplier) {
         supplier.setId(id);
         boolean ok = supplierService.update(supplier);
-        resp.put("success", ok);
-        resp.put("message", ok ? "更新成功" : "更新失败");
-        return ResponseEntity.ok(resp);
+        if (ok) {
+            return ResponseEntity.ok(Result.ok(true, "更新成功"));
+        } else {
+            return ResponseEntity.ok(Result.fail("更新失败"));
+        }
     }
 
     /**
      * 删除供应商
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
-        Map<String, Object> resp = new HashMap<>();
+    public ResponseEntity<Result<Boolean>> delete(@PathVariable Long id) {
         boolean ok = supplierService.deleteById(id);
-        resp.put("success", ok);
-        resp.put("message", ok ? "删除成功" : "删除失败");
-        return ResponseEntity.ok(resp);
+        if (ok) {
+            return ResponseEntity.ok(Result.ok(true, "删除成功"));
+        } else {
+            return ResponseEntity.ok(Result.fail("删除失败"));
+        }
     }
 }
 

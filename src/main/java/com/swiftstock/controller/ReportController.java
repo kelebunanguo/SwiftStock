@@ -1,5 +1,6 @@
 package com.swiftstock.controller;
 
+import com.swiftstock.dto.Result;
 import com.swiftstock.entity.Product;
 import com.swiftstock.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,11 @@ public class ReportController {
      * </ul>
      */
     @GetMapping("/stock")
-    public ResponseEntity<Map<String, Object>> getStockReport(
+    public ResponseEntity<Result<Map<String, Object>>> getStockReport(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Long categoryId) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+
         try {
             List<Product> products = productService.findAll();
             
@@ -78,15 +77,11 @@ public class ReportController {
             data.put("details", products);
             data.put("total", products.size());
             data.put("totalValue", totalValue);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取库存报表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取库存报表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -96,12 +91,10 @@ public class ReportController {
      * 真实销售统计建议基于订单表（PAID/COMPLETED）按时间范围聚合计算。
      */
     @GetMapping("/sales")
-    public ResponseEntity<Map<String, Object>> getSalesReport(
+    public ResponseEntity<Result<Map<String, Object>>> getSalesReport(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+
         try {
             // 模拟销售数据
             Map<String, Object> data = new HashMap<>();
@@ -120,14 +113,10 @@ public class ReportController {
                 Map.of("date", "2025-01-07", "sales", 2200.00)
             );
             data.put("dailySales", dailySales);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "获取销售报表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取销售报表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 }

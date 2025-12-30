@@ -1,5 +1,6 @@
 package com.swiftstock.controller;
 
+import com.swiftstock.dto.Result;
 import com.swiftstock.entity.Order;
 import com.swiftstock.entity.Product;
 import com.swiftstock.service.OrderService;
@@ -48,14 +49,12 @@ public class DashboardController {
      * </ul>
      */
     @GetMapping("/stats")
-    public ResponseEntity<Map<String, Object>> getDashboardStats() {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Map<String, Object>>> getDashboardStats() {
         try {
             // 获取所有商品和订单（不分页，适用于演示数据规模）
             List<Product> allProducts = productService.findAll();
             List<Order> allOrders = orderService.findAll();
-            
+
             // 计算统计数据
             Map<String, Object> stats = new HashMap<>();
             stats.put("totalProducts", allProducts.size());
@@ -65,17 +64,13 @@ public class DashboardController {
                 .sum());
             stats.put("lowStockProducts", stockAlertService.getLowStockCount());
             stats.put("outOfStockProducts", stockAlertService.getOutOfStockCount());
-            
-            response.put("success", true);
-            response.put("data", stats);
-            
+
+            return ResponseEntity.ok(Result.ok(stats));
+
         } catch (Exception e) {
             log.error("Failed to get dashboard stats", e);
-            response.put("success", false);
-            response.put("message", "获取统计数据失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取统计数据失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
     
     /**
@@ -84,9 +79,7 @@ public class DashboardController {
      * <p>按创建时间倒序取前 5 条，用于首页“最近订单”模块展示。
      */
     @GetMapping("/recent-orders")
-    public ResponseEntity<Map<String, Object>> getRecentOrders() {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<List<Order>>> getRecentOrders() {
         try {
             List<Order> allOrders = orderService.findAll();
             // 按创建时间倒序排列，取前5条
@@ -94,16 +87,12 @@ public class DashboardController {
                 .sorted((a, b) -> b.getCreatedTime().compareTo(a.getCreatedTime()))
                 .limit(5)
                 .collect(java.util.stream.Collectors.toList());
-            
-            response.put("success", true);
-            response.put("data", recentOrders);
-            
+
+            return ResponseEntity.ok(Result.ok(recentOrders));
+
         } catch (Exception e) {
             log.error("Failed to get recent orders", e);
-            response.put("success", false);
-            response.put("message", "获取最近订单失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取最近订单失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 } 

@@ -1,6 +1,7 @@
 package com.swiftstock.controller;
 
 import com.swiftstock.dto.OrderCreateDTO;
+import com.swiftstock.dto.Result;
 import com.swiftstock.entity.Order;
 import com.swiftstock.entity.OrderStatus;
 import com.swiftstock.service.OrderService;
@@ -40,18 +41,16 @@ public class OrderController {
      * 适合毕业设计/小数据量演示；如数据量增大建议改为数据库层分页。
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getOrders(
+    public ResponseEntity<Result<Map<String, Object>>> getOrders(
             @RequestParam(required = false) String orderNo,
             @RequestParam(required = false) String customerName,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+
         try {
             log.debug("Searching orders with params: orderNo={}, customerName={}, status={}", orderNo, customerName, status);
-            
+
             Order searchParams = new Order();
             searchParams.setOrderNo(orderNo);
             searchParams.setCustomerName(customerName);
@@ -64,30 +63,26 @@ public class OrderController {
                     log.warn("Invalid order status: {}", status);
                 }
             }
-            
+
             List<Order> orders = orderService.findByCondition(searchParams);
             log.debug("Found {} orders", orders.size());
-            
+
             // 简单分页处理：对查询结果做 subList 截断
             int start = (page - 1) * size;
             int end = Math.min(start + size, orders.size());
             List<Order> pageOrders = orders.subList(start, end);
-            
+
             Map<String, Object> data = new HashMap<>();
             data.put("list", pageOrders);
             data.put("total", orders.size());
             data.put("page", page);
             data.put("size", size);
-            
-            response.put("success", true);
-            response.put("data", data);
+
+            return ResponseEntity.ok(Result.ok(data));
         } catch (Exception e) {
             log.error("Failed to get order list", e);
-            response.put("success", false);
-            response.put("message", "获取订单列表失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取订单列表失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -96,25 +91,18 @@ public class OrderController {
      * <p>返回订单基础信息 + 订单项列表（由 Service/Mapper 负责组装）。
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getOrder(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Order>> getOrder(@PathVariable Long id) {
         try {
             Order order = orderService.findById(id);
             if (order == null) {
-                response.put("success", false);
-                response.put("message", "订单不存在");
+                return ResponseEntity.ok(Result.fail("订单不存在"));
             } else {
-                response.put("success", true);
-                response.put("data", order);
+                return ResponseEntity.ok(Result.ok(order));
             }
         } catch (Exception e) {
             log.error("Failed to get order details. Order ID: {}", id, e);
-            response.put("success", false);
-            response.put("message", "获取订单详情失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取订单详情失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -127,21 +115,14 @@ public class OrderController {
      * </ul>
      */
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createOrder(@RequestBody OrderCreateDTO orderDTO) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Order>> createOrder(@RequestBody OrderCreateDTO orderDTO) {
         try {
             Order order = orderService.createOrder(orderDTO);
-            response.put("success", true);
-            response.put("message", "订单创建成功");
-            response.put("data", order);
+            return ResponseEntity.ok(Result.ok(order, "订单创建成功"));
         } catch (Exception e) {
             log.error("Failed to create order", e);
-            response.put("success", false);
-            response.put("message", "订单创建失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("订单创建失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -150,23 +131,17 @@ public class OrderController {
      * <p>说明：该接口用于“直接设置目标状态”。状态合法性、业务约束、库存扣减/回滚在 Service 内完成。
      */
     @PutMapping("/{id}/status")
-    public ResponseEntity<Map<String, Object>> updateStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> updateStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
         try {
             String status = request.get("status");
             log.debug("Updating order {} status to {}", id, status);
-            
+
             orderService.updateStatus(id, status.toUpperCase());
-            response.put("success", true);
-            response.put("message", "订单状态更新成功");
+            return ResponseEntity.ok(Result.ok(null, "订单状态更新成功"));
         } catch (Exception e) {
             log.error("Failed to update order status. Order ID: {}, Status: {}", id, request.get("status"), e);
-            response.put("success", false);
-            response.put("message", "订单状态更新失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("订单状态更新失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -175,24 +150,18 @@ public class OrderController {
      * <p>与 {@code /status} 的差异：此接口允许携带 {@code reason}（原因）用于日志/审计说明。
      */
     @PutMapping("/{id}/transition")
-    public ResponseEntity<Map<String, Object>> transitionStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> transitionStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
         try {
             String targetStatus = request.get("status");
             String reason = request.get("reason");
             log.debug("Transitioning order {} to status {}", id, targetStatus);
-            
+
             orderService.transitionStatus(id, targetStatus.toUpperCase(), reason);
-            response.put("success", true);
-            response.put("message", "订单状态流转成功");
+            return ResponseEntity.ok(Result.ok(null, "订单状态流转成功"));
         } catch (Exception e) {
             log.error("Failed to transition order status. Order ID: {}, Status: {}", id, request.get("status"), e);
-            response.put("success", false);
-            response.put("message", "订单状态流转失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("订单状态流转失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -201,23 +170,17 @@ public class OrderController {
      * <p>取消的业务约束与库存恢复逻辑由 Service 处理。
      */
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Map<String, Object>> cancelOrder(@PathVariable Long id, @RequestBody Map<String, String> request) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> cancelOrder(@PathVariable Long id, @RequestBody Map<String, String> request) {
         try {
             String reason = request.get("reason");
             log.debug("Cancelling order {} with reason: {}", id, reason);
-            
+
             orderService.cancelOrder(id, reason);
-            response.put("success", true);
-            response.put("message", "订单取消成功");
+            return ResponseEntity.ok(Result.ok(null, "订单取消成功"));
         } catch (Exception e) {
             log.error("Failed to cancel order. Order ID: {}", id, e);
-            response.put("success", false);
-            response.put("message", "订单取消失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("订单取消失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -227,19 +190,13 @@ public class OrderController {
      * 论文/答辩可作为“待优化点”：新增状态变更表记录操作人/时间/原因。
      */
     @GetMapping("/{id}/status-history")
-    public ResponseEntity<Map<String, Object>> getStatusHistory(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<List<com.swiftstock.entity.OrderStatusHistory>>> getStatusHistory(@PathVariable Long id) {
         try {
-            response.put("success", true);
-            response.put("data", orderService.getStatusHistory(id));
+            return ResponseEntity.ok(Result.ok(orderService.getStatusHistory(id)));
         } catch (Exception e) {
             log.error("Failed to get order status history. Order ID: {}", id, e);
-            response.put("success", false);
-            response.put("message", "获取状态历史失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("获取状态历史失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -248,21 +205,15 @@ public class OrderController {
      * <p>若订单处于已付款/履约中状态，删除前会先恢复库存，避免库存永久减少（见 Service 实现）。
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteOrder(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<Result<Void>> deleteOrder(@PathVariable Long id) {
         try {
             log.debug("Deleting order: {}", id);
-            
+
             orderService.deleteById(id);
-            response.put("success", true);
-            response.put("message", "订单删除成功");
+            return ResponseEntity.ok(Result.ok(null, "订单删除成功"));
         } catch (Exception e) {
             log.error("Failed to delete order. Order ID: {}", id, e);
-            response.put("success", false);
-            response.put("message", "删除订单失败：" + e.getMessage());
+            return ResponseEntity.ok(Result.fail("删除订单失败：" + e.getMessage()));
         }
-        
-        return ResponseEntity.ok(response);
     }
 }

@@ -9,7 +9,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改AI模块为测试阶段省token使用" />
+    <list default="true" id="9bd1c4f4-9d65-4e69-9914-364bdecca7fb" name="Changes" comment="修改时间为统一格式">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2025_12_23_18_17_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2025_12_23_18_17__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/InventoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/InventoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/ReportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SalesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SalesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/StockAlertController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/StockAlertController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swiftstock/controller/SupplierController.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -275,6 +289,7 @@
       <workItem from="1766329600895" duration="3268000" />
       <workItem from="1766473765666" duration="3950000" />
       <workItem from="1766479979755" duration="4884000" />
+      <workItem from="1767103115106" duration="3043000" />
     </task>
     <task id="LOCAL-00001" summary="完善功能、添加注释">
       <option name="closed" value="true" />
