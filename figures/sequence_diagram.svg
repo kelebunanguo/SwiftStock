@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold">SwiftStock 系统时序图 - 商品管理流程</text>
+
+  <!-- Lifelines -->
+  <!-- Frontend -->
+  <line x1="100" y1="60" x2="100" y2="420" stroke="#333" stroke-width="2"/>
+  <rect x="70" y="50" width="60" height="30" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="100" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold">前端</text>
+
+  <!-- Controller -->
+  <line x1="250" y1="60" x2="250" y2="420" stroke="#333" stroke-width="2"/>
+  <rect x="220" y="50" width="60" height="30" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="250" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Controller</text>
+
+  <!-- Service -->
+  <line x1="400" y1="60" x2="400" y2="420" stroke="#333" stroke-width="2"/>
+  <rect x="370" y="50" width="60" height="30" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="400" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Service</text>
+
+  <!-- Mapper -->
+  <line x1="550" y1="60" x2="550" y2="420" stroke="#333" stroke-width="2"/>
+  <rect x="520" y="50" width="60" height="30" fill="#E8F5E8" stroke="#388E3C" stroke-width="1"/>
+  <text x="550" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Mapper</text>
+
+  <!-- Database -->
+  <line x1="700" y1="60" x2="700" y2="420" stroke="#333" stroke-width="2"/>
+  <rect x="670" y="50" width="60" height="30" fill="#FFF3E0" stroke="#F57C00" stroke-width="1"/>
+  <text x="700" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Database</text>
+
+  <!-- Messages -->
+  <!-- Step 1: Frontend -> Controller -->
+  <line x1="100" y1="100" x2="250" y2="100" stroke="#1976D2" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="175" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">POST /products</text>
+  <text x="175" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(新增商品请求)</text>
+
+  <!-- Step 2: Controller -> Service -->
+  <line x1="250" y1="140" x2="400" y2="140" stroke="#7B1FA2" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="325" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">createProduct()</text>
+  <text x="325" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(参数校验)</text>
+
+  <!-- Step 3: Service -> Mapper -->
+  <line x1="400" y1="180" x2="550" y2="180" stroke="#388E3C" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="475" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">insertProduct()</text>
+  <text x="475" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(业务逻辑处理)</text>
+
+  <!-- Step 4: Mapper -> Database -->
+  <line x1="550" y1="220" x2="700" y2="220" stroke="#F57C00" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="625" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">INSERT INTO product</text>
+  <text x="625" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(SQL执行)</text>
+
+  <!-- Step 5: Database -> Mapper -->
+  <line x1="700" y1="260" x2="550" y2="260" stroke="#F57C00" stroke-width="2" marker-end="url(#arrow-return)"/>
+  <text x="625" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">执行结果</text>
+  <text x="625" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(影响行数)</text>
+
+  <!-- Step 6: Mapper -> Service -->
+  <line x1="550" y1="300" x2="400" y2="300" stroke="#388E3C" stroke-width="2" marker-end="url(#arrow-return)"/>
+  <text x="475" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">返回实体</text>
+  <text x="475" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(ORM映射)</text>
+
+  <!-- Step 7: Service -> Controller -->
+  <line x1="400" y1="340" x2="250" y2="340" stroke="#7B1FA2" stroke-width="2" marker-end="url(#arrow-return)"/>
+  <text x="325" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Result&lt;Product&gt;</text>
+  <text x="325" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(包装响应)</text>
+
+  <!-- Step 8: Controller -> Frontend -->
+  <line x1="250" y1="380" x2="100" y2="380" stroke="#1976D2" stroke-width="2" marker-end="url(#arrow-return)"/>
+  <text x="175" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">HTTP 200 OK</text>
+  <text x="175" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">(JSON响应)</text>
+
+  <!-- Activation bars -->
+  <rect x="245" y="100" width="10" height="40" fill="#E3F2FD" opacity="0.7"/>
+  <rect x="395" y="140" width="10" height="40" fill="#F3E5F5" opacity="0.7"/>
+  <rect x="545" y="180" width="10" height="40" fill="#E8F5E8" opacity="0.7"/>
+  <rect x="695" y="220" width="10" height="40" fill="#FFF3E0" opacity="0.7"/>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7"
+     refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+    </marker>
+    <marker id="arrow-return" markerWidth="10" markerHeight="7"
+     refX="1" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#666" />
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <text x="400" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold">图例：实线表示方法调用，虚线表示返回</text>
+</svg>

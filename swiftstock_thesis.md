@@ -321,98 +321,198 @@
 
 图注：展示实体间的主外键关系与一对多、多对一关联。
 
-本章小结
-本章描述了系统的开发与运行环境、分层架构、功能模块划分、界面设计原则与数据库概念模型，为后续第4章的详细设计与实现提供依据。
 
 
 
 
 
 
-
-
-国际上，生成式模型与检索增强生成在自然语言交互、知识抽取与业务自动化方面发展迅速，但多数工程实现基于 Python 生态与云端服务。相对而言，面向 Java/Spring 企业后端环境、注重模型治理（审计、合规、限流）与低延迟工程化集成的研究与实践尚不足[12][14]。此外，现有工作在“AI建议的可解释性”与“模型与业务规则协同”方面仍有待加强，这也是本项目需要重点攻关的方向。
-
-文献评述要点（与本项目关联）：
-- 现有工程实践展示了 SpringBoot + Vue 在中小企业系统落地的可行性和效率优势，但通常缺少智能预测能力的深度集成[1][2][5]；
-- 在 WMS 优化与决策支持方面，大数据与机器学习已被证明能显著提升预测精度，但如何在企业后端安全、可审计地集成更大规模模型仍是挑战[3][13][14]；
-- Spring AI 文档为在 Spring 生态内引入模型服务提供了路径，但面向仓储管理的工程化细节（如审计、降级策略、成本控制）需要通过实践进一步完善[12]。
-
-（注意：本章为绪论，引用文献集中于本节，篇幅不应超过全文的1/3；后续章节将以系统实现、实验与评估为主，引用将更聚焦与精简。） 
-国外与产业界在将生成式模型用于业务决策支持、自然语言界面以及检索增强推理（RAG）方面进步迅速，但很多实现以 Python 生态为主（例如将模型部署在云端服务并通过 REST 接口调用）。相比之下，面向 Java/Spring 企业环境的模型集成与工程化探索较少，尤其是在合规性、审计与企业级运维方面的系统化实践尚不足[12][14]。
-
-现有研究的主要不足可归纳为：
-- 模型与业务规则、审计需求脱节，导致 AI 建议难以解释与落地；
-- 在工程层面，模型推理延迟、成本与隐私保护尚未与 WMS 核心需求充分平衡；
-- 针对中小企业场景的低成本、易部署的端到端解决方案较少。
 
 ## 4 系统的详细设计与实现
 
 ### 4.1 接口及类的设计与实现
 
-（1）总体设计思想
-- 采用分层架构（Controller -> Service -> Mapper -> Database），接口设计遵循 REST 规范，返回统一 JSON 结构（Result<T> 或 {success,message,data}）。类设计遵循单一职责与依赖倒置原则，服务通过构造注入解耦，便于单元测试与替换实现。
+（1）描述系统的接口定义、类结构及类间关系。
 
-（2）关键接口与类关系
-- Controller：负责 HTTP 层入参校验与统一返回（如 `ProductController`、`InventoryController`、`OrderController`、`AiForecastController`、`AiProductController`）。  
-- Service：封装业务逻辑与事务（如 `ProductService`、`InventoryService`、`OrderService`、`AiForecastService`、`AiProductService`）。  
-- Mapper：MyBatis Mapper 与 XML/注解 SQL 映射负责持久化。  
-- 实体：`Product`、`Category`、`Order`、`OrderItem`、`InventoryRecord`、`Supplier`、`SupplyRecord`、`Admin`。
+系统采用分层架构设计，包括Controller层、Service层、Mapper层和Entity层。各层职责明确：Controller层处理HTTP请求和响应，Service层封装业务逻辑，Mapper层负责数据持久化，Entity层定义数据模型。
 
-示例（代码片段引用，已存在工程中）：
+接口定义采用RESTful风格，URI与HTTP方法语义对应，返回统一Result<T>响应结构。Controller通过构造注入使用Service接口，Service注入Mapper进行数据访问，实现了清晰的分层依赖关系。
+
+系统按功能划分为六个模块：商品管理、供应商管理、订单管理、库存管理、权限控制与数据统计、人工智能。各模块在不同层级都有对应的实现类，类间通过依赖注入建立关联关系。
+
+（2）提供代码示例或类图，以直观展示接口及类的设计与实现。
+
+系统整体类图如下：
+
+![图 4-1 系统 UML 类图](figures/class_diagram.svg)
+
+图注：展示系统分层架构中的 Controller 层（8个控制器）、Service 层（8个服务类）、Mapper 层（9个数据访问接口）与 Entity 层（10个实体类和DTO）之间的依赖关系。Controller 层负责 HTTP 请求处理，Service 层封装业务逻辑，Mapper 层负责数据持久化，Entity 层定义数据模型。系统按六个功能模块组织：商品管理、供应商管理、订单管理、库存管理、权限控制与数据统计、人工智能。
+
+典型接口实现代码示例：
+
 ```34:55:src/main/java/com/swiftstock/controller/AiForecastController.java
     @GetMapping("/recommend-count")
     public ResponseEntity<Result<Integer>> getRecommendCount() { ... }
 ```
 
+```1:12:src/main/java/com/swiftstock/service/impl/ProductServiceImpl.java
+    @Override
+    @Transactional
+    public void updateStock(Long productId, Integer quantity) {
+        Product product = findById(productId);
+        if (product == null) {
+            throw new RuntimeException("商品不存在：" + productId);
+        }
+        int newStock = product.getStockQuantity() + quantity;
+        if (newStock < 0) {
+            throw new RuntimeException("库存不足：" + product.getName());
+        }
+        productMapper.updateStock(productId, quantity);
+    }
+```
+
 ### 4.2 核心模块的设计与实现
 
 #### 4.2.1 商品管理模块的设计与实现
-- 接口：`GET /products`, `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}`。  
-- 主要类：`ProductController`、`ProductService`、`ProductMapper`、`Product` 实体。  
-- 实现要点：输入校验（Jakarta Validation）、事务安全（Service 层）、图片 URL 管理、分页与搜索（目前为后端过滤，生产应使用 DB 分页/索引或 ES）。  
-- 难点：文件/图片存储与检索、搜索性能；方案：将图片存储在对象存储或静态资源目录，搜索使用数据库索引或引入搜索引擎。
+（1）系统各功能的实现过程、方法及关键技术
+商品管理模块负责商品信息维护与三级分类管理，是系统基础模块。该模块采用Spring Boot分层架构，包括ProductController、ProductService、ProductMapper以及Product实体。
+商品CRUD与查询实现：
+1.	Controller层提供RESTful接口，如GET /products（列表查询，支持名称/分类条件与内存分页）、GET /products/available（可用商品）、POST /products（创建）、PUT /products/{id}（更新）、DELETE /products/{id}（删除）。
+2.	Service层（ProductServiceImpl）调用Mapper执行操作，Mapper使用MyBatis动态SQL（<where>和<if>标签）实现条件查询，并通过LEFT JOIN拼接分类完整路径（full_path）。
+3.	创建商品时，数据库触发器自动生成编码（code）。
+分类管理实现：
+通过GET /products/categories接口调用CategoryService返回分类列表，前端可构建树形结构。
+AI商品详情生成实现：
+1.	AiProductController提供POST /api/ai/product/generate-detail接口，接收商品名称、供应商、分类。
+2.	AiProductServiceImpl使用Spring AI ChatClient构造Prompt调用DeepSeek模型生成文案，异常时返回默认提示。
+关键技术：MyBatis动态SQL与结果映射、Spring AI集成大模型、统一Result响应。
+（2）突出功能的实现难点及解决方案
+难点1：分类路径显示与查询效率：需在列表中显示完整分类路径（如“服装-男装-短袖”）。 
+解决方案：Mapper中使用多表JOIN + CASE表达式一次性拼接full_path，避免前端递归查询。
+难点2：分页与条件查询灵活性：需支持多条件，但数据量小时内存分页易实现。 
+解决方案：采用subList内存分页，动态SQL支持模糊/精确查询。
+难点3：AI生成稳定性：模型输出可能不稳定或异常。 
+解决方案：Prompt严格指定格式与长度，异常捕获返回默认文本，确保接口可用（详细AI实现见4.2.6人工智能模块）。
+商品管理模块通过上述实现提供了高效维护与AI辅助功能，为订单与库存模块奠定基础。
 
 #### 4.2.2 供应商管理模块的设计与实现
-- 接口：`/suppliers` 与 `/supply-records`。  
-- 类：`SupplierController`、`SupplierService`、`SupplyRecordController`、`SupplyRecordService`。  
-- 实现要点：时间格式解析、金额计算、分页查询、导出（异步后台导出任务可选）。批量导入采用逐行校验并记录错误行以实现容错。
+（1）系统各功能的实现过程、方法及关键技术
+供应商管理模块负责供应商信息维护与供货记录追踪，支持供应商的增删改查及供货历史分页查询。该模块采用Spring Boot分层架构，包括SupplierController（供应商操作）、SupplyRecordController（供货记录操作）、SupplierService、SupplyRecordService、SupplierMapper、SupplyRecordMapper以及Supplier、SupplyRecord实体。
+供应商CRUD与查询实现：
+SupplierController提供RESTful接口，如GET /suppliers（分页查询，支持名称/联系人条件）、GET /suppliers/{id}（详情）、GET /suppliers/all（全部列表）、POST /suppliers（创建）、PUT /suppliers/{id}（更新）、DELETE /suppliers/{id}（删除）。
+Service层（SupplierServiceImpl）调用Mapper执行操作，Mapper使用MyBatis动态SQL（<where>和<if>标签）实现条件查询与分页（LIMIT offset, size）。
+供货记录管理实现：
+SupplyRecordController提供GET /supply-records（分页查询指定供应商记录）、POST /supply-records（创建）、PUT /supply-records/{id}（更新）、DELETE /supply-records/{id}（删除）。
+创建/更新时，控制器接收SupplyRecordDTO，解析receiveTime字符串为LocalDateTime，Service计算totalAmount（quantity × unitPrice）后持久化。
+Mapper实现分页与统计（countBySupplierId）。
+关键技术：MyBatis动态SQL与分页、DateTimeFormatter日期解析、统一Result响应。
+（2）突出功能的实现难点及解决方案
+难点1：分页查询与动态条件组合：需支持多条件筛选与可靠分页，避免全表扫描。 
+解决方案：Mapper中使用动态<where>标签组合条件，结合LIMIT实现物理分页；Service层封装count方法返回总数，支持前端分页控件。
+难点2：供货记录日期与金额处理：前端传递日期字符串，需解析；金额需自动计算，避免手动错误。 
+解决方案：控制器使用DateTimeFormatter解析receiveTime（支持yyyy-MM-dd HH:mm:ss格式），异常返回友好提示；Service在持久化前计算totalAmount。
+难点3：供货记录与供应商关联查询：需高效查询指定供应商的供货历史。
+解决方案：Mapper提供findPage与countBySupplierId专用方法，按receiveTime降序排序，确保查询性能。
+供应商管理模块通过上述实现提供了完整的供应商与供货追踪功能，支持采购成本分析与库存同步（供货时更新商品库存）。 
 
 #### 4.2.3 订单管理模块的设计与实现
-- 接口：`/orders`（创建、查询、状态更新、取消）。  
-- 类：`OrderController`、`OrderService`、`OrderMapper`。  
-- 实现要点：订单创建与库存扣减在事务中处理；状态流转由 `OrderStatus` 枚举控制并在 Service 层校验合法性。  
-- 难点：并发下库存一致性与取消恢复；方案：数据库事务与必要时的锁或补偿逻辑。
+（1）系统各功能的实现过程、方法及关键技术
+订单管理模块负责订单全生命周期管理，包括创建、查询、状态流转、取消与删除。该模块采用Spring Boot分层架构，包括OrderController、OrderService、OrderMapper/OrderItemMapper/OrderStatusHistoryMapper以及Order、OrderItem、OrderStatus（枚举）实体。
+订单创建与查询实现：
+Controller层提供RESTful接口，如POST /orders（创建）、GET /orders（列表查询，支持订单号/客户名/状态条件与内存分页）、GET /orders/{id}（详情）。
+创建时接收OrderCreateDTO，Service层（OrderServiceImpl）生成订单编号（自动格式ORDyyyyMMddXXXX）、计算总金额、写入订单主表与订单项。若状态为PAID，则同步扣减库存。
+查询使用MyBatis动态SQL支持条件过滤，并关联查询订单项。
+订单状态流转与管理实现：
+支持PUT /orders/{id}/status（直接更新）和PUT /orders/{id}/transition（带原因流转）。
+Service层使用OrderStatus枚举的状态机（canTransitionTo方法）校验合法流转，处理库存扣减/恢复（PAID进入扣减，取消/删除恢复）。
+状态变更记录到order_status_history表，支持GET /orders/{id}/status-history查询历史。
+取消（PUT /orders/{id}/cancel）和删除（DELETE /orders/{id}）时恢复库存并记录历史。
+关键技术：MyBatis枚举类型处理器（OrderStatusTypeHandler）、@Transactional事务控制、状态机设计确保流转合法性、统一Result响应。
+（2）突出功能的实现难点及解决方案
+难点1：订单状态流转合法性与业务一致性：状态变更需防止非法流转（如从“已完成”跳到“待付款”），并同步库存避免超卖。
+解决方案：引入OrderStatus枚举状态机（canTransitionTo校验顺序），结合validateStatusTransition方法处理业务规则（如配货前库存检查、发货前付款验证）；库存操作在handleStockOperationOnStatusChange中集中处理。
+难点2：库存与订单状态的原子性同步：创建/状态变更/取消/删除时需同时更新订单与库存，防止部分失败导致数据不一致。
+解决方案：关键方法使用@Transactional注解保证原子性；库存变更调用ProductService.updateStock（内部负库存校验）。
+难点3：订单编号唯一性与自动生成：需生成唯一、可读的订单号（如ORD202512180001），并发时避免重复。
+解决方案：Service层查询当天最大订单号提取序号+1，结合数据库查询保证唯一性。
+难点4：状态历史追溯：需记录每次变更的时间、原因与前后状态，支持审计。
+解决方案：独立order_status_history表，变更时调用logStatusHistory插入记录，前端可展示时间轴。
+订单管理模块通过状态机与事务控制实现了可靠的全生命周期管理，与库存模块紧密协作，确保业务一致性。
 
 #### 4.2.4 库存管理模块的设计与实现
-- 接口：`/inventory`（列表、records/{productId}、in、out、operation、batch-operation）。  
-- 类：`InventoryController`、`InventoryService`、`InventoryRecordMapper`。  
-- 实现要点：记录变更明细（inventory_record）、更新 product.stock_quantity、提供分页查询与 stockStatus 过滤；批量操作为逐条尝试以保证部分成功可见。
+（1）详细描述系统各功能的实现过程、方法及关键技术
+库存管理模块负责库存查询、变动操作与预警，支持入库/出库记录追溯与低库存/缺货监控。该模块采用Spring Boot分层架构，包括InventoryController（库存操作）、StockAlertController（预警查询）、InventoryService、StockAlertService、InventoryRecordMapper以及InventoryRecord实体。
+库存查询与历史实现：
+InventoryController提供GET /inventory（列表查询，支持名称/分类/库存状态过滤与内存分页）、GET /inventory/records/{productId}（变动历史）。
+查询使用ProductService.findAll()获取商品列表，Stream过滤应用条件（名称模糊、分类、状态：out/low/normal），subList实现分页。
+入库/出库操作实现：
+POST /inventory/in（入库）、POST /inventory/out（出库）、POST /inventory/operation（业务类型映射，如purchase→入库）、POST /inventory/batch-operation（批量）。
+Service层（InventoryServiceImpl）先调用ProductService.updateStock更新商品库存，再写入InventoryRecord（type=IN/OUT），@Transactional保证原子性。
+库存预警实现：
+StockAlertController提供GET /stock-alert/info（预警信息）、GET /stock-alert/stats（统计）、GET /stock-alert/check/{productId}（单品检查）。
+StockAlertServiceImpl遍历商品列表，判断stock_quantity <= min_stock_level（低库存）或==0（缺货），返回预警商品与计数。
+关键技术：@Transactional事务控制、Stream过滤与内存分页、SLF4J日志记录。
+（2）突出功能的实现难点及解决方案
+难点1：库存变动与记录的一致性：入库/出库需同时更新商品库存与写入记录，部分失败会导致数据不一致。
+解决方案：方法使用@Transactional注解，将库存更新与记录插入置于同一事务；异常回滚保证原子性。
+难点2：查询过滤与分页效率：需支持多条件过滤（名称/分类/状态）与分页，数据量小时内存操作易实现。
+解决方案：采用Stream过滤 + subList内存分页，简单高效。
+难点3：库存预警实时性：需遍历所有商品判断状态，数据量大时性能差。
+解决方案：当前遍历findAll()实现，适合小规模；预警统计独立计数方法，避免重复加载详情（详细AI补货推荐见4.2.6人工智能模块）。
+难点4：批量操作容错：批量入/出库单个商品失败不应中断整体。
+解决方案：循环处理，异常捕获跳过单个，返回成功/总数统计，实现“部分成功”策略。
+库存管理模块通过事务与过滤机制实现了可靠的库存操作与预警，为订单与AI补货提供了数据支撑。
 
 #### 4.2.5 权限控制模块的设计与实现
-- 接口与实现：基于 Spring Security + JWT（`JwtTokenUtil`），登录接口 `/auth/login` 返回 token，后续请求通过 Filter 验证。系统为单管理员模式，权限判定简化为是否为管理员。
-- 难点：密钥管理与敏感信息保护；方案：使用环境变量或配置中心注入密钥，避免日志中泄露敏感信息。
+（1）详细描述系统各功能的实现过程、方法及关键技术
+权限控制模块负责管理员登录认证与接口访问授权，采用JWT无状态认证机制。该模块包括AuthController、AdminService、AdminMapper、JwtAuthenticationFilter、JwtTokenUtil以及SecurityConfig。
+登录认证实现：
+AuthController提供POST /auth/login接口，接收用户名/密码。
+Service层（AdminServiceImpl）调用Mapper查询Admin，PasswordEncoder（BCrypt）校验密码哈希。
+成功后JwtTokenUtil生成JWT（包含用户名/id，HMAC256签名，过期时间配置）。
+接口授权实现：
+JwtAuthenticationFilter继承OncePerRequestFilter，拦截请求提取Bearer token，JwtTokenUtil验证并解析用户名，加载Admin设置到SecurityContext。
+SecurityConfig定义规则：/auth/**、静态资源、API文档允许匿名，其余需认证；禁用CSRF；添加JWT过滤器。
+用户信息获取：
+GET /auth/userinfo从SecurityContext获取当前Admin返回。
+关键技术：Spring Security集成、BCrypt密码哈希、JWT（auth0库）无状态认证、@EnableWebSecurity配置。
+（2）实现难点及解决方案
+难点1：密码安全存储与校验：需防止明文存储与暴力破解。 
+解决方案：使用BCryptPasswordEncoder哈希存储，登录时matches校验；密钥/过期时间配置化。
+难点2：JWT验证与Security集成：需在每个请求验证token并设置认证上下文，避免会话状态。 
+解决方案：自定义JwtAuthenticationFilter解析token，构造UsernamePasswordAuthenticationToken设置SecurityContext；SecurityConfig添加过滤器优先执行。
+难点3：访问规则灵活配置：需精确控制匿名/认证接口，避免过度开放或严格。 
+解决方案：authorizeHttpRequests定义白名单（登录、文档、静态），其余authenticated；CSRF禁用适合JWT。
+权限控制模块通过JWT与Spring Security实现了安全高效的认证授权，确保系统接口访问受控。
 
-#### 4.2.6 数据统计模块的设计与实现
-- 功能：仪表盘统计（商品数、订单数、库存总量、低库存数）、报表导出。  
-- 实现：`DashboardController` / `ReportController` 聚合 SQL 并返回前端图表所需数据；对复杂聚合采用缓存（Redis）与异步导出以提高响应能力。
+#### 4.2.6 人工智能模块的设计与实现
+（1）详细描述系统各功能的实现过程、方法及关键技术
+人工智能模块是本系统的核心创新点，实现了基于大语言模型（DeepSeek）的智能补货推荐与商品详情自动生成两大功能。该模块独立设计，包括AiForecastController、AiProductController、AiForecastService、AiProductService及其实现类，集成Spring AI框架完成大模型调用。
+AI智能补货推荐实现：
+AiForecastController提供GET /api/ai/forecast/recommend-count（补货数量）和GET /api/ai/forecast/recommend-list（详细列表，前10条）。
+AiForecastServiceImpl核心逻辑：
+查询所有在售商品，通过@Async注解并行构造Prompt并调用DeepSeek模型（每个商品独立请求）。
+Prompt包含商品名称、编码、当前库存、安全阈值及店铺背景，要求模型输出严格JSON（needReorder、forecastSales7Days、suggestReorderQuantity、advice）。
+解析JSON后过滤needReorder=true的结果，取补货量10的倍数向上取整。
+使用ConcurrentHashMap内存缓存结果30分钟，ScheduledExecutorService定时静默刷新，避免频繁调用大模型。
+异步并行处理显著缩短批量计算时间（测试3-5个商品秒级完成）。
+AI商品详情生成实现：
+AiProductController提供POST /api/ai/product/generate-detail接口，接收商品名称、供应商、分类。
+AiProductServiceImpl构造专业营销Prompt（指定长度100-200字、卖点、语气），调用模型生成详情文案，异常返回默认提示。
+关键技术：Spring AI ChatClient集成DeepSeek、@Async+CompletableFuture并行调用、ConcurrentHashMap+定时任务缓存机制、严格Prompt工程与JSON解析、异常容错默认文本。
+（2）实现难点及解决方案
+创新点与难点1：批量商品AI补货预测的性能瓶颈：单个商品调用大模型耗时较长，商品数量多时串行调用响应慢、成本高。 
+解决方案（核心创新）：采用@Async异步并行处理所有商品请求，同时发送大幅缩短总耗时；结合内存缓存（30分钟TTL）与后台定时刷新，实现“热数据”秒级响应，避免重复调用大模型，兼顾实时性与成本。
+创新点与难点2：大模型输出不稳定与格式控制：模型可能输出非JSON、空内容或不符合要求文本，导致解析失败。 
+解决方案：设计严谨Prompt（明确要求“纯JSON格式、无额外文字”、字段约束、补货量10倍数取整），后端使用Jackson强制解析，异常/无效时返回null过滤；补货量后处理向上取整，确保结果可用。
+创新点与难点3：AI生成内容的质量与专业性：普通Prompt生成的文案可能泛泛、缺乏营销感或不符合商品类目。 
+解决方案：Prompt工程精细化——角色定位“10年电商专家”、指定卖点词汇（轻薄透气、速干科技等）、长度与结构要求、类目背景（运动服装鞋帽），生成文案专业自然，提升商品上架效率。
+难点4：系统可用性与容错：大模型服务异常或超时时不应阻塞主流程。 
+解决方案：单个商品异常捕获返回null不影响整体；缓存失效时静默刷新；提供测试接口快速验证；所有接口异常返回友好默认文本，确保前端正常显示。
+人工智能模块通过并行异步、缓存优化与精细Prompt工程，实现了高效、稳定、智能的补货推荐与详情生成，显著提升了仓库管理智能化水平与运营效率，是本系统最具创新性的功能模块。
 
-### 4.3 人工智能辅助功能的设计与实现
 
-#### 4.3.1 AI智能生成商品描述的设计与实现
-- 设计：`AiProductService` 负责构造 Prompt（包含商品名、分类与供应商信息），调用模型生成候选描述并返回给前端由管理员审核或保存。  
-占位流程图（提交最终稿时替换为真实图）：  
-![AI生成商品详情流程图](figures/ai_detail_flow.svg)
-
-#### 4.3.2 AI智能补货推荐的设计与实现
-- 设计：`AiForecastService` 定期或按需汇集历史订单、库存与促销等特征，调用模型进行销量预测；预测结果与安全库存和 EOQ 规则合并生成补货建议列表并排序。管理员审核后可生成采购单。  
-占位流程图（提交最终稿时替换为真实图）：  
-![AI补货推荐流程图](figures/ai_recommend_flow.svg)
-
-#### 4.3.3 Spring AI 框架集成与大模型调用实现
-- 项目中 `AiTestController` 已验证 `ChatClient` 调用；生产实践建议在 Service 层实现模型适配器，包含超时、重试、并发控制与结果后处理。工程重点：异步批处理（TaskExecutor / @Async）、请求限流、降级策略与结果缓存。
-
-### 4.4 系统实现效果
+### 4.3 系统实现效果
 
 （1）截图占位：请在最终稿中插入运行截图（首页、AI 补货页面、商品详情生成页面、库存列表等）。  
 

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold">SwiftStock 系统 UML 类图</text>
+  <text x="700" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="14">按架构分层展示系统类结构</text>
+
+  <!-- Controller Layer -->
+  <rect x="50" y="80" width="1300" height="120" fill="#E3F2FD" stroke="#1976D2" stroke-width="3"/>
+  <text x="700" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Controller 层</text>
+
+  <!-- Controllers -->
+  <rect x="70" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="120" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">ProductController</text>
+
+  <rect x="190" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="240" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">SupplierController</text>
+
+  <rect x="310" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="360" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">OrderController</text>
+
+  <rect x="430" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="480" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">InventoryController</text>
+
+  <rect x="550" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="600" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AuthController</text>
+
+  <rect x="670" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="720" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">DashboardController</text>
+
+  <rect x="790" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="840" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiForecastController</text>
+
+  <rect x="910" y="110" width="100" height="40" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="960" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiProductController</text>
+
+  <!-- Service Layer -->
+  <rect x="50" y="220" width="1300" height="120" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+  <text x="700" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Service 层</text>
+
+  <!-- Services -->
+  <rect x="70" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="120" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">ProductService</text>
+
+  <rect x="190" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="240" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">SupplierService</text>
+
+  <rect x="310" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="360" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">OrderService</text>
+
+  <rect x="430" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="480" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">InventoryService</text>
+
+  <rect x="550" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="600" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AuthService</text>
+
+  <rect x="670" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="720" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">ReportService</text>
+
+  <rect x="790" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="840" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiForecastService</text>
+
+  <rect x="910" y="250" width="100" height="40" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="960" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiProductService</text>
+
+  <!-- Mapper Layer -->
+  <rect x="50" y="360" width="1300" height="120" fill="#E8F5E8" stroke="#388E3C" stroke-width="3"/>
+  <text x="700" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Mapper 层</text>
+
+  <!-- Mappers -->
+  <rect x="70" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="115" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">ProductMapper</text>
+
+  <rect x="170" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="215" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">SupplierMapper</text>
+
+  <rect x="270" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="315" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">OrderMapper</text>
+
+  <rect x="370" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="415" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">OrderItemMapper</text>
+
+  <rect x="470" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="515" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">InventoryRecordMapper</text>
+
+  <rect x="570" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="615" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">AdminMapper</text>
+
+  <rect x="670" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="715" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">CategoryMapper</text>
+
+  <rect x="770" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="815" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">SupplyRecordMapper</text>
+
+  <rect x="870" y="390" width="90" height="35" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="915" y="408" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold">OrderStatusHistoryMapper</text>
+
+  <!-- Entity Layer -->
+  <rect x="50" y="500" width="1300" height="160" fill="#FFF3E0" stroke="#F57C00" stroke-width="3"/>
+  <text x="700" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Entity 层</text>
+
+  <!-- Entities -->
+  <rect x="70" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="115" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">Product</text>
+  <text x="115" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="180" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="225" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">Category</text>
+  <text x="225" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="290" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="335" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">Supplier</text>
+  <text x="335" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="400" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="445" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">SupplyRecord</text>
+  <text x="445" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="510" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="555" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">Order</text>
+  <text x="555" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="620" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="665" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">OrderItem</text>
+  <text x="665" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="730" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="775" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">InventoryRecord</text>
+  <text x="775" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <rect x="840" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="885" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiReorderRecommendVO</text>
+  <text x="885" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">(DTO)</text>
+
+  <rect x="950" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="995" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">AiProductGenerateDTO</text>
+  <text x="995" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">(DTO)</text>
+
+  <rect x="1060" y="530" width="90" height="60" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="1105" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">Admin</text>
+  <text x="1105" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="7">-id: Long</text>
+
+  <!-- Arrows between layers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Vertical arrows between layers -->
+  <line x1="125" y1="190" x2="125" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="245" y1="190" x2="245" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="365" y1="190" x2="365" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="485" y1="190" x2="485" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="605" y1="190" x2="605" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="725" y1="190" x2="725" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="845" y1="190" x2="845" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="965" y1="190" x2="965" y2="220" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <line x1="120" y1="330" x2="120" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="240" y1="330" x2="240" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="360" y1="330" x2="360" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="480" y1="330" x2="480" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="330" x2="600" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="720" y1="330" x2="720" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="840" y1="330" x2="840" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="960" y1="330" x2="960" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <line x1="115" y1="470" x2="115" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="215" y1="470" x2="215" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="315" y1="470" x2="315" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="415" y1="470" x2="415" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="515" y1="470" x2="515" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="615" y1="470" x2="615" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="715" y1="470" x2="715" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="815" y1="470" x2="815" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="915" y1="470" x2="915" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Legend -->
+  <rect x="1100" y="80" width="180" height="200" fill="#F5F5F5" stroke="#333" stroke-width="1"/>
+  <text x="1190" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold">图例</text>
+
+  <rect x="1115" y="115" width="15" height="12" fill="#BBDEFB" stroke="#1976D2" stroke-width="1"/>
+  <text x="1140" y="125" font-family="Arial, sans-serif" font-size="10">Controller</text>
+
+  <rect x="1115" y="135" width="15" height="12" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1"/>
+  <text x="1140" y="145" font-family="Arial, sans-serif" font-size="10">Service</text>
+
+  <rect x="1115" y="155" width="15" height="12" fill="#81C784" stroke="#388E3C" stroke-width="1"/>
+  <text x="1140" y="165" font-family="Arial, sans-serif" font-size="10">Mapper</text>
+
+  <rect x="1115" y="175" width="15" height="12" fill="#FFB74D" stroke="#F57C00" stroke-width="1"/>
+  <text x="1140" y="185" font-family="Arial, sans-serif" font-size="10">Entity</text>
+
+  <!-- External Service -->
+  <rect x="1150" y="550" width="120" height="60" fill="#B0BEC5" stroke="#37474F" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="1210" y="568" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold">ChatClient</text>
+  <text x="1210" y="583" text-anchor="middle" font-family="Arial, sans-serif" font-size="8">(Spring AI)</text>
+  <text x="1210" y="598" text-anchor="middle" font-family="Arial, sans-serif" font-size="8">DeepSeek API</text>
+
+  <!-- AI Service connection -->
+  <line x1="960" y1="320" x2="1210" y2="550" stroke="#00BCD4" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="1085" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="9">AI服务调用</text>
+</svg>
