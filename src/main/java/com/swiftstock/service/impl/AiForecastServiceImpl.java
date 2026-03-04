@@ -214,8 +214,8 @@ public class AiForecastServiceImpl implements AiForecastService {
         log.info("开始并行处理 {} 个商品的AI补货建议", products.size());
 
         // === 测试专用：限制只处理前5个商品（省token，快速出结果）===
-        int testLimit = 3;  // ← 改这里控制数量
-        products = products.subList(0, Math.min(testLimit, products.size()));
+//        int testLimit = 3;  // ← 改这里控制数量
+//        products = products.subList(0, Math.min(testLimit, products.size()));
         // === 正式演示时注释或删除上面3行 ===
 
         // 创建所有商品的异步调用
