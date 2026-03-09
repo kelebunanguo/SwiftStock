@@ -43,10 +43,10 @@ spring:
   ai:
     openai:
       base-url: https://api.deepseek.com
-      api-key: sk-c7f04122bc9946cf9f53c008bacd1568  # 填你自己的
+      api-key: ${DEEPSEEK_API_KEY:sk-default-placeholder}
       chat:
         options:
-          model: deepseek-chat  # 或 deepseek-reasoner（推理模型）
+          model: deepseek-chat
           temperature: 0.3
           max-tokens: 300
 
