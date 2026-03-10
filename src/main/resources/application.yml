@@ -90,4 +90,4 @@ springdoc:
     operationsSorter: method
   show-actuator: false
   packages-to-scan: com.swiftstock.controller
-  #http://localhost:8088/swiftstock/login
+  #http://localhost:9090/swiftstock/swagger-ui/index.html 接口文档
