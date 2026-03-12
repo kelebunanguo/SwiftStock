@@ -1,0 +1,472 @@
+{
+  "info": {
+    "_postman_id": "717cae88-1a8e-4a1d-9518-d6115a2cd830",
+    "name": "SwiftStock接口测试",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44859318",
+    "_collection_link": "https://go.postman.co/collection/44859318-717cae88-1a8e-4a1d-9518-d6115a2cd830?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "登录模块-登录",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"登录成功\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.jsonBody(\"success\", true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/swiftstock/auth/login",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "商品模块-列表查询",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"商品列表返回成功\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.jsonBody(\"success\", true);\r",
+              "    pm.response.to.have.jsonBody(\"data.list\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "商品模块-可用商品",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI5NzIyLCJleHAiOjE3NzMzMTYxMjJ9.JIup3ngn5jvYEjOGDWBb5hAgr87LtJj88sN_4SY9QVU",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/products/available",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "products",
+            "available"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "订单模块-列表查询",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AI模块-补货推荐列表",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"AI补货推荐返回成功\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.jsonBody(\"success\", true);\r",
+              "    const data = pm.response.json().data;\r",
+              "    pm.expect(data).to.be.an(\"array\").and.have.lengthOf.at.least(1);\r",
+              "    console.log(\"AI推荐了 \" + data.length + \" 个商品\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/api/ai/forecast/recommend-list",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "api",
+            "ai",
+            "forecast",
+            "recommend-list"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AI模块-AI生成商品描述",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"AI商品描述生成成功\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.jsonBody(\"success\", true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"productName\":\"Nike经典运动短袖\",\r\n    \"supplier\":\"Nike官方旗舰店\",\r\n    \"category\":\"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/api/ai/product/generate-detail",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "api",
+            "ai",
+            "product",
+            "generate-detail"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "库存模块-入库",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"入库操作成功\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.response.to.have.jsonBody(\"success\", true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"productId\": 1,\r\n     \"quantity\": 10, \r\n     \"reason\": \"测试入库\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/inventory/in",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "inventory",
+            "in"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "库存模块-出库",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"productId\": 1,\r\n     \"quantity\": 10,\r\n      \"reason\": \"测试出库\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/inventory/out",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "inventory",
+            "out"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "供应商模块-列表查询",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/suppliers",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "suppliers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "数据统计模块",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/swiftstock/sales/overview",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "swiftstock",
+            "sales",
+            "overview"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd2lmdHN0b2NrIiwic3ViIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNzczMjI0Njk4LCJleHAiOjE3NzMzMTEwOTh9.oVQeC4W9mimvLkOf0lc4gT6j6LnwiWZkfhX3Pa8499c",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "if (pm.response.code === 200) {\r",
+          "    const jsonData = pm.response.json();\r",
+          "    if (jsonData && jsonData.success && jsonData.data && jsonData.data.token) {\r",
+          "        const token = jsonData.data.token;\r",
+          "        pm.environment.set(\"jwt_token\", token);\r",
+          "        console.log(\"Token已保存：\" + token);\r",
+          "    }\r",
+          "}"
+        ]
+      }
+    }
+  ]
+}
