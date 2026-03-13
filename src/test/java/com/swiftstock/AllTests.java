@@ -7,7 +7,8 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasses({
         LoginTest.class,
         AiRecommandTest.class,
-        InventoryTest.class
+        InventoryTest.class,
+        ParameterizedInventoryTest.class,
 })
 
 public class AllTests {

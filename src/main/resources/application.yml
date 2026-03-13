@@ -17,7 +17,7 @@ spring:
     allow-bean-definition-overriding: true
   devtools:
     restart:
-      enabled: true
+      enabled: false
       additional-paths: src/main/java
       exclude: static/**,public/**,resources/**,templates/**
     livereload:

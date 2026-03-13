@@ -21,4 +21,18 @@ public class InventoryTest extends BaseTest {
                 .body("success", equalTo(true))
                 .log().all();
     }
+
+    @Test
+    public void testInventoryOut() {
+        given()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body("{\"productId\":1, \"quantity\":10, \"reason\":\"自动化测试出库\"}")
+        .when()
+                .post("/inventory/out")
+        .then()
+                .statusCode(200)
+                .body("success", equalTo(true))
+                .log().all();
+    }
 }
