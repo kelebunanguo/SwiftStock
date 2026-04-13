@@ -31,6 +31,18 @@ public interface OrderItemMapper {
      * @param orderId 订单 ID
      */
     void deleteByOrderId(@Param("orderId") Long orderId);
+
+    /**
+     * 查询指定商品在指定日期范围内的销量总和
+     *
+     * @param productId 商品 ID
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 销量总和
+     */
+    Integer sumSalesQuantityByProductId(@Param("productId") Long productId, 
+                                       @Param("startDate") String startDate, 
+                                       @Param("endDate") String endDate);
 }
 
 

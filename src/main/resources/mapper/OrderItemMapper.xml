@@ -16,4 +16,15 @@
     <delete id="deleteByOrderId">
         DELETE FROM order_item WHERE order_id = #{orderId}
     </delete>
-</mapper> 
+    
+    <!-- 查询指定商品在指定日期范围内的销量总和 -->
+    <select id="sumSalesQuantityByProductId" resultType="java.lang.Integer">
+        SELECT COALESCE(SUM(i.quantity), 0)
+        FROM order_item i
+        INNER JOIN orders o ON i.order_id = o.id
+        WHERE i.product_id = #{productId}
+          AND o.status IN ('PAID', 'PREPARING', 'SHIPPED', 'DELIVERED', 'COMPLETED')
+          AND o.created_time &gt;= #{startDate}
+          AND o.created_time &lt;= #{endDate}
+    </select>
+</mapper>

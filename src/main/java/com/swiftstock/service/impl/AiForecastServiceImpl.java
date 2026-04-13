@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swiftstock.dto.AiReorderRecommendVO;
 import com.swiftstock.entity.Product;
+import com.swiftstock.mapper.OrderItemMapper;
 import com.swiftstock.mapper.ProductMapper;
 import com.swiftstock.service.AiForecastService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PreDestroy;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class AiForecastServiceImpl implements AiForecastService {
 
     private final ProductMapper productMapper;
+    private final OrderItemMapper orderItemMapper;
     private final ChatClient chatClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -44,8 +48,11 @@ public class AiForecastServiceImpl implements AiForecastService {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Autowired
-    public AiForecastServiceImpl(ProductMapper productMapper, ChatClient.Builder chatClientBuilder) {
+    public AiForecastServiceImpl(ProductMapper productMapper, 
+                                  OrderItemMapper orderItemMapper, 
+                                  ChatClient.Builder chatClientBuilder) {
         this.productMapper = productMapper;
+        this.orderItemMapper = orderItemMapper;
         this.chatClient = chatClientBuilder.build();
 
         // 定时刷新缓存，避免频繁请求大模型
@@ -108,6 +115,74 @@ public class AiForecastServiceImpl implements AiForecastService {
     }
 
     /**
+     * 获取商品历史销量数据
+     *
+     * @param productId 商品ID
+     * @return 包含近30天销量、近60天销量、趋势的数组 [recent30Days, previous30Days]
+     */
+    private int[] getHistoricalSalesData(Long productId) {
+        try {
+            LocalDate today = LocalDate.now();
+            String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String startRecent = today.minusDays(30).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String startPrevious = today.minusDays(60).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endPrevious = today.minusDays(31).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            // 查询近30天销量
+            Integer recent30Days = orderItemMapper.sumSalesQuantityByProductId(
+                productId, 
+                startRecent + " 00:00:00", 
+                todayStr + " 23:59:59"
+            );
+
+            // 查询前30天销量（用于趋势对比）
+            Integer previous30Days = orderItemMapper.sumSalesQuantityByProductId(
+                productId, 
+                startPrevious + " 00:00:00", 
+                endPrevious + " 23:59:59"
+            );
+
+            return new int[]{
+                recent30Days != null ? recent30Days : 0,
+                previous30Days != null ? previous30Days : 0
+            };
+        } catch (Exception e) {
+            log.warn("获取商品 {} 历史销量失败: {}", productId, e.getMessage());
+            return new int[]{0, 0};
+        }
+    }
+
+    /**
+     * 计算季节性趋势描述
+     *
+     * @param recentSales 近30天销量
+     * @param previousSales 前30天销量
+     * @return 趋势描述字符串
+     */
+    private String calculateSeasonalTrend(int recentSales, int previousSales) {
+        if (previousSales == 0) {
+            if (recentSales > 0) {
+                return "新增热销商品，近期销量上升";
+            }
+            return "新品上市，暂无历史对比数据";
+        }
+
+        double changeRate = ((double) (recentSales - previousSales) / previousSales) * 100;
+        
+        if (changeRate >= 50) {
+            return "销量大幅增长" + String.format("%.1f", changeRate) + "%，进入热销期";
+        } else if (changeRate >= 20) {
+            return "销量稳步上升，增长" + String.format("%.1f", changeRate) + "%，市场需求旺盛";
+        } else if (changeRate >= 0) {
+            return "销量小幅增长" + String.format("%.1f", changeRate) + "%，市场稳定";
+        } else if (changeRate >= -20) {
+            return "销量小幅下降" + String.format("%.1f", Math.abs(changeRate)) + "%，市场正常波动";
+        } else {
+            return "销量明显下降" + String.format("%.1f", Math.abs(changeRate)) + "%，需关注库存风险";
+        }
+    }
+
+    /**
      * 异步处理单个商品的AI补货建议
      *
      * @param product 商品对象
@@ -126,25 +201,22 @@ public class AiForecastServiceImpl implements AiForecastService {
                 String productCode = product.getCode();
                 Integer currentStock = product.getStockQuantity() == null ? 0 : product.getStockQuantity();
                 Integer minStock = product.getMinStockLevel() == null ? 10 : product.getMinStockLevel();
+                Double price = product.getPrice() != null ? product.getPrice().doubleValue() : 0.0;
 
-                // 严格按照模板构造 prompt
-                String prompt = ""
-                        + "你是一名拥有10年经验的电商仓库管理专家。请根据以下商品信息，分析未来7天的销售情况并给出补货建议。\n\n"
-                        + "商品名称：" + productName + "\n"
-                        + "商品编码：" + productCode + "\n"
-                        + "当前库存：" + currentStock + " 件\n"
-                        + "最小库存阈值：" + minStock + " 件\n\n"
-                        + "背景信息：\n"
-                        + "- 本店主要销售运动服装鞋帽类商品\n"
-                        + "- 周末销量通常是工作日的1.5-2倍\n"
-                        + "- 近期无大型促销活动\n\n"
-                        + "请直接输出纯JSON格式（不要任何其他文字）：\n"
-                        + "{\n"
-                        + "  \"needReorder\": true 或 false,\n"
-                        + "  \"forecastSales7Days\": 整数（你预测的未来7天销量，合理范围10-100）, \n"
-                        + "  \"suggestReorderQuantity\": 整数（建议补货数量，如果不需要补货填0，取10的倍数向上取整，最小补货单位10件）, \n"
-                        + "  \"advice\": \"50-80字自然流畅的中文建议，语气专业，像人类专家写的一样，突出缺货风险、补货紧迫性和理由\"\n"
-                        + "}\n";
+                // 获取历史销量数据
+                int[] salesData = getHistoricalSalesData(product.getId());
+                int recent30DaysSales = salesData[0];
+                int previous30DaysSales = salesData[1];
+                
+                // 计算日均销量
+                double dailyAvgSales = recent30DaysSales / 30.0;
+                
+                // 计算季节性趋势
+                String seasonalTrend = calculateSeasonalTrend(recent30DaysSales, previous30DaysSales);
+
+                // 构建增强版 Prompt，包含完整信息
+                String prompt = buildEnhancedPrompt(productName, productCode, currentStock, 
+                    minStock, price, recent30DaysSales, dailyAvgSales, seasonalTrend);
 
                 String aiResponse = chatClient.prompt()
                         .user(prompt)
@@ -196,6 +268,66 @@ public class AiForecastServiceImpl implements AiForecastService {
     }
 
     /**
+     * 构建增强版 Prompt，包含完整的历史销量和趋势信息
+     */
+    private String buildEnhancedPrompt(String productName, String productCode, 
+                                       int currentStock, int minStock, double price,
+                                       int recent30DaysSales, double dailyAvgSales,
+                                       String seasonalTrend) {
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("你是一名拥有10年经验的电商仓库管理专家。请根据以下商品完整数据，分析未来7天的销售情况并给出专业补货建议。\n\n");
+        prompt.append("【商品基本信息】\n");
+        prompt.append("- 商品名称：").append(productName).append("\n");
+        prompt.append("- 商品编码：").append(productCode).append("\n");
+        prompt.append("- 当前库存：").append(currentStock).append(" 件\n");
+        prompt.append("- 最小安全库存：").append(minStock).append(" 件\n");
+        prompt.append("- 商品单价：").append(String.format("%.2f", price)).append(" 元\n\n");
+        
+        prompt.append("【历史销售数据】\n");
+        prompt.append("- 近30天总销量：").append(recent30DaysSales).append(" 件\n");
+        prompt.append("- 近30天日均销量：").append(String.format("%.1f", dailyAvgSales)).append(" 件/天\n\n");
+        
+        prompt.append("【季节性趋势分析】\n");
+        prompt.append("- ").append(seasonalTrend).append("\n\n");
+        
+        prompt.append("【库存风险评估】\n");
+        // 计算库存可支撑天数
+        int canSustainDays = (dailyAvgSales > 0) ? (int)(currentStock / dailyAvgSales) : 999;
+        if (canSustainDays > 30) {
+            prompt.append("- 当前库存可支撑约 ").append(canSustainDays).append(" 天（库存充足）\n");
+        } else if (canSustainDays > 7) {
+            prompt.append("- 当前库存可支撑约 ").append(canSustainDays).append(" 天（库存偏紧）\n");
+        } else if (canSustainDays > 0) {
+            prompt.append("- 当前库存可支撑约 ").append(canSustainDays).append(" 天（库存紧张，亟需补货）\n");
+        } else {
+            prompt.append("- 当前库存已无法满足日均需求（缺货风险极高）\n");
+        }
+        
+        // 库存与安全库存对比
+        if (currentStock < minStock) {
+            prompt.append("- 库存低于安全库存 ").append(minStock - currentStock).append(" 件，存在缺货风险\n");
+        } else {
+            prompt.append("- 库存高于安全库存，暂无缺货风险\n");
+        }
+        
+        prompt.append("\n【背景信息】\n");
+        prompt.append("- 本店主要销售运动服装鞋帽类商品\n");
+        prompt.append("- 周末销量通常是工作日的1.5-2倍\n");
+        prompt.append("- 近期无大型促销活动\n\n");
+        
+        prompt.append("【输出要求】\n");
+        prompt.append("请直接输出纯JSON格式（不要任何其他文字）：\n");
+        prompt.append("{\n");
+        prompt.append("  \"needReorder\": true 或 false（根据综合分析判断是否需要补货）,\n");
+        prompt.append("  \"forecastSales7Days\": 整数（你预测的未来7天销量，应基于历史日均销量和趋势调整，合理范围5-200）,\n");
+        prompt.append("  \"suggestReorderQuantity\": 整数（建议补货数量，如果不需要补货填0，必须是10的倍数向上取整，最小补货单位10件）,\n");
+        prompt.append("  \"advice\": \"60-100字自然流畅的中文建议，语气专业，像人类专家写的一样，突出缺货风险、补货紧迫性、销量趋势和补货理由\"\n");
+        prompt.append("}\n");
+        
+        return prompt.toString();
+    }
+
+    /**
      * 生成推荐列表的具体实现：并行调用AI模型处理所有商品，显著提升性能
      *
      * <p>使用异步并行调用，每个商品的AI请求同时发送，大幅缩短总等待时间。</p>
@@ -212,11 +344,6 @@ public class AiForecastServiceImpl implements AiForecastService {
         long startTime = System.currentTimeMillis();
         log.info("开始并行处理，时间: {}", LocalDateTime.now());
         log.info("开始并行处理 {} 个商品的AI补货建议", products.size());
-
-        // === 测试专用：限制只处理前5个商品（省token，快速出结果）===
-//        int testLimit = 3;  // ← 改这里控制数量
-//        products = products.subList(0, Math.min(testLimit, products.size()));
-        // === 正式演示时注释或删除上面3行 ===
 
         // 创建所有商品的异步调用
         List<CompletableFuture<AiReorderRecommendVO>> futures = new ArrayList<>();
@@ -244,7 +371,7 @@ public class AiForecastServiceImpl implements AiForecastService {
                 }
             }
             long endTime = System.currentTimeMillis();
-            long elapsedTime = endTime - startTime ;
+            long elapsedTime = endTime - startTime;
             double elapsedTimes = elapsedTime / 1000.0; // 转换为秒
             log.info("方法执行完成，耗时: {} ms", elapsedTimes);
             log.info("AI补货建议并行处理完成，共获得 {} 个有效建议", result.size());
@@ -261,5 +388,3 @@ public class AiForecastServiceImpl implements AiForecastService {
     }
 
 }
-
-
