@@ -3,6 +3,7 @@ package com.swiftstock.service;
 import com.swiftstock.dto.OrderCreateDTO;
 import com.swiftstock.entity.Order;
 import com.swiftstock.entity.OrderStatusHistory;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -81,4 +82,12 @@ public interface OrderService {
      * @return 状态历史列表
      */
     List<OrderStatusHistory> getStatusHistory(Long id);
-} 
+
+    /**
+     * 自动取消指定截止时间之前创建且仍未付款的订单。
+     *
+     * @param deadline 付款截止时间
+     * @return 成功取消的订单数量
+     */
+    int cancelExpiredUnpaidOrders(LocalDateTime deadline);
+}

@@ -502,6 +502,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 自动取消超过付款期限的待付款订单。
+     *
+     * <p>更新语句会再次校验订单仍为 UNPAID，避免扫描完成后订单刚好付款时被误取消。</p>
+     */
+    @Override
+    @Transactional
+    public int cancelExpiredUnpaidOrders(LocalDateTime deadline) {
+        List<Order> expiredOrders = orderMapper.selectExpiredUnpaidOrders(deadline);
+        int cancelledCount = 0;
+
+        for (Order order : expiredOrders) {
+            if (orderMapper.cancelIfUnpaid(order.getId()) == 0) {
+                continue;
+            }
+
+            logStatusHistory(
+                    OrderStatus.UNPAID,
+                    OrderStatus.CANCELLED,
+                    "超过30分钟未付款，系统自动取消",
+                    order
+            );
+            cancelledCount++;
+            log.info("订单{}超过30分钟未付款，已自动取消", order.getOrderNo());
+        }
+
+        return cancelledCount;
+    }
+
+    /**
      * 记录订单状态变更历史
      */
     private void logStatusHistory(OrderStatus fromStatus, OrderStatus toStatus, String reason, Order order) {
@@ -513,4 +542,4 @@ public class OrderServiceImpl implements OrderService {
         history.setChangedTime(LocalDateTime.now());
         orderStatusHistoryMapper.insert(history);
     }
-} 
+}

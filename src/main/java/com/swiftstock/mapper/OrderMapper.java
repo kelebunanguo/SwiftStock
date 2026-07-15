@@ -5,6 +5,7 @@ import com.swiftstock.entity.OrderItem;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -86,4 +87,20 @@ public interface OrderMapper {
      * @return 最大订单号，如果没有则返回null
      */
     String selectMaxOrderNoByPrefix(@Param("prefix") String prefix);
-} 
+
+    /**
+     * 查询超过付款期限且仍处于待付款状态的订单。
+     *
+     * @param deadline 付款截止时间
+     * @return 已超时的待付款订单
+     */
+    List<Order> selectExpiredUnpaidOrders(@Param("deadline") LocalDateTime deadline);
+
+    /**
+     * 仅当订单仍为待付款状态时将其取消，避免与付款操作发生竞态。
+     *
+     * @param id 订单 ID
+     * @return 受影响的行数
+     */
+    int cancelIfUnpaid(@Param("id") Long id);
+}

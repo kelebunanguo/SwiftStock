@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 应用程序启动类
@@ -13,9 +14,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @MapperScan("com.swiftstock.mapper")
 @EnableAsync
+@EnableScheduling
 public class SwiftStockApplication {
     
     public static void main(String[] args) {
         SpringApplication.run(SwiftStockApplication.class, args);
     }
-} 
+}

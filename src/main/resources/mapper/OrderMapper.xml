@@ -172,4 +172,20 @@
         FROM orders
         WHERE order_no LIKE CONCAT(#{prefix}, '%')
     </select>
-</mapper> 
+
+    <select id="selectExpiredUnpaidOrders" resultMap="orderMap">
+        SELECT o.*
+        FROM orders o
+        WHERE o.status = 'UNPAID'
+          AND o.created_time &lt;= #{deadline}
+        ORDER BY o.created_time ASC
+    </select>
+
+    <update id="cancelIfUnpaid">
+        UPDATE orders
+        SET status = 'CANCELLED',
+            updated_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+          AND status = 'UNPAID'
+    </update>
+</mapper>
